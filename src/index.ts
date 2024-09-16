@@ -1,38 +1,31 @@
 import { Application, Assets, AssetsBundle, Sprite, Texture,  } from 'pixi.js';
 import { GameConst } from './GameConst';
 import Asset from './Asset';
-
-
+import { GameBoard } from './GameScene/GameBoard';
+import { GameStart } from './GameScene/GameStart';
+import { EventHandle } from './EventHandle';
 
 // Asynchronous IIFE
 (async () =>
 {
-    // Khởi tạo PixiJS application.
     const app = new Application();
 
-    // Cài đặt app với một số thuộc tính.
     await app.init({ background: '#1099bb', width: GameConst.GAME_WIDTH, height: GameConst.GAME_HEIGHT});
 
     new Asset();
     await Asset.loadAssets();
-    const sprite = new Sprite(Texture.from('background'));
 
-    const x = GameConst.GAME_WIDTH/sprite.width;
-    const y= GameConst.GAME_HEIGHT/sprite.height ;
+    const gameStart = new GameStart();
+    const gameBoard = new GameBoard();
 
-    sprite.scale.set(x,y);
+    app.stage.addChild(gameStart);
 
-    // const bundles: AssetsBundle[] = asset;
-    // await Assets.init({ manifest: {bundles}});
-    // Assets.backgroundLoadBundle(bundles.map(i => i.name));
-    // Assets.loadBundle('tupe').then(data => {
-    //     console.log(data)
-    // });
-    
+    EventHandle.on('startGame', () => {
+        app.stage.removeChild(gameStart); 
+        app.stage.addChild(gameBoard); 
+    });
 
-    
-  
-    app.stage.addChild(sprite);
-    // Thả canvas của app vào body của HTML.
     document.body.appendChild(app.canvas);
 })();
+
+
