@@ -18,12 +18,12 @@ import { EventHandle } from './EventHandle';
     const gameStart = new GameStart();
     const gameBoard = new GameBoard();
 
-    app.stage.addChild(gameStart);
+    app.stage.addChild(gameBoard);
 
-    EventHandle.on('startGame', () => {
-        app.stage.removeChild(gameStart); 
-        app.stage.addChild(gameBoard); 
-    });
+    // EventHandle.on('startGame', () => {
+    //     app.stage.removeChild(gameStart); 
+    //     app.stage.addChild(gameBoard); 
+    // });
 
     document.body.appendChild(app.canvas);
 })();
