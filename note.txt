@@ -1,0 +1,35 @@
+ /** matrix */
+ // const rows = Math.floor(GameConst.GAME_HEIGHT / cellSize);
+        // const cols = Math.floor(GameConst.GAME_WIDTH / cellSize);
+        // this.gridMap = new Array(rows).fill(0).map(() => new Array(cols).fill(0));
+
+
+
+
+lam nhieu map
+        // const cellSize = GameConst.SQUARE_SIZE;
+        // this.map = gameMap;
+        // const grap = new Graphics();
+        // gameMap.forEach((val: number[], idxX: number) => {
+        //     val.forEach((value, idxY) => {
+        //         grap.rect(idxX * cellSize, idxY * cellSize, 40, 40);
+        //         let color = 0xffffff;
+        //         switch (value) {
+        //             case 0: // Cỏ
+        //                 color = 0x86D293;
+        //                 break;
+        //             case 1: // Đường
+        //                 color = 0xFDFAD9;
+        //                 break;
+        //             case 2: // Tháp
+        //                 color = 0x664343;
+        //                 break;
+        //             case 3: // Vật thể khác
+        //                 color = 0xF5F5F5;
+        //                 break;
+        //         }
+        //         grap.fill(color);
+        //     });
+        // });
+
+        // this.addChild(grap);
