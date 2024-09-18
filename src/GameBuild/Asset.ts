@@ -1,5 +1,5 @@
 import { Assets, Sprite, Texture } from 'pixi.js';
-import bundles from '../assetBundle.json';
+import bundles from '../../assetBundle.json';
 
 export default class Asset {
     static texture: any = {};
@@ -8,8 +8,9 @@ export default class Asset {
         await Assets.init({ manifest: { bundles } });
 
         // Hoặc tải tài nguyên trước khi sử dụng với await
-        await Assets.loadBundle('load-scene');
         await Assets.loadBundle('game-scene');
+        await Assets.loadBundle('load-map');
+        await Assets.loadBundle('game-enemy');
 
 
     };

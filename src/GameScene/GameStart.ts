@@ -1,6 +1,6 @@
 import { Container, Graphics, Sprite, Texture, Text, TextStyle, } from "pixi.js";
-import { GameConst } from "../GameConst";
-import { EventHandle } from "../EventHandle";
+import { GameConst } from "../GameBuild/GameConst";
+import { EventHandle } from "../GameBuild/EventHandle";
 
 export class GameStart extends Container {
 

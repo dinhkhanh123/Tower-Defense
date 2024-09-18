@@ -1,9 +1,9 @@
-import { Application, Assets, AssetsBundle, Sprite, Texture,  } from 'pixi.js';
-import { GameConst } from './GameConst';
-import Asset from './Asset';
+import { Application } from 'pixi.js';
+import Asset from './GameBuild/Asset';
+import { GameConst } from './GameBuild/GameConst';
 import { GameBoard } from './GameScene/GameBoard';
 import { GameStart } from './GameScene/GameStart';
-import { EventHandle } from './EventHandle';
+
 
 // Asynchronous IIFE
 (async () =>
@@ -25,6 +25,9 @@ import { EventHandle } from './EventHandle';
     //     app.stage.addChild(gameBoard); 
     // });
 
+    app.ticker.add((time)=>{
+        gameBoard.update(time.deltaTime);
+    });
     document.body.appendChild(app.canvas);
 })();
 

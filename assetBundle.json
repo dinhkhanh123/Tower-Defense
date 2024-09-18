@@ -1,42 +1,51 @@
 [
     {
-        "name": "load-scene",
-        "assets": [
-            {
-                "alias": "fish1",
-                "src": "https://pixijs.com/assets/tutorials/fish-pond/fish1.png"
-            },
-            {
-                "alias": "fish2",
-                "src": "https://pixijs.com/assets/tutorials/fish-pond/fish2.png"
-            },
-            {
-                "alias": "fish3",
-                "src": "https://pixijs.com/assets/tutorials/fish-pond/fish3.png"
-            },
-            {
-                "alias": "fish4",
-                "src": "https://pixijs.com/assets/tutorials/fish-pond/fish4.png"
-            },
-            {
-                "alias": "fish5",
-                "src": "https://pixijs.com/assets/tutorials/fish-pond/fish5.png"
-            },
-            {
-                "alias": "bgImage",
-                "src": "https://pixijs.com/assets/tutorials/fish-pond/pond_background.jpg"
-            },{
-                "alias": "overlay",
-                "src": "https://pixijs.com/assets/tutorials/fish-pond/wave_overlay.png"
-            }
-        ]
-    },
-    {
         "name": "game-scene",
         "assets": [
             {
                 "alias": "background",
                 "src": "images/bg.png"
+            }
+        ]
+    },{
+        "name": "load-map",
+        "assets": [
+            {
+                "alias": "grass",
+                "src": "./images/map/grass.png"
+            },
+            {
+                "alias": "road",
+                "src": "./images/map/tilemap.png"
+            },
+            {
+                "alias": "tower1_1",
+                "src": "./images/towers/tower1_1.png"
+            },
+            {
+                "alias": "tower1_2",
+                "src": "./images/towers/tower1_2.png"
+            },
+            {
+                "alias": "tower1_3",
+                "src": "./images/towers/tower1_3.png"
+            },
+            {
+                "alias": "slot_tower",
+                "src": "./images/map/slot_tower.png"
+            }
+        ]
+    },
+    {
+        "name": "game-enemy",
+        "assets": [
+            {
+                "alias": "enemy1",
+                "src": "./images/enemies/enemy1_1.png"
+            },
+            {
+                "alias": "enemy2",
+                "src": "./images/enemies/enemy1_2.png"
             }
         ]
     }

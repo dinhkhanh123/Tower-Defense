@@ -1,5 +1,5 @@
 import { Container, Graphics } from "pixi.js";
-import { GameConst } from "../GameConst";
+import { GameConst } from "../GameBuild/GameConst";
 
 export class RightPanel extends Container{
 

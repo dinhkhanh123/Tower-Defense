@@ -1,24 +1,31 @@
 import { Container, } from "pixi.js";
-import { GameConst } from "../GameConst";
-import { MapGame } from "./Map/MapGame";
+import { GameConst } from "../GameBuild/GameConst";
+import { MapGame } from './Map/MapGame';
 import { RightPanel } from "./RightPanel";
 import { BottomPanel } from './BottomPanel';
+import { Enemy } from "../GameObject/Enemies/Enemy";
 
 export class GameBoard extends Container {
-
+    private mapGame;
+    private rightPan;
+    private bottomPanel;
     constructor() {
         super();
-        this.init()
+        this.mapGame = new MapGame();    
+        this.rightPan = new RightPanel();
+        this.bottomPanel = new BottomPanel();
+
+        this.init();
     }
 
     init() {
-        const mapGame = new MapGame();
-        this.addChild(mapGame);
-
-        const rightPan = new RightPanel();
-        this.addChild(rightPan);
-
-        const bottomPanel = new BottomPanel();
-        this.addChild(bottomPanel);
+        this.addChild(this.mapGame);
+        this.addChild(this.rightPan);
+        this.addChild(this.bottomPanel);
     }
+
+    update(time:number){
+        this.mapGame.update(time);
+    }
+
 }
