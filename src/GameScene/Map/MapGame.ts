@@ -29,9 +29,7 @@ export class MapGame extends Container {
         
         this.enemySpawn = new EnemySpawner(this.gridMap);
         
-        this.init();
-        
-       
+        this.init();   
     }
 
    async init() {
