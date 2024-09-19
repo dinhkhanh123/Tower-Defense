@@ -21,7 +21,7 @@ export class Pathfinding {
             const { x, y, path } = queue.shift()!;
 
             if (x === goal.x && y === goal.y) {
-                return path; // Tìm thấy đường đi
+                return path; 
             }
 
             for (const dir of directions) {
@@ -36,6 +36,6 @@ export class Pathfinding {
             }
         }
 
-        return null; // Không tìm thấy đường đi
+        return null; 
     }
 }

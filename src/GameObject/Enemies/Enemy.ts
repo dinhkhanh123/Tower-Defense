@@ -62,17 +62,17 @@ export class Enemy {
     }
 
     updateTexture(dx: number, dy: number) {
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        // const angle = Math.atan2(dy, dx) * (180 / Math.PI);
         
-        if (angle >= -45 && angle < 45) {
-            this.sprite = new Sprite(Texture.from('enemy2'));
-        } else if (angle >= 45 && angle < 135) {
-            this.sprite = new Sprite(Texture.from('enemy1'));
-        } else if (angle >= -135 && angle < -45) {
-            this.sprite = new Sprite(Texture.from('enemy2'));
-        } else {
-            this.sprite = new Sprite(Texture.from('enemy1'));
-        }
+        // if (angle >= -45 && angle < 45) {
+        //     this.sprite = new Sprite(Texture.from('enemy2'));
+        // } else if (angle >= 45 && angle < 135) {
+        //     this.sprite = new Sprite(Texture.from('enemy1'));
+        // } else if (angle >= -135 && angle < -45) {
+        //     this.sprite = new Sprite(Texture.from('enemy2'));
+        // } else {
+        //     this.sprite = new Sprite(Texture.from('enemy1'));
+        // }
     }
 
    

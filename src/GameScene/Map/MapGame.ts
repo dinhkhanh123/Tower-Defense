@@ -1,8 +1,7 @@
-import { Container, Graphics, Point, Rectangle, Sprite, Texture } from "pixi.js";
+import { Assets, Container, Graphics, Point, Rectangle, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
-import {Pathfinding} from "../Map/Pathfinding"
 import { EnemySpawner } from '../Spawn/SpawnEnemy';
-import { Enemy } from "../../GameObject/Enemies/Enemy";
+
 
 export class MapGame extends Container {
     private gridMap: number[][] = [
@@ -21,32 +20,37 @@ export class MapGame extends Container {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 3, 0], // Hàng 13
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 3, 0], // Hàng 14
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  // Hàng 15
-    ];;
-    private pathfinding!: Pathfinding;
+    ];
+
     private enemySpawn: EnemySpawner;
     
     constructor() {
         super();
+        
         this.enemySpawn = new EnemySpawner(this.gridMap);
+        
         this.init();
-             
+        
+       
     }
 
-    init() {
+   async init() {
         this.width = 800;
         this.height = 600;
-
-        this.LoadMap();
-        this.addChild(this.enemySpawn);    
+        await this.LoadMap();
+        
+        this.addChild(this.enemySpawn); 
+           
     }
     update(delta:number){
         this.enemySpawn.update(delta);
        }
     
-    LoadMap() {
+       async LoadMap() {
         const grap = new Graphics();
         const cellSize = GameConst.SQUARE_SIZE;
-      
+        const map_texture =await Assets.load('./atlas/map_atlas.json');
+        console.log("nam duoi");
         for (let i = 0; i < this.gridMap.length; i++) {
             const y = i * cellSize;
             for (let j = 0; j < this.gridMap[i].length; j++) {
@@ -57,18 +61,18 @@ export class MapGame extends Container {
                 let texturemap: Texture;
                 switch (cellValue) {
                     case 0: // Cỏ
-                    texturemap = Texture.from("grass");
+                    texturemap = map_texture.textures['grass'];
                         break;
                     case 1: // Đường
-                    texturemap = Texture.from("road");
+                    texturemap = map_texture.textures['road'];
                         break;
                     case 2: // Tháp
-                    texturemap = Texture.from("tower1_1");
+                    texturemap = map_texture.textures['tower1_1'];
                         break;
                     case 3: // Vật thể khác
-                    texturemap = Texture.from("road");
+                    texturemap = map_texture.textures['road']
                         break;
-                        default:
+                    default:
                             texturemap = Texture.EMPTY; 
                 }
                 const sprite = new Sprite(texturemap);
@@ -82,26 +86,4 @@ export class MapGame extends Container {
         }
         
     }
-
-    
-
-    // drawPath(path: [number, number][]) {
-    //     const graphics = new Graphics();  
-    //     const cellSize = GameConst.SQUARE_SIZE;
-        
-    //     for (let i = 0; i < path.length - 1; i++) {
-    //         const [x1, y1] = path[i];
-    //         const [x2, y2] = path[i + 1];
-    
-    //         // Di chuyển đến điểm bắt đầu của đoạn đường
-    //         graphics.moveTo(x1 * cellSize + cellSize / 2, y1 * cellSize + cellSize / 2);
-            
-    //         // Vẽ đường tới điểm tiếp theo
-    //         graphics.lineTo(x2 * cellSize + cellSize / 2, y2 * cellSize + cellSize / 2);
-    //     }
-    //     graphics.stroke({ width: 2, color: 0xffd900 });
-    
-    //     // Thêm Graphics vào Container để hiển thị
-    //     this.addChild(graphics); 
-    // }
 }

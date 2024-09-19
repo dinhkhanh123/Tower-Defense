@@ -1,4 +1,4 @@
-import { Container, Sprite, Texture, Point } from "pixi.js";
+import { Container, Sprite, Texture, Point, Assets } from "pixi.js";
 import { Enemy } from "../../GameObject/Enemies/Enemy";
 import { Pathfinding } from "../Map/Pathfinding";
 
@@ -14,11 +14,12 @@ export class EnemySpawner extends Container{
         this.init();
     }
 
-    init(){
-        const texture = Texture.from('enemy1');
+   async init(){
+        const enemytt = await Assets.load('./atlas/enemies_atlas.json');
+        const texture = enemytt.textures['enemy1_1'];
         const start = { x: 0, y: 2}; 
-        const start2 = { x: 0, y: 13}; 
-        const goal = { x: 19, y: 1 }; 
+        const start2 = { x: 19, y: 1}; 
+        const goal = { x: 0, y: 13 }; 
         const goal2 = { x: 0, y: 13 }; 
 
 

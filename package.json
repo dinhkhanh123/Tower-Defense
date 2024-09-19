@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn webpack --mode development",
-    "start": "yarn webpack serve --mode development"
+    "start": "yarn webpack serve --mode development",
+    "texture-pack": "node ./tools/packTextures.js"
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.6.0",
@@ -15,10 +16,12 @@
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0",
-    "webpack-server": "^0.1.2"
+    "webpack-server": "^0.1.2",
+    "webpack-shell-plugin-next": "^2.3.2"
   },
   "dependencies": {
     "file-loader": "^6.2.0",
+    "free-tex-packer-core": "^0.3.4",
     "pixi.js": "^8.4.0",
     "url-loader": "^4.1.1"
   }

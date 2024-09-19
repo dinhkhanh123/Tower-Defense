@@ -1,8 +1,8 @@
 import { Container, } from "pixi.js";
 import { GameConst } from "../GameBuild/GameConst";
 import { MapGame } from './Map/MapGame';
-import { RightPanel } from "./RightPanel";
-import { BottomPanel } from './BottomPanel';
+import { RightPanel } from "../GameScene/Scenes/RightPanel";
+import { BottomPanel } from './Scenes/BottomPanel';
 import { Enemy } from "../GameObject/Enemies/Enemy";
 
 export class GameBoard extends Container {
