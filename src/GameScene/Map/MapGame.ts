@@ -1,7 +1,8 @@
 import { Assets, Container, Graphics, Point, Rectangle, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
 import { EnemySpawner } from '../Spawn/SpawnEnemy';
-
+import Asset from "../../GameBuild/Asset";
+import { EventHandle } from "../../GameBuild/EventHandle";
 
 export class MapGame extends Container {
     private gridMap: number[][] = [
@@ -23,32 +24,31 @@ export class MapGame extends Container {
     ];
 
     private enemySpawn: EnemySpawner;
-    
+
     constructor() {
         super();
-        
+
         this.enemySpawn = new EnemySpawner(this.gridMap);
-        
-        this.init();   
+
+        this.init();
     }
 
-   async init() {
+    init() {
         this.width = 800;
         this.height = 600;
-        await this.LoadMap();
-        
-        this.addChild(this.enemySpawn); 
-           
+        this.LoadMap();
+
+        this.addChild(this.enemySpawn);
+
     }
-    update(delta:number){
+    update(delta: number) {
         this.enemySpawn.update(delta);
-       }
-    
-       async LoadMap() {
+    }
+
+    LoadMap() {
         const grap = new Graphics();
         const cellSize = GameConst.SQUARE_SIZE;
-        const map_texture =await Assets.load('./atlas/map_atlas.json');
-        console.log("nam duoi");
+
         for (let i = 0; i < this.gridMap.length; i++) {
             const y = i * cellSize;
             for (let j = 0; j < this.gridMap[i].length; j++) {
@@ -59,19 +59,19 @@ export class MapGame extends Container {
                 let texturemap: Texture;
                 switch (cellValue) {
                     case 0: // Cỏ
-                    texturemap = map_texture.textures['grass'];
+                        texturemap = Asset.getTexture('grass');
                         break;
                     case 1: // Đường
-                    texturemap = map_texture.textures['road'];
+                        texturemap = Asset.getTexture('road');
                         break;
                     case 2: // Tháp
-                    texturemap = map_texture.textures['tower1_1'];
+                        texturemap = Asset.getTexture('slot_tower');
                         break;
                     case 3: // Vật thể khác
-                    texturemap = map_texture.textures['road']
+                        texturemap = Asset.getTexture('road');
                         break;
                     default:
-                            texturemap = Texture.EMPTY; 
+                        texturemap = Texture.EMPTY;
                 }
                 const sprite = new Sprite(texturemap);
                 sprite.x = x;
@@ -79,9 +79,20 @@ export class MapGame extends Container {
                 sprite.width = cellSize;
                 sprite.height = cellSize;
 
-                this.addChild(sprite); 
+                if (cellValue === 2) {
+                    sprite.interactive = true;
+                    sprite.eventMode = 'static';
+                    sprite.on('pointerdown', () => this.onTowerSlotClicked(j, i)); 
+                }
+
+                this.addChild(sprite);
             }
         }
-        
+    }
+
+    onTowerSlotClicked(x: number, y: number) {
+        console.log(`Tower slot clicked at: (${x}, ${y})`);
+
+        EventHandle.emit('tower_slot_clicked', { x, y });
     }
 }

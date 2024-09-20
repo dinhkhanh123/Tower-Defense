@@ -1,6 +1,7 @@
 import { Container, Graphics, Sprite, Texture, Text, TextStyle, } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
 import { EventHandle } from "../../GameBuild/EventHandle";
+import Asset from "../../GameBuild/Asset";
 
 
 export class GameStart extends Container {
@@ -15,9 +16,7 @@ export class GameStart extends Container {
         this.height = GameConst.GAME_HEIGHT;
 
         //bacground
-        const background = new Sprite(Texture.from('background'));
-        background.scale.set(GameConst.GAME_WIDTH / background.width, GameConst.GAME_HEIGHT / background.height);
-        this.addChild(background);
+      
 
         // Create start button
         const startButton = new Graphics();
