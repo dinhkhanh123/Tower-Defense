@@ -7,10 +7,9 @@ export class ArcherTower extends Tower {
         const damage = 10;
         const range = 100;
         const attackSpeed = 1;
+        const towerDetail = "archer tower";
 
         // ID và loại tower là Archer
-        super(id, TowerType.Archer, damage, range, attackSpeed);
+        super(id, TowerType.Archer, damage, range, attackSpeed, towerDetail);
     }
-
-
 }

@@ -85,7 +85,7 @@ export class MapGame extends Container {
                 sprite.height = cellSize;
 
                 if (cellValue === 2) {
-                    // this.towerSlots.push({ x: j, y: i, hasTower: false });
+
                     sprite.eventMode = 'static';
                     sprite.interactive = true;
                     sprite.on('pointerdown', () => this.onTowerSlotClicked(j, i));

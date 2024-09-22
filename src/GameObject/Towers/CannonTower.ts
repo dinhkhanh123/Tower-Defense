@@ -7,8 +7,9 @@ export class CannonTower extends Tower {
         const damage = 5;
         const range = 120;
         const attackSpeed = 1.5;
+        const towerDetail = "canon tower";
 
-        // ID và loại tower là Mage
-        super(id, TowerType.Cannon, damage, range, attackSpeed);
+        // ID và loại tower là Mag
+        super(id, TowerType.Cannon, damage, range, attackSpeed, towerDetail);
     }
 }

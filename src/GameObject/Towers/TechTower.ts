@@ -8,8 +8,9 @@ export class TechTower extends Tower {
         const damage = 8;
         const range = 90;
         const attackSpeed = 2;
+        const towerDetail = "tech tower";
 
         // ID và loại tower là Tech
-        super(id, TowerType.Tech, damage, range, attackSpeed);
+        super(id, TowerType.Tech, damage, range, attackSpeed, towerDetail);
     }
 }
