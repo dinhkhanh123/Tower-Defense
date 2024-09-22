@@ -7,17 +7,16 @@ import { TowerType } from "../GameObject/Towers/TowerType";
 
 
 export class TowerFactory {
-    public static instance:TowerFactory;
-    private static nextId: number = 0; 
+    public static instance: TowerFactory;
+    private static nextId: number = 0;
 
-    constructor(){
+    constructor() {
         TowerFactory.instance = this;
     }
 
-    // Phương thức tạo tháp dựa trên loại TowerType
     public static createTower(type: TowerType): Tower {
         const id = this.nextId++;
-        
+
         switch (type) {
             case TowerType.Archer:
                 return new ArcherTower(id);

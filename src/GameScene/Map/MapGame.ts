@@ -3,8 +3,11 @@ import { GameConst } from "../../GameBuild/GameConst";
 import { EnemySpawner } from '../Spawn/SpawnEnemy';
 import Asset from "../../GameBuild/Asset";
 import { EventHandle } from "../../GameBuild/EventHandle";
+import { TowerController } from "../../Controller/TowerController";
+import { TowerType } from "../../GameObject/Towers/TowerType";
 
 export class MapGame extends Container {
+
     private gridMap: number[][] = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Hàng 1
         [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1], // Hàng 2
@@ -24,12 +27,14 @@ export class MapGame extends Container {
     ];
 
     private enemySpawn: EnemySpawner;
+    private towerController: TowerController;
 
+    private towerSlots: { x: number, y: number, hasTower: boolean }[] = [];
     constructor() {
         super();
 
         this.enemySpawn = new EnemySpawner(this.gridMap);
-
+        this.towerController = new TowerController(this);
         this.init();
     }
 
@@ -80,9 +85,10 @@ export class MapGame extends Container {
                 sprite.height = cellSize;
 
                 if (cellValue === 2) {
-                    sprite.interactive = true;
+                    // this.towerSlots.push({ x: j, y: i, hasTower: false });
                     sprite.eventMode = 'static';
-                    sprite.on('pointerdown', () => this.onTowerSlotClicked(j, i)); 
+                    sprite.interactive = true;
+                    sprite.on('pointerdown', () => this.onTowerSlotClicked(j, i));
                 }
 
                 this.addChild(sprite);
@@ -92,7 +98,6 @@ export class MapGame extends Container {
 
     onTowerSlotClicked(x: number, y: number) {
         console.log(`Tower slot clicked at: (${x}, ${y})`);
-
         EventHandle.emit('tower_slot_clicked', { x, y });
     }
 }
