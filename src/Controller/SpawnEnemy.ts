@@ -2,54 +2,55 @@ import { Container, Sprite, Texture, Point, Assets } from "pixi.js";
 import { Enemy } from "../GameObject/Enemies/Enemy";
 import { Pathfinding } from "../GameScene/Map/Pathfinding";
 import Asset from "../GameBuild/Asset";
+import { EnemyType } from "../GameObject/Enemies/EnemyType";
 
-export class EnemySpawner extends Container{
+export class EnemySpawner extends Container {
     private enemies: Enemy[] = [];
     private gridMap: number[][];
     private pathfinding: Pathfinding;
-    constructor(gridmap:number[][]){
+
+    private start: { x: number, y: number } = { x: 0, y: 2 }; // Start point
+    private goal: { x: number, y: number } = { x: 0, y: 13 }; // End point
+
+
+
+    constructor(gridmap: number[][]) {
         super();
         this.gridMap = gridmap;
         this.pathfinding = new Pathfinding(this.gridMap);
-
-        this.init();
+        this.spawnEnemy();
     }
 
-    init(){
-
-        const texture = Asset.getTexture('enemy1_1');
-        const start = { x: 0, y: 2}; 
-        const start2 = { x: 19, y: 2}; 
-        const goal = { x: 0, y: 13 }; 
-   
 
 
-        const path = this.pathfinding.bfs(start, goal); 
-        const path2 = this.pathfinding.bfs(start2, goal); 
+    spawnEnemy() {
 
-        if (path && path2) {
-            const enemy = new Enemy(1, texture, path);
-            enemy.sprite.position.set(start.x * 40 - 100 , start.y * 40);
-            enemy.sprite.anchor.set(0.5);
-            const enemy2 = new Enemy(2, texture, path2);
-            enemy2.sprite.position.set(start2.x * 40 + 100 , start2.y * 40);
-            enemy2.sprite.anchor.set(0.5);
+        // Tạo enemy và truyền pathfinding để tự tìm đường
+        const enemyType = EnemyType.Goblin;
+        const newEnemy = new Enemy(this.enemies.length + 1, enemyType, this.start, this.goal, this.pathfinding);
+        newEnemy.sprite.position.set(this.start.x * 40, this.start.y * 40);
+        newEnemy.sprite.anchor.set(0.5);
+        console.log(newEnemy);
+        // Thêm enemy vào danh sách và container
+        this.enemies.push(newEnemy);
+        this.addChild(newEnemy.sprite);
 
-            this.enemies.push(enemy);
-            this.enemies.push(enemy2);
 
-            this.addChild(enemy.sprite);
-            this.addChild(enemy2.sprite);
-        }
     }
 
-    update(delta:number){
+    update(delta: number) {
+        // Cập nhật tất cả các enemy
         this.enemies.forEach(enemy => {
             enemy.update(delta);
+
         });
+
+
     }
 
     public getEnemies(): Enemy[] {
         return this.enemies;
     }
+
+
 }
