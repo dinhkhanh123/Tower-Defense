@@ -5,31 +5,47 @@ import { ObjectPool } from "../ObjectPool/ObjectPool";
 import { GameConst } from "../GameBuild/GameConst";
 import { EventHandle } from "../GameBuild/EventHandle";
 import { BottomPanel } from "../GameScene/UIBottom/BottomPanel";
+import { Enemy } from "../GameObject/Enemies/Enemy";
+import { EnemySpawner } from "./SpawnEnemy";
 
 
 export class TowerController {
     public static instance: TowerController;
-    private towers: Tower[] = [];
     private map: Container;
+    private towers: Tower[] = [];
     private objectPool: ObjectPool;
+    private enemySpawner: EnemySpawner;
 
-    constructor(map: Container) {
+    constructor(map: Container,enemySpawner: EnemySpawner) {
         TowerController.instance = this;
         this.objectPool = new ObjectPool();
         this.map = map;
+        this.enemySpawner = enemySpawner;
     }
 
-    public createTower(type: TowerType, x: number, y: number) {
+    public createTower(type: TowerType,baseSprite:Sprite) {
         const tower = this.objectPool.getTowerFromPool(type);
-        tower.spriteTower.position.set(x * GameConst.SQUARE_SIZE, y * GameConst.SQUARE_SIZE);
+        baseSprite.removeAllListeners();
+        tower.baseTower = baseSprite;
+        tower.spriteTower.position = baseSprite.position;
         this.towers.push(tower);
 
-        tower.spriteTower.interactive = true;
-        tower.spriteTower.on('pointerdown', () => {
+        // const option = { sprite: tower.spriteTower, }
+        baseSprite.on('pointerdown', () => {
             EventHandle.emit('tower_clicked', tower);
             BottomPanel.instance.setVisibleSystem('infor');
         });
+
         this.map.addChild(tower.spriteTower);
     }
-
+    
+    public update(deltaTime: number){
+        this.towers.forEach(tower => {
+            this.enemySpawner.getEnemies().forEach(enemy => {
+                if (tower.isInRange(enemy)) {
+                    console.log('enemy'+`${tower.id}`);
+                }
+            });
+        });
+    }
 }

@@ -39,8 +39,8 @@ export class TowerInfor extends Container {
 
         this.addChild(towerInfor);
         this.addChild(closeTowerPan);
-        this.addChild(this.towerSprite); // Add sprite container
-        this.addChild(this.towerDetailText); // Add text container
+        this.addChild(this.towerSprite); 
+        this.addChild(this.towerDetailText); 
     }
 
     listenToEvents() {

@@ -2,7 +2,7 @@ import { Container } from "pixi.js";
 import { SkillSystem } from "./SkillSystem";
 import { TowerSystem } from "./TowerSystem";
 import { TowerInfor } from "./TowerInfor";
-import { Tower } from "../../GameObject/Towers/Tower";
+
 
 export class BottomPanel extends Container {
     public static instance: BottomPanel

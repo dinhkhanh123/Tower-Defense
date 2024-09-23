@@ -1,4 +1,4 @@
-import { Container, Graphics } from "pixi.js";
+import { Container, Graphics, Sprite } from 'pixi.js';
 import { Tower } from "../../GameObject/Towers/Tower";
 import { TowerFactory } from "../../TowerFactory/TowerFactory";
 import { TowerType } from "../../GameObject/Towers/TowerType";
@@ -7,8 +7,8 @@ import { EventHandle } from "../../GameBuild/EventHandle";
 import { BottomPanel } from "./BottomPanel";
 
 export class TowerSystem extends Container {
-
-    private posTower!: { x: number; y: number };
+    //private posTower!: { x: number; y: number };
+    private baseSprite!:Sprite;
     constructor() {
         super();
 
@@ -50,7 +50,7 @@ export class TowerSystem extends Container {
 
             towerSprite.on('pointerdown', () => {
                 const selectedTowerType = towers[i].type;
-                TowerController.instance.createTower(selectedTowerType, this.posTower.x, this.posTower.y);
+                TowerController.instance.createTower(selectedTowerType, this.baseSprite);
                 BottomPanel.instance.setVisibleSystem('skill');
             });
 
@@ -61,10 +61,10 @@ export class TowerSystem extends Container {
 
 
     listenToEvents() {
-        EventHandle.on('tower_slot_clicked', (data: { x: number; y: number }) => {
+        EventHandle.on('tower_slot_clicked', (data: {sprite:Sprite }) => {
             this.visible = true;
             BottomPanel.instance.setVisibleSystem('tower');
-            this.posTower = { x: data.x, y: data.y };
+            this.baseSprite = data.sprite;
         });
     }
 }

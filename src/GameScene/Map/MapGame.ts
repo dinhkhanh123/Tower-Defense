@@ -1,10 +1,10 @@
-import { Assets, Container, Graphics, Point, Rectangle, Sprite, Texture } from "pixi.js";
+import { Assets, Container, Graphics, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
-import { EnemySpawner } from '../Spawn/SpawnEnemy';
+import { EnemySpawner } from '../../Controller/SpawnEnemy';
 import Asset from "../../GameBuild/Asset";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { TowerController } from "../../Controller/TowerController";
-import { TowerType } from "../../GameObject/Towers/TowerType";
+
 
 export class MapGame extends Container {
 
@@ -28,13 +28,13 @@ export class MapGame extends Container {
 
     private enemySpawn: EnemySpawner;
     private towerController: TowerController;
+  
 
-    private towerSlots: { x: number, y: number, hasTower: boolean }[] = [];
     constructor() {
         super();
 
         this.enemySpawn = new EnemySpawner(this.gridMap);
-        this.towerController = new TowerController(this);
+        this.towerController = new TowerController(this,this.enemySpawn);
         this.init();
     }
 
@@ -46,8 +46,9 @@ export class MapGame extends Container {
         this.addChild(this.enemySpawn);
 
     }
-    update(delta: number) {
-        this.enemySpawn.update(delta);
+    update(deltaTime: number) {
+        this.enemySpawn.update(deltaTime);
+        this.towerController.update(deltaTime);
     }
 
     LoadMap() {
@@ -85,10 +86,10 @@ export class MapGame extends Container {
                 sprite.height = cellSize;
 
                 if (cellValue === 2) {
-
                     sprite.eventMode = 'static';
+                    sprite.cursor = 'pointer'
                     sprite.interactive = true;
-                    sprite.on('pointerdown', () => this.onTowerSlotClicked(j, i));
+                    sprite.on('pointerdown', () => this.onTowerSlotClicked(j, i,sprite));
                 }
 
                 this.addChild(sprite);
@@ -96,8 +97,8 @@ export class MapGame extends Container {
         }
     }
 
-    onTowerSlotClicked(x: number, y: number) {
+    onTowerSlotClicked(x: number, y: number,sprite:Sprite) {
         console.log(`Tower slot clicked at: (${x}, ${y})`);
-        EventHandle.emit('tower_slot_clicked', { x, y });
+        EventHandle.emit('tower_slot_clicked', {sprite});
     }
 }

@@ -1,4 +1,5 @@
 import { Point, Sprite, Texture } from "pixi.js";
+import { GameConst } from "../../GameBuild/GameConst";
 
 export class Enemy {
     private id: number;
@@ -24,8 +25,8 @@ export class Enemy {
     move(delta: number) {
         if (this.currentPathIndex < this.path.length) {
             const target = this.path[this.currentPathIndex];
-            const dx = target.x * 40 - this.sprite.x;
-            const dy = target.y * 40 - this.sprite.y;
+            const dx = target.x * GameConst.SQUARE_SIZE - this.sprite.x;
+            const dy = target.y * GameConst.SQUARE_SIZE - this.sprite.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist > 1) {
