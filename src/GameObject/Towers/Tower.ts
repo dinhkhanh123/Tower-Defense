@@ -34,4 +34,8 @@ export class Tower {
         );
         return distance <= this.range;
     }
+
+    public Attack(){
+        
+    }
 }
