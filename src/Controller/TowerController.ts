@@ -7,30 +7,37 @@ import { EventHandle } from "../GameBuild/EventHandle";
 import { BottomPanel } from "../GameScene/UIBottom/BottomPanel";
 import { Enemy } from "../GameObject/Enemies/Enemy";
 import { EnemySpawner } from "./SpawnEnemy";
-
+import { Projectile } from "../GameObject/Projectiles/Projectile";
+import Asset from "../GameBuild/Asset";
 
 export class TowerController {
     public static instance: TowerController;
     private map: Container;
     private towers: Tower[] = [];
+    private projectiles: Projectile[] = [];
     private objectPool: ObjectPool;
     private enemySpawner: EnemySpawner;
 
-    constructor(map: Container,enemySpawner: EnemySpawner) {
+    constructor(map: Container, enemySpawner: EnemySpawner) {
         TowerController.instance = this;
         this.objectPool = new ObjectPool();
         this.map = map;
         this.enemySpawner = enemySpawner;
+
+        // Lắng nghe sự kiện va chạm của viên đạn
+        EventHandle.on('projectile_hit', (projectile: Projectile) => {
+            this.handleProjectileHit(projectile);
+        });
     }
 
-    public createTower(type: TowerType,baseSprite:Sprite) {
+    public createTower(type: TowerType, baseSprite: Sprite) {
         const tower = this.objectPool.getTowerFromPool(type);
+
         baseSprite.removeAllListeners();
         tower.baseTower = baseSprite;
         tower.spriteTower.position = baseSprite.position;
         this.towers.push(tower);
 
-        // const option = { sprite: tower.spriteTower, }
         baseSprite.on('pointerdown', () => {
             EventHandle.emit('tower_clicked', tower);
             BottomPanel.instance.setVisibleSystem('infor');
@@ -38,14 +45,38 @@ export class TowerController {
 
         this.map.addChild(tower.spriteTower);
     }
-    
-    public update(deltaTime: number){
+
+    public addProjectile(projectile: Projectile) {
+        this.projectiles.push(projectile);
+        this.map.addChild(projectile.sprite);
+    }
+
+    public update(deltaTime: number) {
+        const currentTime = performance.now() / 1000;
+        // Cập nhật tất cả các tháp
         this.towers.forEach(tower => {
-            this.enemySpawner.getEnemies().forEach(enemy => {
-                if (tower.isInRange(enemy)) {
-                    console.log('enemy'+`${tower.id}`);
-                }
-            });
+            // Kiểm tra xem có kẻ địch nào trong tầm bắn
+            const enemies = this.enemySpawner.getEnemies().filter(enemy => tower.isInRange(enemy));
+
+            if (enemies.length > 0) {
+                // Tấn công kẻ địch đầu tiên trong tầm
+                tower.Attack(enemies[0], currentTime);
+            }
         });
+
+        // Cập nhật vị trí của các viên đạn
+        this.projectiles.forEach((projectile, index) => {
+            projectile.move(deltaTime);
+
+            // Nếu viên đạn đã "destroy", xóa nó khỏi mảng
+            if (projectile.sprite.destroyed) {
+                this.projectiles.splice(index, 1);
+            }
+        });
+    }
+
+    private handleProjectileHit(projectile: Projectile) {
+        // Xóa viên đạn khỏi mảng projectiles nếu nó đã va chạm
+        this.projectiles = this.projectiles.filter(p => p !== projectile);
     }
 }

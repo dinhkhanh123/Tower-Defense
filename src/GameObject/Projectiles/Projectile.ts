@@ -1,17 +1,23 @@
 import { Sprite } from "pixi.js";
 import { Enemy } from "../Enemies/Enemy";
+import { EventHandle } from "../../GameBuild/EventHandle";
 
 export class Projectile {
-    private sprite:Sprite;
+    public sprite: Sprite;
     private speed: number;
     private damage: number;
-    private target: Enemy;
+    private target!: Enemy;
 
-    constructor(sprite:Sprite,speed: number, damage: number, target: Enemy){
+    constructor(sprite: Sprite) {
         this.sprite = sprite;
+        this.speed = 0;
+        this.damage = 0;
+    }
+
+    public setTarget(target: Enemy, speed: number, damage: number) {
+        this.target = target;
         this.speed = speed;
         this.damage = damage;
-        this.target = target;
     }
 
     public move(delta: number) {
@@ -29,10 +35,14 @@ export class Projectile {
         }
     }
 
-     // Xử lý khi viên đạn chạm vào mục tiêu
-     private hitTarget() {
+    // Xử lý khi viên đạn chạm vào mục tiêu
+    private hitTarget() {
         // Gây sát thương cho mục tiêu
         this.target.takeDamage(this.damage);
+        
+        // Gửi sự kiện va chạm
+        EventHandle.emit('projectile_hit', this);
+
         // Hủy viên đạn (có thể remove khỏi scene và array)
         this.destroy();
     }
@@ -41,5 +51,6 @@ export class Projectile {
     public destroy() {
         // Logic xóa viên đạn khỏi map hoặc object pool
         this.sprite.destroy();
+        // Có thể thêm logic để trả viên đạn về object pool nếu cần
     }
 }
