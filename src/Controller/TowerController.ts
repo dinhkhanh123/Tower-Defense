@@ -18,6 +18,7 @@ export class TowerController {
     private objectPool: ObjectPool;
     private enemySpawner: EnemySpawner;
 
+
     constructor(map: Container, enemySpawner: EnemySpawner) {
         TowerController.instance = this;
         this.objectPool = new ObjectPool();
@@ -65,8 +66,11 @@ export class TowerController {
             projectile.move(deltaTime);
 
             // Nếu viên đạn đã "destroy", xóa nó khỏi mảng
-            if (projectile.sprite.destroyed) {
+            if (!projectile.sprite.visible) {
                 this.projectiles.splice(index, 1);
+
+                // Remove khỏi map (màn hình)
+                this.map.removeChild(projectile.sprite);
             }
         });
     }

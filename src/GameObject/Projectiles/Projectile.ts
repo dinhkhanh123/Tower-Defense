@@ -9,9 +9,9 @@ export class Projectile {
     private speed: number;
     private damage: number;
     private target!: Enemy;
-    private type:TowerType;
+    private type: TowerType;
 
-    constructor(sprite: Sprite,towerType:TowerType) {
+    constructor(sprite: Sprite, towerType: TowerType) {
         this.sprite = sprite;
         this.type = towerType;
         this.speed = 0;
@@ -43,16 +43,11 @@ export class Projectile {
     private hitTarget() {
         // Gây sát thương cho mục tiêu
         this.target.takeDamage(this.damage);
- 
-        // Hủy viên đạn (có thể remove khỏi scene và array)
-        this.destroy();
+
+        ObjectPool.instance.returnProjectileToPool(this.type, this);
+
+        // Remove đạn khỏi màn hình
+        this.sprite.visible = false;
     }
 
-    // Hủy viên đạn
-    public destroy() {
-        // Logic xóa viên đạn khỏi map hoặc object pool
-        //ObjectPool.instance.returnProjectileToPool(this.type,this);
-        this.sprite.destroy();
-    }
-       
 }
