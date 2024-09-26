@@ -24,10 +24,6 @@ export class TowerController {
         this.map = map;
         this.enemySpawner = enemySpawner;
 
-        // Lắng nghe sự kiện va chạm của viên đạn
-        EventHandle.on('projectile_hit', (projectile: Projectile) => {
-            this.handleProjectileHit(projectile);
-        });
     }
 
     public createTower(type: TowerType, baseSprite: Sprite) {
@@ -75,8 +71,5 @@ export class TowerController {
         });
     }
 
-    private handleProjectileHit(projectile: Projectile) {
-        // Xóa viên đạn khỏi mảng projectiles nếu nó đã va chạm
-        this.projectiles = this.projectiles.filter(p => p !== projectile);
-    }
+
 }

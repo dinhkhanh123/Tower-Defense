@@ -48,7 +48,7 @@ export class ObjectPool {
         //const sprite = new Sprite(Asset.getTexture(`Projectile_${towerType}`)); // Texture tùy vào loại tháp
         const sprite = new Sprite(Asset.getTexture('slot_tower')); 
 
-        return new Projectile(sprite);
+        return new Projectile(sprite,towerType);
     }
 
         // Hàm lấy Projectile từ pool

@@ -21,7 +21,7 @@ export class Enemy {
         this.id = id;
         this.sprite = new Sprite(Asset.getTexture('Goblin'));
         this.hp = 100;
-        this.speed = 2;
+        this.speed = 1;
         this.damage = 10;
         this.isAlive = true;
         this.currentPosition = pointStart;
@@ -40,9 +40,9 @@ export class Enemy {
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist > 1) {
-                const angle = Math.atan2(dy, dx);
+               // const angle = Math.atan2(dy, dx);
 
-                this.sprite.rotation = angle;
+              //  this.sprite.rotation = angle;
 
                 // this.updateTexture(dx, dy);
 

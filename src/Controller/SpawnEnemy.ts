@@ -24,7 +24,7 @@ export class EnemySpawner extends Container {
         this.gridMap = gridmap;
         this.pathfinding = new Pathfinding(this.gridMap);
  
-        this.spawnEnemy(this.spawnPoints[1]);
+        this.spawnEnemy(this.spawnPoints[0]);
         // this.spawnEnemy(this.spawnPoints[1]);
         
     }

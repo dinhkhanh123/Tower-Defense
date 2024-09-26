@@ -33,7 +33,7 @@ export class Tower {
         this.towerDetail = towerDetail;
         this.level = 1;
 
-        this.cooldownTime = 1 / this.attackSpeed; // seconds between attacks
+        this.cooldownTime = .5 / this.attackSpeed; 
         this.lastAttackTime = 0;
     }
 
@@ -47,7 +47,7 @@ export class Tower {
             // Add projectile to TowerController
             TowerController.instance.addProjectile(projectile);
 
-            // Update last attack time
+
             this.lastAttackTime = currentTime;
         }
    
