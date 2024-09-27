@@ -17,9 +17,10 @@ export class Tower {
     public towerDetail: string;
     public level: number;
     public baseTower!:Sprite;
+    public target:Enemy[] = [];
  
 
-    private cooldownTime: number; // Time in seconds between shots
+    private cooldownTime: number; 
     private lastAttackTime: number; 
 
     constructor(id: number, type: TowerType, damage: number, range: number, attackSpeed: number, towerDetail: string) {
@@ -39,18 +40,19 @@ export class Tower {
 
     public Attack(enemy:Enemy, currentTime: number){
         if (currentTime - this.lastAttackTime >= this.cooldownTime) {
-            // Get projectile from the pool
+           
             const projectile = ObjectPool.instance.getProjectileFromPool(this.type);
             projectile.sprite.position.set(this.spriteTower.x, this.spriteTower.y);
-            projectile.setTarget(enemy, this.attackSpeed * 5, this.damage);
+            // truyen id cua ene vao trong method set target
+            // truyen vi tri dong cua ene
+            // truyen them vi tri hien tai tinh cua tower
+          //  projectile.setTarget(enemy, this.attackSpeed * 5, this.damage);
 
             // Add projectile to TowerController
-            TowerController.instance.addProjectile(projectile);
+           // TowerController.instance.addProjectile(projectile);
 
-
-            this.lastAttackTime = currentTime;
+           // this.lastAttackTime = currentTime;
         }
-   
     }
 
     public isInRange(enemy: Enemy): boolean {

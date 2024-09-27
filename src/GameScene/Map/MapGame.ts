@@ -47,7 +47,8 @@ export class MapGame extends Container {
 
     }
     update(deltaTime: number) {
-        this.enemySpawn.update(deltaTime);
+        const currentTime = performance.now() / 1000;
+        this.enemySpawn.update(deltaTime,currentTime);
         this.towerController.update(deltaTime);
     }
 

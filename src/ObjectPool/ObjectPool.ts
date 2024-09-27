@@ -2,13 +2,16 @@ import { Sprite } from "pixi.js";
 import { Projectile } from "../GameObject/Projectiles/Projectile";
 import { Tower } from "../GameObject/Towers/Tower";
 import { TowerType } from "../GameObject/Towers/TowerType";
-import { TowerFactory } from "../TowerFactory/TowerFactory";
+import { TowerFactory } from '../TowerFactory/TowerFactory';
 import Asset from "../GameBuild/Asset";
+import { Enemy } from "../GameObject/Enemies/Enemy";
+import { EnemyType } from "../GameObject/Enemies/EnemyType";
 
 export class ObjectPool {
     public static instance: ObjectPool;
     private _towerPool: { [towerType: string]: Tower[] } = {};
     private _projectilePool: { [towerType: string]: Projectile[] } = {};
+    private _enemyPool: { [enemyType: string]: Enemy[] } = {};
 
     constructor() {
         ObjectPool.instance = this;
@@ -23,10 +26,19 @@ export class ObjectPool {
 
             this._projectilePool[towerType] = [];
             for (let i = 0; i < 5; i++) {
-                const projectile = this.createProjectile(towerType);
+                const projectile = TowerFactory.createProjectile(towerType);
                 this._projectilePool[towerType].push(projectile);
             }
         });
+
+        Object.values(EnemyType).forEach((enemyType)=>{
+            this._enemyPool[enemyType] = [];
+            for(let i = 0; i < 5; i++){
+                const enemy = TowerFactory.createEnemy(enemyType);
+                this._enemyPool[enemyType].push(enemy);
+            }
+        });
+
     }
 
     public getTowerFromPool(towerType: TowerType): Tower {
@@ -42,19 +54,25 @@ export class ObjectPool {
         this._towerPool[towerType].push(tower);
     }
 
-    // Hàm tạo viên đạn dựa trên loại tháp
-    private createProjectile(towerType: TowerType): Projectile {
-        // Tạo viên đạn với texture hoặc thuộc tính khác nhau tùy theo loại tháp
-        //const sprite = new Sprite(Asset.getTexture(`Projectile_${towerType}`)); // Texture tùy vào loại tháp
-        const sprite = new Sprite(Asset.getTexture('slot_tower'));
-
-        return new Projectile(sprite, towerType);
+    // Hàm lấy Enemy từ pool
+    public getEnemyFromPool(enemyType: EnemyType): Enemy {
+        if (this._enemyPool[enemyType]?.length <= 0) {
+            const enemy = TowerFactory.createEnemy(enemyType);
+            return enemy;
+        } else {
+            return this._enemyPool[enemyType].pop() as Enemy;
+        }
     }
 
-    // Hàm lấy Projectile từ pool
+    // Hàm trả Enemy về pool
+    public returnEnemyToPool(enemyType: EnemyType, enemy: Enemy) {
+        this._enemyPool[enemyType].push(enemy);
+    }
+
+   // Hàm lấy Projectile từ pool
     public getProjectileFromPool(towerType: TowerType): Projectile {
         if (this._projectilePool[towerType] ?.length <= 0) {
-            return this.createProjectile(towerType);
+            return TowerFactory.createProjectile(towerType);
         } else {
             return this._projectilePool[towerType].pop() as Projectile;
         }

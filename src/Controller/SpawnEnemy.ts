@@ -4,12 +4,14 @@ import { Pathfinding } from "../GameScene/Map/Pathfinding";
 import Asset from "../GameBuild/Asset";
 import { EnemyType } from "../GameObject/Enemies/EnemyType";
 import { GameConst } from "../GameBuild/GameConst";
+import { ObjectPool } from "../ObjectPool/ObjectPool";
 
 export class EnemySpawner extends Container {
-    private enemies: Enemy[] = [];
     private gridMap: number[][];
     private pathfinding: Pathfinding;
-    private spawnInterval: number = 500;
+    private enemies: Enemy[] = [];
+    private spawnInterval: number = 5;
+    private lastSpawnTime: number = 0;
 
     private spawnPoints: { x: number, y: number }[] = [
         { x: 0, y: 2 },
@@ -17,48 +19,46 @@ export class EnemySpawner extends Container {
     ];
     private goal: { x: number, y: number } = { x: 0, y: 13 };
 
-
-
     constructor(gridmap: number[][]) {
         super();
         this.gridMap = gridmap;
         this.pathfinding = new Pathfinding(this.gridMap);
 
-        this.spawnEnemy(this.spawnPoints[0]);
-        this.spawnEnemy(this.spawnPoints[1]);
-
     }
 
+    spawnEnemy() {
+        const spawnPoint = this.spawnPoints[0];
 
-
-    spawnEnemy(startPoint: { x: number, y: number }) {
-
-        // Tạo enemy và truyền pathfinding để tự tìm đường
         const enemyType = EnemyType.Goblin;
-        const newEnemy = new Enemy(this.enemies.length + 1, enemyType, startPoint, this.goal, this.pathfinding);
+        const enemy = ObjectPool.instance.getEnemyFromPool(enemyType);
 
-        newEnemy.sprite.position.set(startPoint.x * GameConst.SQUARE_SIZE, startPoint.y * GameConst.SQUARE_SIZE);
+        enemy.sprite.x = spawnPoint.x * GameConst.SQUARE_SIZE;
+        enemy.sprite.y = spawnPoint.y * GameConst.SQUARE_SIZE;
 
-        newEnemy.sprite.anchor.set(0.5);
+        enemy.setPosition(spawnPoint, this.goal, this.pathfinding);
 
-        // Thêm enemy vào danh sách và container
-        this.enemies.push(newEnemy);
-        this.addChild(newEnemy.sprite);
+        this.enemies.push(enemy);
+
+        this.addChild(enemy.sprite);
     }
 
-    update(delta: number) {
-        // Cập nhật tất cả các enemy
-        this.enemies.forEach(enemy => {
-            enemy.update(delta);
+    update(delta: number,currentTime: number) {
+    // Kiểm tra nếu đã đủ thời gian để spawn một kẻ địch mới
+    if (currentTime - this.lastSpawnTime > this.spawnInterval) {
+        this.spawnEnemy();
+        this.lastSpawnTime = currentTime; // Cập nhật thời gian spawn cuối cùng
+    }
 
-        });
+    // Cập nhật tất cả các enemy
+    this.enemies.forEach(enemy => {
+        enemy.update(delta);
+    });
 
-
+    // Loại bỏ các enemy đã chết
+    this.enemies = this.enemies.filter(enemy => enemy.isAlive);
     }
 
     public getEnemies(): Enemy[] {
         return this.enemies;
     }
-
-
 }

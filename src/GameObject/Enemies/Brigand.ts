@@ -1,12 +1,12 @@
 import { Enemy } from "./Enemy";
 import { EnemyType } from "./EnemyType";
 
-export class Goblin extends Enemy{
+export class Brigand extends Enemy{
     constructor(id:number){
-        const hp = 10;
-        const speed = 2;
+        const hp = 25;
+        const speed = 3;
         const damage = 5;
 
-        super(id,EnemyType.Goblin,hp,speed,damage);
+        super(id,EnemyType.Brigand,hp,speed,damage);
     }
 }

@@ -14,17 +14,14 @@ export class TowerController {
     public static instance: TowerController;
     private map: Container;
     private towers: Tower[] = [];
-    private projectiles: Projectile[] = [];
     private objectPool: ObjectPool;
     private enemySpawner: EnemySpawner;
-
 
     constructor(map: Container, enemySpawner: EnemySpawner) {
         TowerController.instance = this;
         this.objectPool = new ObjectPool();
         this.map = map;
         this.enemySpawner = enemySpawner;
-
     }
 
     public createTower(type: TowerType, baseSprite: Sprite) {
@@ -43,37 +40,43 @@ export class TowerController {
         this.map.addChild(tower.spriteTower);
     }
 
-    public addProjectile(projectile: Projectile) {
-        this.projectiles.push(projectile);
-        this.map.addChild(projectile.sprite);
-    }
-
     public update(deltaTime: number) {
         const currentTime = performance.now() / 1000;
         // Cập nhật tất cả các tháp
         this.towers.forEach(tower => {
             // Kiểm tra xem có kẻ địch nào trong tầm bắn
-            const enemies = this.enemySpawner.getEnemies().filter(enemy => tower.isInRange(enemy));
+            const enemiesInRange  = this.enemySpawner.getEnemies().filter(enemy => tower.isInRange(enemy));
 
-            if (enemies.length > 0) {
-                // Tấn công kẻ địch đầu tiên trong tầm
-                tower.Attack(enemies[0], currentTime);
-            }
+            enemiesInRange.forEach(enemy => {
+                if(!tower.target.includes(enemy)){
+                    tower.target.push(enemy);
+                }
+            });
+
+            if(tower.target.length > 0){
+                let currentTarget = tower.target[0];
+                if(!tower.isInRange(currentTarget)){
+                    tower.target.shift();
+                }else{
+                    tower.Attack(currentTarget,currentTime);
+                }
+            }      
         });
 
-        // Cập nhật vị trí của các viên đạn
-        this.projectiles.forEach((projectile, index) => {
-            projectile.move(deltaTime);
+         // public addProjectile(projectile: Projectile) {
+    //     this.projectiles.push(projectile);
+    //     this.map.addChild(projectile.sprite);
+    // }
 
-            // Nếu viên đạn đã "destroy", xóa nó khỏi mảng
-            if (!projectile.sprite.visible) {
-                this.projectiles.splice(index, 1);
+        // // Cập nhật vị trí của các viên đạn
+        // this.projectiles.forEach((projectile, index) => {
+        //     projectile.move(deltaTime);
+            
+        //     if (!projectile.sprite.visible) {
+        //         this.projectiles.splice(index, 1);
 
-                // Remove khỏi map (màn hình)
-                this.map.removeChild(projectile.sprite);
-            }
-        });
+        //         this.map.removeChild(projectile.sprite);
+        //     }
+        // });
     }
-
-
 }

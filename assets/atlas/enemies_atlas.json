@@ -1,6 +1,6 @@
 {
   "frames": {
-    "Goblin": {
+    "enemy1_1": {
       "frame": {
         "x": 2,
         "y": 2,
@@ -47,6 +47,126 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    "Bandit": {
+      "frame": {
+        "x": 70,
+        "y": 2,
+        "w": 20,
+        "h": 30
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 20,
+        "h": 30
+      },
+      "sourceSize": {
+        "w": 20,
+        "h": 30
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Goblin": {
+      "frame": {
+        "x": 70,
+        "y": 36,
+        "w": 20,
+        "h": 30
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 20,
+        "h": 30
+      },
+      "sourceSize": {
+        "w": 20,
+        "h": 30
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Ogre": {
+      "frame": {
+        "x": 70,
+        "y": 70,
+        "w": 20,
+        "h": 30
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 20,
+        "h": 30
+      },
+      "sourceSize": {
+        "w": 20,
+        "h": 30
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Brigand": {
+      "frame": {
+        "x": 94,
+        "y": 2,
+        "w": 20,
+        "h": 29
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 1,
+        "w": 20,
+        "h": 29
+      },
+      "sourceSize": {
+        "w": 20,
+        "h": 30
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Shaman": {
+      "frame": {
+        "x": 94,
+        "y": 35,
+        "w": 20,
+        "h": 29
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 1,
+        "w": 20,
+        "h": 29
+      },
+      "sourceSize": {
+        "w": 20,
+        "h": 30
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   },
   "meta": {
@@ -55,7 +175,7 @@
     "image": "enemies_atlas.png",
     "format": "RGBA8888",
     "size": {
-      "w": 68,
+      "w": 116,
       "h": 102
     },
     "scale": 1

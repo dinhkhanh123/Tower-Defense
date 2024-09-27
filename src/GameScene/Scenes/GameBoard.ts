@@ -27,5 +27,4 @@ export class GameBoard extends Container {
     update(time:number){
         this.mapGame.update(time);
     }
-
 }

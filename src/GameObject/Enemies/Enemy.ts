@@ -1,4 +1,4 @@
-import { Point, Sprite, Texture } from "pixi.js";
+import { Point, PointData, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
 import { EnemyType } from "./EnemyType";
 import Asset from "../../GameBuild/Asset";
@@ -7,23 +7,28 @@ import { Pathfinding } from "../../GameScene/Map/Pathfinding";
 export class Enemy {
     private id: number;
     public sprite: Sprite;
-    private hp: number;
-    private speed: number;
-    private damage: number;
-    private isAlive: boolean;
-    private currentPosition: { x: number, y: number };
-    private goalPosition: { x: number, y: number };
-    private pathfinding: Pathfinding;
+    private _hp: number;
+    private _speed: number;
+    private _damage: number;
+    public isAlive: boolean;
+    public position: PointData;
+    private currentPosition!: { x: number, y: number };
+    private goalPosition!: { x: number, y: number };
+    private pathfinding!: Pathfinding;
     private currentPathIndex: number = 0;
 
 
-    constructor(id: number, type: EnemyType, pointStart: { x: number, y: number }, pointEnd: { x: number, y: number }, pathfinding: Pathfinding) {
+    constructor(id: number, type: EnemyType,hp:number,speed:number,damage:number) {
         this.id = id;
-        this.sprite = new Sprite(Asset.getTexture('Goblin'));
-        this.hp = 100;
-        this.speed = 1;
-        this.damage = 10;
+        this.sprite = new Sprite(Asset.getTexture(type));
+        this._hp = hp;
+        this._speed = speed;
+        this._damage = damage;
         this.isAlive = true;
+        this.position = { x: this.sprite.x, y: this.sprite.y };
+    }
+
+    setPosition(pointStart: { x: number, y: number }, pointEnd: { x: number, y: number },pathfinding: Pathfinding){
         this.currentPosition = pointStart;
         this.goalPosition = pointEnd;
         this.pathfinding = pathfinding;
@@ -40,58 +45,35 @@ export class Enemy {
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist > 1) {
-               // const angle = Math.atan2(dy, dx);
-
-              //  this.sprite.rotation = angle;
-
-                // this.updateTexture(dx, dy);
-
-                this.sprite.x += (dx / dist) * this.speed * delta;
-                this.sprite.y += (dy / dist) * this.speed * delta;
+                this.sprite.x += (dx / dist) * this._speed * delta;
+                this.sprite.y += (dy / dist) * this._speed * delta;
             } else {
                 this.currentPathIndex++;
             }
         }
-        // Nếu tìm thấy đường đi
-        // if (path && this.currentPathIndex < path.length) {
 
-        //     const nextPoint = path[this.currentPathIndex];
-
-        //     // Di chuyển enemy về phía điểm tiếp theo
-        //     const dx = nextPoint.x * 40 - this.sprite.x;
-        //     const dy = nextPoint.y * 40 - this.sprite.y;
-        //     const distance = Math.sqrt(dx * dx + dy * dy);
-
-        //     // Di chuyển theo trục x và y dựa trên khoảng cách
-        //     if (distance > 0) {
-        //         this.sprite.x += (dx / distance) * this.speed * delta;
-        //         this.sprite.y += (dy / distance) * this.speed * delta;
-
-        //         // Nếu enemy đã gần tới điểm tiếp theo, chuyển sang điểm tiếp theo trong path
-        //         if (distance < this.speed * delta) {
-        //             this.currentPathIndex++;
-        //             this.currentPosition = nextPoint; // Cập nhật vị trí hiện tại của enemy
-        //         }
-        //     }
-        // }
     }
+
+    public getUpdatePositionEnemy(): PointData {
+        this.position = { x: this.sprite.x, y: this.sprite.y };
+        return this.position;
+    }
+
     update(delta: number) {
         this.move(delta);
     }
 
     takeDamage(damage: number) {
-        this.hp -= damage;
-        if (this.hp <= 0) {
-            this.hp = 0;
+        this._hp -= damage;
+        if (this._hp <= 0) {
+            this._hp = 0;
             this.isAlive = false;
             this.die();
         }
     }
 
-
     die() {
-        //  console.log(`Enemy ${this.id} has been killed.`);
-        // Thêm logic như xóa enemy khỏi game, hiển thị hiệu ứng, v.v.
+       // return to pool
     }
 
     updateTexture(dx: number, dy: number) {
@@ -107,8 +89,6 @@ export class Enemy {
         //     this.sprite = new Sprite(Texture.from('enemy1'));
         // }
     }
-
-
 
     // Kiểm tra nếu kẻ thù đã đến cuối lộ trình
     // hasReachedEnd(): boolean {

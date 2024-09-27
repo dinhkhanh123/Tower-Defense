@@ -4,7 +4,7 @@ import { Texture } from 'pixi.js';
 
 export class ArcherTower extends Tower {
     constructor(id: number) {
-        const damage = 10;
+        const damage = 5;
         const range = 100;
         const attackSpeed = 1;
         const towerDetail = "archer tower";
