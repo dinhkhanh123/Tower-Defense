@@ -1,10 +1,12 @@
-import { Point, Sprite, Texture } from "pixi.js";
+import { Point, PointData, Sprite, Texture } from "pixi.js";
 import { TowerType } from "./TowerType";
 import Asset from "../../GameBuild/Asset";
 import { Enemy } from "../Enemies/Enemy";
 import { Projectile } from "../Projectiles/Projectile";
 import { TowerController } from "../../Controller/TowerController";
 import { ObjectPool } from "../../ObjectPool/ObjectPool";
+import { ProjectileController } from "../../Controller/ProjectileController";
+import { EventHandle } from "../../GameBuild/EventHandle";
 
 export class Tower {
     public id: number;
@@ -16,12 +18,12 @@ export class Tower {
     public attackSpeed: number;
     public towerDetail: string;
     public level: number;
-    public baseTower!:Sprite;
-    public target:Enemy[] = [];
- 
+    public baseTower!: Sprite;
+    public target: Enemy[] = [];
 
-    private cooldownTime: number; 
-    private lastAttackTime: number; 
+
+    private cooldownTime: number;
+    private lastAttackTime: number;
 
     constructor(id: number, type: TowerType, damage: number, range: number, attackSpeed: number, towerDetail: string) {
         this.id = id;
@@ -34,31 +36,21 @@ export class Tower {
         this.towerDetail = towerDetail;
         this.level = 1;
 
-        this.cooldownTime = .5 / this.attackSpeed; 
+        this.cooldownTime = .5 / this.attackSpeed;
         this.lastAttackTime = 0;
     }
 
-    public Attack(enemy:Enemy, currentTime: number){
+    public Attack(enemyId: number, enemyPosition: PointData, currentTime: number) {
         if (currentTime - this.lastAttackTime >= this.cooldownTime) {
-           
-            const projectile = ObjectPool.instance.getProjectileFromPool(this.type);
-            projectile.sprite.position.set(this.spriteTower.x, this.spriteTower.y);
-            // truyen id cua ene vao trong method set target
-            // truyen vi tri dong cua ene
-            // truyen them vi tri hien tai tinh cua tower
-          //  projectile.setTarget(enemy, this.attackSpeed * 5, this.damage);
-
-            // Add projectile to TowerController
-           // TowerController.instance.addProjectile(projectile);
-
-           // this.lastAttackTime = currentTime;
+            EventHandle.emit('create_projectile', this, enemyId, enemyPosition);
+            this.lastAttackTime = currentTime;
         }
     }
 
-    public isInRange(enemy: Enemy): boolean {
+    public isInRange(enemyPosition: PointData): boolean {
         const distance = Math.sqrt(
-            Math.pow(enemy.sprite.x - this.spriteTower.x, 2) + 
-            Math.pow(enemy.sprite.y - this.spriteTower.y, 2)
+            Math.pow(enemyPosition.x - this.spriteTower.x, 2) +
+            Math.pow(enemyPosition.y - this.spriteTower.y, 2)
         );
         return distance <= this.range;
     }

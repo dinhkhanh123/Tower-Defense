@@ -4,6 +4,7 @@ import { EnemySpawner } from '../../Controller/SpawnEnemy';
 import Asset from "../../GameBuild/Asset";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { TowerController } from "../../Controller/TowerController";
+import { ProjectileController } from "../../Controller/ProjectileController";
 
 
 export class MapGame extends Container {
@@ -28,14 +29,24 @@ export class MapGame extends Container {
 
     private enemySpawn: EnemySpawner;
     private towerController: TowerController;
-  
+    private projectileController: ProjectileController;
+    private spawnPoints: { x: number, y: number }[] = [
+        { x: 0, y: 2 },
+        { x: 2, y: 2 }
+    ];
+
+    private goal: { x: number, y: number } = { x: 0, y: 13 };
+
 
     constructor() {
         super();
 
         this.enemySpawn = new EnemySpawner(this.gridMap);
-        this.towerController = new TowerController(this,this.enemySpawn);
+        this.towerController = new TowerController(this, this.enemySpawn);
+        this.projectileController = new ProjectileController(this);
         this.init();
+        this.SpawnEnemy();
+
     }
 
     init() {
@@ -48,8 +59,29 @@ export class MapGame extends Container {
     }
     update(deltaTime: number) {
         const currentTime = performance.now() / 1000;
-        this.enemySpawn.update(deltaTime,currentTime);
+        this.enemySpawn.update(deltaTime, currentTime);
         this.towerController.update(deltaTime);
+        this.projectileController.update(deltaTime);
+    }
+
+    SpawnEnemy() {
+        const enemiesPerWave = 5;
+        const startSpawn = new Sprite(Asset.getTexture('slot_tower'));
+        startSpawn.position.x = this.spawnPoints[0].x * GameConst.SQUARE_SIZE;
+        startSpawn.position.y = this.spawnPoints[0].y * GameConst.SQUARE_SIZE;
+
+        startSpawn.eventMode = 'static';
+        startSpawn.cursor = 'pointer';
+        startSpawn.interactive = true;
+
+        startSpawn.on('pointerdown', () => this.startSpawn(this.spawnPoints[0], this.goal, enemiesPerWave));
+
+        this.addChild(startSpawn);
+    }
+
+    startSpawn(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, enemiesPerWave: number) {
+        EventHandle.emit('startSpawn', spawnPoint, goal, enemiesPerWave);
+        console.log(spawnPoint, goal, enemiesPerWave);
     }
 
     LoadMap() {
@@ -90,7 +122,7 @@ export class MapGame extends Container {
                     sprite.eventMode = 'static';
                     sprite.cursor = 'pointer'
                     sprite.interactive = true;
-                    sprite.on('pointerdown', () => this.onTowerSlotClicked(j, i,sprite));
+                    sprite.on('pointerdown', () => this.onTowerSlotClicked(j, i, sprite));
                 }
 
                 this.addChild(sprite);
@@ -98,8 +130,11 @@ export class MapGame extends Container {
         }
     }
 
-    onTowerSlotClicked(x: number, y: number,sprite:Sprite) {
+
+
+    onTowerSlotClicked(x: number, y: number, sprite: Sprite) {
         console.log(`Tower slot clicked at: (${x}, ${y})`);
-        EventHandle.emit('tower_slot_clicked', {sprite});
+        EventHandle.emit('tower_slot_clicked', { sprite });
     }
+
 }

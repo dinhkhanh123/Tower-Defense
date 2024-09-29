@@ -3,10 +3,15 @@ import { GameConst } from "../../GameBuild/GameConst";
 import { EnemyType } from "./EnemyType";
 import Asset from "../../GameBuild/Asset";
 import { Pathfinding } from "../../GameScene/Map/Pathfinding";
+import { EventHandle } from "../../GameBuild/EventHandle";
+import { Projectile } from "../Projectiles/Projectile";
+import { TowerType } from "../Towers/TowerType";
+import { ObjectPool } from "../../ObjectPool/ObjectPool";
 
 export class Enemy {
-    private id: number;
+    public id: number;
     public sprite: Sprite;
+    public type: EnemyType;
     private _hp: number;
     private _speed: number;
     private _damage: number;
@@ -18,17 +23,20 @@ export class Enemy {
     private currentPathIndex: number = 0;
 
 
-    constructor(id: number, type: EnemyType,hp:number,speed:number,damage:number) {
+    constructor(id: number, type: EnemyType, hp: number, speed: number, damage: number) {
         this.id = id;
+        this.type = type;
         this.sprite = new Sprite(Asset.getTexture(type));
         this._hp = hp;
         this._speed = speed;
         this._damage = damage;
         this.isAlive = true;
         this.position = { x: this.sprite.x, y: this.sprite.y };
+
+        this.listenEventHandle();
     }
 
-    setPosition(pointStart: { x: number, y: number }, pointEnd: { x: number, y: number },pathfinding: Pathfinding){
+    setPosition(pointStart: { x: number, y: number }, pointEnd: { x: number, y: number }, pathfinding: Pathfinding) {
         this.currentPosition = pointStart;
         this.goalPosition = pointEnd;
         this.pathfinding = pathfinding;
@@ -63,17 +71,22 @@ export class Enemy {
         this.move(delta);
     }
 
-    takeDamage(damage: number) {
+    takeDamage(id: number, damage: number) {
         this._hp -= damage;
         if (this._hp <= 0) {
             this._hp = 0;
             this.isAlive = false;
-            this.die();
+
+
         }
     }
 
-    die() {
-       // return to pool
+
+
+    listenEventHandle() {
+        EventHandle.on('projectile_hit', (towerType: TowerType, projectile: Projectile, idEnemy: number) => {
+            this.takeDamage(idEnemy, projectile.damage);
+        });
     }
 
     updateTexture(dx: number, dy: number) {

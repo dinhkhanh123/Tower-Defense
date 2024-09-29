@@ -45,38 +45,24 @@ export class TowerController {
         // Cập nhật tất cả các tháp
         this.towers.forEach(tower => {
             // Kiểm tra xem có kẻ địch nào trong tầm bắn
-            const enemiesInRange  = this.enemySpawner.getEnemies().filter(enemy => tower.isInRange(enemy));
+            const enemiesInRange = this.enemySpawner.getEnemies().filter(enemy =>
+                tower.isInRange(enemy.getUpdatePositionEnemy())
+            );
 
             enemiesInRange.forEach(enemy => {
-                if(!tower.target.includes(enemy)){
+                if (!tower.target.includes(enemy)) {
                     tower.target.push(enemy);
                 }
             });
 
-            if(tower.target.length > 0){
+            if (tower.target.length > 0) {
                 let currentTarget = tower.target[0];
-                if(!tower.isInRange(currentTarget)){
+                if (!tower.isInRange(currentTarget.getUpdatePositionEnemy())) {
                     tower.target.shift();
-                }else{
-                    tower.Attack(currentTarget,currentTime);
+                } else {
+                    tower.Attack(currentTarget.id, currentTarget.getUpdatePositionEnemy(), currentTime);
                 }
-            }      
+            }
         });
-
-         // public addProjectile(projectile: Projectile) {
-    //     this.projectiles.push(projectile);
-    //     this.map.addChild(projectile.sprite);
-    // }
-
-        // // Cập nhật vị trí của các viên đạn
-        // this.projectiles.forEach((projectile, index) => {
-        //     projectile.move(deltaTime);
-            
-        //     if (!projectile.sprite.visible) {
-        //         this.projectiles.splice(index, 1);
-
-        //         this.map.removeChild(projectile.sprite);
-        //     }
-        // });
     }
 }
