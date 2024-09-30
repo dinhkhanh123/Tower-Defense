@@ -35,6 +35,9 @@ export class Projectile {
         const dy = this.targetPosition.y - this.sprite.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
+        
+        this.sprite.rotation = Math.atan2(dy, dx);
+
         // Nếu viên đạn tới gần mục tiêu, thực hiện va chạm
         if (distance < this.speed * delta) {
             this.hitTarget();
@@ -52,5 +55,5 @@ export class Projectile {
         EventHandle.emit('projectile_hit', this.towerType, this, this.enemyId);
     }
 }
-// dung event emitter emit goi tru mau cua thang ene co id duoc truyen vao tu khi tower goi
+
 

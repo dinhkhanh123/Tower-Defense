@@ -66,6 +66,7 @@ export class ObjectPool {
 
     // Hàm trả Enemy về pool
     public returnEnemyToPool(enemyType: EnemyType, enemy: Enemy) {
+        
         this._enemyPool[enemyType].push(enemy);
     }
 

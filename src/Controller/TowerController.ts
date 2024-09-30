@@ -16,12 +16,14 @@ export class TowerController {
     private towers: Tower[] = [];
     private objectPool: ObjectPool;
     private enemySpawner: EnemySpawner;
+    private currentTime:number;
 
     constructor(map: Container, enemySpawner: EnemySpawner) {
         TowerController.instance = this;
         this.objectPool = new ObjectPool();
         this.map = map;
         this.enemySpawner = enemySpawner;
+        this.currentTime = 0;
     }
 
     public createTower(type: TowerType, baseSprite: Sprite) {
@@ -41,12 +43,12 @@ export class TowerController {
     }
 
     public update(deltaTime: number) {
-        const currentTime = performance.now() / 1000;
+        this.currentTime += deltaTime ;
         // Cập nhật tất cả các tháp
         this.towers.forEach(tower => {
             // Kiểm tra xem có kẻ địch nào trong tầm bắn
             const enemiesInRange = this.enemySpawner.getEnemies().filter(enemy =>
-                tower.isInRange(enemy.getUpdatePositionEnemy())
+                enemy.isAlive && tower.isInRange(enemy.getUpdatePositionEnemy())
             );
 
             enemiesInRange.forEach(enemy => {
@@ -57,10 +59,10 @@ export class TowerController {
 
             if (tower.target.length > 0) {
                 let currentTarget = tower.target[0];
-                if (!tower.isInRange(currentTarget.getUpdatePositionEnemy())) {
+                if (!currentTarget.isAlive ||!tower.isInRange(currentTarget.getUpdatePositionEnemy())) {
                     tower.target.shift();
                 } else {
-                    tower.Attack(currentTarget.id, currentTarget.getUpdatePositionEnemy(), currentTime);
+                    tower.Attack(currentTarget.id, currentTarget.getUpdatePositionEnemy(), this.currentTime);
                 }
             }
         });

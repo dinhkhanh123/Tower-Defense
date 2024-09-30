@@ -30,12 +30,10 @@ export class MapGame extends Container {
     private enemySpawn: EnemySpawner;
     private towerController: TowerController;
     private projectileController: ProjectileController;
-    private spawnPoints: { x: number, y: number }[] = [
-        { x: 0, y: 2 },
-        { x: 2, y: 2 }
-    ];
-
-    private goal: { x: number, y: number } = { x: 0, y: 13 };
+ 
+    private waveData: any[] = [GameConst.WAVE_1, GameConst.WAVE_2, GameConst.WAVE_3, GameConst.WAVE_4, GameConst.WAVE_5];
+    private totalWaves: number = this.waveData.length; 
+    private currentWave: number = 0;
 
 
     constructor() {
@@ -58,30 +56,61 @@ export class MapGame extends Container {
 
     }
     update(deltaTime: number) {
-        const currentTime = performance.now() / 1000;
-        this.enemySpawn.update(deltaTime, currentTime);
+        this.enemySpawn.update(deltaTime);
         this.towerController.update(deltaTime);
         this.projectileController.update(deltaTime);
+
+        if (!this.enemySpawn.isSpawning && this.enemySpawn.getEnemies().length === 0 && this.currentWave !== 0) {
+            if (this.currentWave < this.totalWaves) {
+                this.startNextWave();
+            }
+        }
     }
 
     SpawnEnemy() {
-        const enemiesPerWave = 5;
         const startSpawn = new Sprite(Asset.getTexture('slot_tower'));
-        startSpawn.position.x = this.spawnPoints[0].x * GameConst.SQUARE_SIZE;
-        startSpawn.position.y = this.spawnPoints[0].y * GameConst.SQUARE_SIZE;
 
         startSpawn.eventMode = 'static';
         startSpawn.cursor = 'pointer';
         startSpawn.interactive = true;
 
-        startSpawn.on('pointerdown', () => this.startSpawn(this.spawnPoints[0], this.goal, enemiesPerWave));
+        startSpawn.on('pointerdown', () => {
+            this.startSpawn();
+            startSpawn.visible = false; 
+        });
 
         this.addChild(startSpawn);
     }
 
-    startSpawn(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, enemiesPerWave: number) {
-        EventHandle.emit('startSpawn', spawnPoint, goal, enemiesPerWave);
-        console.log(spawnPoint, goal, enemiesPerWave);
+    startSpawn() {
+        
+        this.currentWave++;
+
+        switch (this.currentWave) {
+            case 1:
+                EventHandle.emit('startSpawn', GameConst.WAVE_1.spawnPoints, GameConst.WAVE_1.goad, GameConst.WAVE_1.enemySpawnNumber);
+                break;
+            case 2:
+                EventHandle.emit('startSpawn', GameConst.WAVE_2.spawnPoints, GameConst.WAVE_2.goad, GameConst.WAVE_2.enemySpawnNumber);
+                break;
+            case 3:
+                EventHandle.emit('startSpawn', GameConst.WAVE_3.spawnPoints, GameConst.WAVE_3.goad, GameConst.WAVE_3.enemySpawnNumber);
+                break;
+            case 4:
+                EventHandle.emit('startSpawn', GameConst.WAVE_4.spawnPoints, GameConst.WAVE_4.goad, GameConst.WAVE_4.enemySpawnNumber);
+                break;
+            case 5:
+                EventHandle.emit('startSpawn', GameConst.WAVE_5.spawnPoints1, GameConst.WAVE_5.goad, GameConst.WAVE_5.enemySpawnNumber);
+                EventHandle.emit('startSpawn', GameConst.WAVE_5.spawnPoints2, GameConst.WAVE_5.goad, GameConst.WAVE_5.enemySpawnNumber);
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    startNextWave() {   
+        this.startSpawn();
     }
 
     LoadMap() {
@@ -129,8 +158,6 @@ export class MapGame extends Container {
             }
         }
     }
-
-
 
     onTowerSlotClicked(x: number, y: number, sprite: Sprite) {
         console.log(`Tower slot clicked at: (${x}, ${y})`);

@@ -12,7 +12,9 @@ import Asset from './GameBuild/Asset';
     await Asset.loadAtlas([
          './atlas/enemies_atlas.json',    
         './atlas/map_atlas.json',
-         './atlas/towers_atlas.json'       
+         './atlas/towers_atlas.json'  ,
+         './atlas/projectile_atlas.json'       
+
     ]);
 
     const gameStart = new GameStart();

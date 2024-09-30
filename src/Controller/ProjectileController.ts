@@ -22,6 +22,9 @@ export class ProjectileController {
         projectile.sprite.x = tower.spriteTower.x;
         projectile.sprite.y = tower.spriteTower.y;
 
+        projectile.sprite.scale.set(0.5);
+        projectile.sprite.anchor.set(0.5);
+
         projectile.setTarget(enemyId, enemyPosition, tower.attackSpeed * 5, tower.damage);
 
         this.projectiles.push(projectile);

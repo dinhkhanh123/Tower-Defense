@@ -1,7 +1,5 @@
 import { Container, Sprite, Texture, Point, Assets } from "pixi.js";
 import { Enemy } from "../GameObject/Enemies/Enemy";
-import { Pathfinding } from "../GameScene/Map/Pathfinding";
-import Asset from "../GameBuild/Asset";
 import { EnemyType } from "../GameObject/Enemies/EnemyType";
 import { GameConst } from "../GameBuild/GameConst";
 import { ObjectPool } from "../ObjectPool/ObjectPool";
@@ -9,97 +7,104 @@ import { EventHandle } from "../GameBuild/EventHandle";
 
 export class EnemySpawner extends Container {
     private gridMap: number[][];
-    private pathfinding: Pathfinding;
     private enemies: Enemy[] = [];
     public waveNumber: number;
-    private spawnInterval: number;
-    private lastSpawnTime: number = 0;
-    private isSpawning: boolean = false;
-    private enemiesToSpawn: number;
-    private currentEnemiesCount: number = 0;
-    private spawnPoint: { x: number, y: number };
-    private goal: { x: number, y: number };
-
+    public isSpawning: boolean = false;
+    public currentEnemiesCount: number = 0;
 
     constructor(gridmap: number[][]) {
         super();
         this.gridMap = gridmap;
-        this.pathfinding = new Pathfinding(this.gridMap);
-        this.spawnInterval = 2;
         this.waveNumber = 0;
-        this.enemiesToSpawn = 0;
-        this.spawnPoint = { x: 0, y: 0 };
-        this.goal = { x: 0, y: 0 };
-
+  
         this.listenEventHandle();
+    }
+
+    listenEventHandle() {
+        EventHandle.on('startSpawn', (spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, enemiesPerWave: number) => {
+            this.isSpawning = false;
+
+            if(this.enemies.length === 0 && !this.isSpawning){
+                this.spawnWave(spawnPoint,goal,enemiesPerWave);
+            }
+        });
     }
 
     createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }) {
         const enemyType = EnemyType.Goblin;
         const enemy = ObjectPool.instance.getEnemyFromPool(enemyType);
 
+        enemy.reset();
+
         enemy.sprite.x = spawnPoint.x * GameConst.SQUARE_SIZE;
         enemy.sprite.y = spawnPoint.y * GameConst.SQUARE_SIZE;
 
-        enemy.setPosition(spawnPoint, goal, this.pathfinding);
+        enemy.sprite.anchor.set(0.5);
+
+        enemy.setPosition(spawnPoint, goal, this.gridMap);
 
         this.enemies.push(enemy);
 
         this.addChild(enemy.sprite);
     }
 
-    removeEnemy() {
-        console.log('remove');
+    removeEnemy(deadEnemy: Enemy) {
+    const index = this.enemies.indexOf(deadEnemy);
+        if (index !== -1) {    
+            this.enemies.splice(index, 1);
+            this.removeChild(deadEnemy.sprite);  
+    
+            ObjectPool.instance.returnEnemyToPool(deadEnemy.type, deadEnemy);
+        }
     }
 
-    listenEventHandle() {
-        EventHandle.on('startSpawn', (spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, enemiesPerWave: number) => {
-            this.spawnPoint = spawnPoint;
-            this.goal = goal;
-            this.enemiesToSpawn = enemiesPerWave;
-            this.currentEnemiesCount = 0;
-            this.isSpawning = true;
-            this.lastSpawnTime = 0;
+    spawnWave(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, enemiesPerWave: number) {
+        this.waveNumber ++;
+        this.currentEnemiesCount = 0;
+        this.isSpawning = true;
 
-        });
-    }
-
-    update(deltaTime: number, currentTime: number) {
-        if (this.isSpawning && this.currentEnemiesCount < this.enemiesToSpawn) {
-            if (currentTime - this.lastSpawnTime >= this.spawnInterval) {
-                this.createEnemy(this.spawnPoint, this.goal);
+        const spawnDelay = 1000;
+        for (let i = 0; i < enemiesPerWave; i++) {
+            setTimeout(() => {
+                this.createEnemy(spawnPoint, goal);
                 this.currentEnemiesCount++;
-                this.lastSpawnTime = currentTime;
-            }
+            }, i * spawnDelay + Math.random() * spawnDelay); 
         }
-
-        if (this.currentEnemiesCount >= this.enemiesToSpawn) {
+    
+        setTimeout(() => {
             this.isSpawning = false;
-        }
+            console.log(`Wave ${this.waveNumber} completed.`);
+        }, enemiesPerWave * spawnDelay); 
+    }
 
-        this.enemies.forEach(enemy => {
+
+    update(deltaTime: number) {
+        this.enemies.forEach((enemy) => {
             enemy.update(deltaTime);
-        });
+  
+            if (!enemy.isAlive || enemy.hasReachedGoal()) {
+                this.removeEnemy(enemy);
+            }
+        });     
     }
 
     public getEnemies(): Enemy[] {
         return this.enemies;
     }
 
-    // spawnEnemy() {
-    //     const spawnPoint = this.spawnPoints[0];
 
-    //     const enemyType = EnemyType.Goblin;
-    //     const enemy = ObjectPool.instance.getEnemyFromPool(enemyType);
+    // if (this.isSpawning && this.currentEnemiesCount < this.enemiesToSpawn) {
+    //     if (currentTime - this.lastSpawnTime >= this.spawnInterval) {
+    //         this.createEnemy(this.spawnPoint, this.goal);
+    //         this.currentEnemiesCount++;
+    //         this.lastSpawnTime = currentTime;
+    //     }
+    // }
 
-    //     enemy.sprite.x = spawnPoint.x * GameConst.SQUARE_SIZE;
-    //     enemy.sprite.y = spawnPoint.y * GameConst.SQUARE_SIZE;
 
-    //     enemy.setPosition(spawnPoint, this.goal, this.pathfinding);
 
-    //     this.enemies.push(enemy);
-
-    //     this.addChild(enemy.sprite);
+    // if (this.currentEnemiesCount >= this.enemiesToSpawn) {
+    //     this.isSpawning = false;
     // }
 
     // update(delta: number, currentTime: number) {
@@ -116,14 +121,10 @@ export class EnemySpawner extends Container {
     //         if (!enemy.isAlive) {
     //             this.removeChild(enemy.sprite);
     //             ObjectPool.instance.returnEnemyToPool(enemy.type, enemy);
-    //             this.enemies.slice(index, 1);
+    //             this.enemies.splice(index, 1);
     //         }
 
-
     //     });
-
-
-
     // }
 
 

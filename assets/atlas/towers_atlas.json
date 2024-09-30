@@ -1,8 +1,104 @@
 {
   "frames": {
-    "Archer": {
+    "Archer_Img": {
       "frame": {
         "x": 2,
+        "y": 2,
+        "w": 67,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 5,
+        "y": 0,
+        "w": 67,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 100
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Cannon_Img": {
+      "frame": {
+        "x": 73,
+        "y": 2,
+        "w": 62,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 6,
+        "y": 0,
+        "w": 62,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 100
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Mage_Img": {
+      "frame": {
+        "x": 2,
+        "y": 106,
+        "w": 67,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 6,
+        "y": 0,
+        "w": 67,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 100
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Tech_Img": {
+      "frame": {
+        "x": 73,
+        "y": 106,
+        "w": 60,
+        "h": 99
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 9,
+        "y": 1,
+        "w": 60,
+        "h": 99
+      },
+      "sourceSize": {
+        "w": 80,
+        "h": 100
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Archer": {
+      "frame": {
+        "x": 139,
         "y": 2,
         "w": 40,
         "h": 40
@@ -26,7 +122,7 @@
     },
     "Cannon": {
       "frame": {
-        "x": 2,
+        "x": 139,
         "y": 46,
         "w": 40,
         "h": 40
@@ -50,7 +146,7 @@
     },
     "Mage": {
       "frame": {
-        "x": 2,
+        "x": 139,
         "y": 90,
         "w": 40,
         "h": 40
@@ -74,7 +170,7 @@
     },
     "Tech": {
       "frame": {
-        "x": 2,
+        "x": 137,
         "y": 134,
         "w": 40,
         "h": 40
@@ -103,8 +199,8 @@
     "image": "towers_atlas.png",
     "format": "RGBA8888",
     "size": {
-      "w": 44,
-      "h": 176
+      "w": 181,
+      "h": 208
     },
     "scale": 1
   }

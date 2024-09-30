@@ -12,9 +12,9 @@ export class Enemy {
     public id: number;
     public sprite: Sprite;
     public type: EnemyType;
-    private _hp: number;
-    private _speed: number;
-    private _damage: number;
+    private _hp: {hpConst: number, hpCount: number};
+    private _speed: {speedConst:number, speedCount:number};
+    private _damage: {damageConst: number, damageCount: number};
     public isAlive: boolean;
     public position: PointData;
     private currentPosition!: { x: number, y: number };
@@ -27,19 +27,27 @@ export class Enemy {
         this.id = id;
         this.type = type;
         this.sprite = new Sprite(Asset.getTexture(type));
-        this._hp = hp;
-        this._speed = speed;
-        this._damage = damage;
+        this._hp = {hpConst: hp, hpCount: hp};
+        this._speed = {speedConst: speed,speedCount: speed};
+        this._damage = {damageConst: damage, damageCount: damage};
+
         this.isAlive = true;
         this.position = { x: this.sprite.x, y: this.sprite.y };
 
         this.listenEventHandle();
     }
 
-    setPosition(pointStart: { x: number, y: number }, pointEnd: { x: number, y: number }, pathfinding: Pathfinding) {
-        this.currentPosition = pointStart;
-        this.goalPosition = pointEnd;
-        this.pathfinding = pathfinding;
+    reset(){
+        this._hp.hpCount = this._hp.hpConst;
+        this.isAlive = true;
+        this.currentPathIndex = 0;
+    }
+
+    setPosition(pointStart: { x: number, y: number }, pointEnd: { x: number, y: number }, gridMap: number[][]) {
+        this.currentPosition = {x: pointStart.x, y: pointStart.y};
+        this.goalPosition = {x: pointEnd.x, y: pointEnd.y};
+        this.pathfinding = new Pathfinding(gridMap)
+ 
     }
 
     move(delta: number) {
@@ -53,8 +61,8 @@ export class Enemy {
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist > 1) {
-                this.sprite.x += (dx / dist) * this._speed * delta;
-                this.sprite.y += (dy / dist) * this._speed * delta;
+                this.sprite.x += (dx / dist) * this._speed.speedCount * delta;
+                this.sprite.y += (dy / dist) * this._speed.speedCount * delta;
             } else {
                 this.currentPathIndex++;
             }
@@ -71,22 +79,30 @@ export class Enemy {
         this.move(delta);
     }
 
-    takeDamage(id: number, damage: number) {
-        this._hp -= damage;
-        if (this._hp <= 0) {
-            this._hp = 0;
-            this.isAlive = false;
+    takeDamage(id:number, damage: number) {
 
+        if(id === this.id){
+            this._hp.hpCount -= damage;
+            if (this._hp.hpCount <= 0) {
+                this._hp.hpCount = 0;
+                this.isAlive = false;              
+            } 
+        }  
 
-        }
     }
-
-
 
     listenEventHandle() {
         EventHandle.on('projectile_hit', (towerType: TowerType, projectile: Projectile, idEnemy: number) => {
             this.takeDamage(idEnemy, projectile.damage);
         });
+    }
+
+    hasReachedGoal(): boolean {
+        const dx = this.goalPosition.x * GameConst.SQUARE_SIZE - this.sprite.x;
+        const dy = this.goalPosition.y * GameConst.SQUARE_SIZE - this.sprite.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        return distance < 1;
     }
 
     updateTexture(dx: number, dy: number) {
@@ -103,7 +119,7 @@ export class Enemy {
         // }
     }
 
-    // Kiểm tra nếu kẻ thù đã đến cuối lộ trình
+    //Kiểm tra nếu kẻ thù đã đến cuối lộ trình
     // hasReachedEnd(): boolean {
     //     return this.currentPathIndex >= this.path.length - 1;
     // }

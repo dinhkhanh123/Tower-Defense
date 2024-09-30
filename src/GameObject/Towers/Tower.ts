@@ -29,14 +29,14 @@ export class Tower {
         this.id = id;
         this.type = type;
         this.spriteTower = new Sprite(Asset.getTexture(type));
-        this.imageTower = new Sprite(Asset.getTexture(type));
+        this.imageTower = new Sprite(Asset.getTexture(`${type}_Img`));
         this.damage = damage;
         this.range = range;
         this.attackSpeed = attackSpeed;
         this.towerDetail = towerDetail;
         this.level = 1;
 
-        this.cooldownTime = .5 / this.attackSpeed;
+        this.cooldownTime =  50 / this.attackSpeed;
         this.lastAttackTime = 0;
     }
 
