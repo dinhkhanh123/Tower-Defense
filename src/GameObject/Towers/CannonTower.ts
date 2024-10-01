@@ -6,10 +6,11 @@ export class CannonTower extends Tower {
     constructor(id: number) {
         const damage = 5;
         const range = 130;
-        const attackSpeed = 1.5;
-        const towerDetail = "canon tower";
+        const attackSpeed = 1;
+        const towerDetail = "Canon Tower";
+        const towerName = TowerType.Cannon.toString();
 
         // ID và loại tower là Mag
-        super(id, TowerType.Cannon, damage, range, attackSpeed, towerDetail);
+        super(id, TowerType.Cannon, damage, range, attackSpeed,towerName, towerDetail);
     }
 }

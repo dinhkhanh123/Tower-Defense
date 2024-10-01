@@ -14,8 +14,12 @@ import Asset from './GameBuild/Asset';
         './atlas/map_atlas.json',
          './atlas/towers_atlas.json'  ,
          './atlas/projectile_atlas.json'       
-
     ]);
+    await Asset.loadBitmap('./atlas/GoldPeaberry.xml');
+    await Asset.loadBitmap('./atlas/GoldPeaberry.fnt');
+
+    await Asset.loadBitmap('./atlas/Peaberry.xml');
+    await Asset.loadBitmap('./atlas/Peaberry.fnt');
 
     const gameStart = new GameStart();
     const gameBoard = new GameBoard();

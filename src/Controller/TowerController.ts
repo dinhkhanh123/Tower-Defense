@@ -2,13 +2,10 @@ import { Container, Sprite } from "pixi.js";
 import { Tower } from "../GameObject/Towers/Tower";
 import { TowerType } from "../GameObject/Towers/TowerType";
 import { ObjectPool } from "../ObjectPool/ObjectPool";
-import { GameConst } from "../GameBuild/GameConst";
 import { EventHandle } from "../GameBuild/EventHandle";
 import { BottomPanel } from "../GameScene/UIBottom/BottomPanel";
-import { Enemy } from "../GameObject/Enemies/Enemy";
 import { EnemySpawner } from "./SpawnEnemy";
-import { Projectile } from "../GameObject/Projectiles/Projectile";
-import Asset from "../GameBuild/Asset";
+
 
 export class TowerController {
     public static instance: TowerController;
@@ -16,14 +13,18 @@ export class TowerController {
     private towers: Tower[] = [];
     private objectPool: ObjectPool;
     private enemySpawner: EnemySpawner;
-    private currentTime:number;
 
     constructor(map: Container, enemySpawner: EnemySpawner) {
         TowerController.instance = this;
         this.objectPool = new ObjectPool();
         this.map = map;
         this.enemySpawner = enemySpawner;
-        this.currentTime = 0;
+
+       // this.listenEventHandle();
+    }
+
+    listenEventHandle(){
+        EventHandle.on('create_tower',(type:TowerType,sprite:Sprite) => this.createTower(type,sprite));
     }
 
     public createTower(type: TowerType, baseSprite: Sprite) {
@@ -35,7 +36,21 @@ export class TowerController {
         this.towers.push(tower);
 
         baseSprite.on('pointerdown', () => {
-            EventHandle.emit('tower_clicked', tower);
+            const optionTower = {
+                id:tower.id,
+                level: tower.level,
+                towerName: tower.towerName,
+                towerDetail: tower.towerDetail,
+                damage: tower.damage,
+                speedAttack: tower.attackSpeed,
+                sprite: tower.imageTower,
+                range: {
+                    range: tower.range,
+                    x: tower.baseTower.position.x,
+                    y: tower.baseTower.position.y
+                }
+            };
+            EventHandle.emit('tower_clicked', optionTower);
             BottomPanel.instance.setVisibleSystem('infor');
         });
 
@@ -43,7 +58,6 @@ export class TowerController {
     }
 
     public update(deltaTime: number) {
-        this.currentTime += deltaTime ;
         // Cập nhật tất cả các tháp
         this.towers.forEach(tower => {
             // Kiểm tra xem có kẻ địch nào trong tầm bắn
@@ -59,10 +73,10 @@ export class TowerController {
 
             if (tower.target.length > 0) {
                 let currentTarget = tower.target[0];
-                if (!currentTarget.isAlive ||!tower.isInRange(currentTarget.getUpdatePositionEnemy())) {
+                if (!currentTarget.isAlive || !tower.isInRange(currentTarget.getUpdatePositionEnemy())) {
                     tower.target.shift();
                 } else {
-                    tower.Attack(currentTarget.id, currentTarget.getUpdatePositionEnemy(), this.currentTime);
+                    tower.Attack(currentTarget.id, currentTarget.getUpdatePositionEnemy(), deltaTime);
                 }
             }
         });

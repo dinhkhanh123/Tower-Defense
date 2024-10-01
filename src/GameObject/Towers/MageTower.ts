@@ -7,10 +7,11 @@ export class MageTower extends Tower {
         const damage = 5;
         const range = 120;
         const attackSpeed = 1.5;
-        const towerDetail = "mage tower";
+        const towerDetail = "Mage Tower";
+        const towerName = TowerType.Mage.toString();
 
         // ID và loại tower là Mage
-        super(id, TowerType.Mage, damage, range, attackSpeed, towerDetail);
+        super(id, TowerType.Mage, damage, range, attackSpeed,towerName, towerDetail);
     }
 
     attack() {

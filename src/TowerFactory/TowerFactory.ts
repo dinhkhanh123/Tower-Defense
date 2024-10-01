@@ -75,8 +75,7 @@ export class TowerFactory {
     public static createProjectile(type:TowerType):Projectile{
         const id = this.projectileId++;
         const sprite = new Sprite(Asset.getTexture(`projectile_${type}`));
-        //const sprite = new Sprite(Asset.getTexture(`projectile_Archer`));
-
+        
         return new Projectile(id,sprite,type);
     }
 }
