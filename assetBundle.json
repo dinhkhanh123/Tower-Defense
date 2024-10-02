@@ -1,0 +1,31 @@
+[
+    {
+        "name": "load-scene",
+        "assets": [
+            {
+                "alias": "background_right",
+                "src": "./atlas/img/Background_PanRight.png"
+            },
+            {
+                "alias": "logo_game",
+                "src": "./atlas/img/loading-logo.png"
+            },
+            {
+                "alias": "ui_bar_buttom",
+                "src": "./atlas/img/ui_bar_B.png"
+            },
+            {
+                "alias": "ui_bar_buttom_tower",
+                "src": "./atlas/img/ui_bar_B-tower.png"
+            },
+            {
+                "alias": "btn_close",
+                "src": "./atlas/img/sprite-close.png"
+            },
+            {
+                "alias": "btn_back",
+                "src": "./atlas/img/btn_back.png"
+            }
+        ]
+    }
+  ]

@@ -19,16 +19,17 @@ export class ProjectileController {
     createProjectile(tower: Tower, enemyId: number, enemyPosition: PointData) {
         const projectile = ObjectPool.instance.getProjectileFromPool(tower.type);
 
-        projectile.sprite.x = tower.spriteTower.x;
-        projectile.sprite.y = tower.spriteTower.y;
+        projectile.sprite.x = tower.spriteTower.sprite.x;
+        projectile.sprite.y = tower.spriteTower.sprite.y;
 
         projectile.sprite.scale.set(0.5);
         projectile.sprite.anchor.set(0.5);
 
-        projectile.setTarget(enemyId, enemyPosition, tower.attackSpeed * 5, tower.damage);
+        projectile.setTarget(enemyId, enemyPosition, tower.attackSpeed.speed * 5, tower.damageTower.damage);
 
         this.projectiles.push(projectile);
 
+        projectile.sprite.zIndex = 3;
         this.map.addChild(projectile.sprite);
     }
 

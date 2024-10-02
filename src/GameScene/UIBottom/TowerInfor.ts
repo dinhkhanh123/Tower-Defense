@@ -41,9 +41,12 @@ export class TowerInfor extends Container {
         towerInfor.rect(0, 600, 800, 168);
         towerInfor.fill(0xD2E0FB);
 
-        const closeTowerPan = new Graphics();
-        closeTowerPan.rect(770, 600, 30, 30);
-        closeTowerPan.fill('#D91656');
+        const closeTowerPan = new Sprite(Texture.from('btn_close'));
+        closeTowerPan.x = 780;
+        closeTowerPan.y = 620;
+        closeTowerPan.width = 30;
+        closeTowerPan.height = 30;
+        closeTowerPan.anchor.set(0.5);
 
         closeTowerPan.interactive = true;
         closeTowerPan.eventMode = 'static';
@@ -114,7 +117,6 @@ export class TowerInfor extends Container {
         this.towerSell.on('pointerdown',()=>{
             EventHandle.emit('sell_tower', this.towerId);
         });
-
 
 
         this.addChild(this.towerSprite); 

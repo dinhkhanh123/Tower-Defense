@@ -1,4 +1,4 @@
-import { Container, Graphics } from "pixi.js";
+import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { TowerSystem } from "./TowerSystem";
 import { BottomPanel } from "./BottomPanel";
 
@@ -11,10 +11,9 @@ export class SkillSystem extends Container {
     }
 
     init() {
-        const skillPan = new Graphics();
-
-        skillPan.rect(0, 600, 800, 168);
-        skillPan.fill(0xB17457);
+        const skillPan = new Sprite(Texture.from('ui_bar_buttom'));
+        skillPan.y = 600;
+    
 
         this.addChild(skillPan);
     }

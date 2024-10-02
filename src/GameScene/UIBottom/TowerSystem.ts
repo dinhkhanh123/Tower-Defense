@@ -1,4 +1,4 @@
-import { Container, Graphics, Sprite } from 'pixi.js';
+import { Container, Graphics, Sprite, Texture } from 'pixi.js';
 import { Tower } from "../../GameObject/Towers/Tower";
 import { TowerFactory } from "../../TowerFactory/TowerFactory";
 import { TowerType } from "../../GameObject/Towers/TowerType";
@@ -17,13 +17,15 @@ export class TowerSystem extends Container {
     }
 
     init() {
-        const towerPan = new Graphics();
-        towerPan.rect(0, 600, 800, 168);
-        towerPan.fill('#EDE8DC');
+        const towerPan = new Sprite(Texture.from('ui_bar_buttom_tower'));
+        towerPan.y = 600;
 
-        const closeTowerPan = new Graphics();
-        closeTowerPan.rect(770, 600, 30, 30);
-        closeTowerPan.fill('#D91656');
+        const closeTowerPan = new Sprite(Texture.from('btn_close'));
+        closeTowerPan.x = 780;
+        closeTowerPan.y = 620;
+        closeTowerPan.width = 30;
+        closeTowerPan.height = 30;
+        closeTowerPan.anchor.set(0.5);
 
         closeTowerPan.interactive = true;
         closeTowerPan.eventMode = 'static';
@@ -42,29 +44,28 @@ export class TowerSystem extends Container {
         for (let i = 0; i < towers.length; i++) {
 
             const towerSprite = towers[i].imageTower;
-            towerSprite.x = 100 * i + 50;
-            towerSprite.y = 610;
-            towerSprite.width = 80;
-            towerSprite.height = 100;
-            towerSprite.interactive = true;
+            towerSprite.image.x = 100 * i + 50;
+            towerSprite.image.y = 610;
+            towerSprite.image.width = 80;
+            towerSprite.image.height = 100;
+            towerSprite.image.interactive = true;
 
-            towerSprite.on('pointerdown', () => {
+            towerSprite.image.on('pointerdown', () => {
                 const selectedTowerType = towers[i].type;
                 TowerController.instance.createTower(selectedTowerType, this.baseSprite);
                 BottomPanel.instance.setVisibleSystem('skill');
             });
 
-
-            this.addChild(towerSprite);
+            this.addChild(towerSprite.image);
         }
     }
 
 
     listenToEvents() {
-        EventHandle.on('tower_slot_clicked', (data: {sprite:Sprite }) => {
+        EventHandle.on('tower_slot_clicked', (sprite:Sprite) => {
             this.visible = true;
             BottomPanel.instance.setVisibleSystem('tower');
-            this.baseSprite = data.sprite;
+            this.baseSprite = sprite;
         });
     }
 }

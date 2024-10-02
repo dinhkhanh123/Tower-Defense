@@ -6,10 +6,9 @@ import { EventHandle } from "../../GameBuild/EventHandle";
 import { TowerController } from "../../Controller/TowerController";
 import { ProjectileController } from "../../Controller/ProjectileController";
 
-
 export class MapGame extends Container {
-
-    private gridMap: number[][] = [
+    public static instance:MapGame;
+    public gridMap: number[][] = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Hàng 1
         [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1], // Hàng 2
         [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 2, 1, 1, 1, 1, 1, 1, 1], // Hàng 3
@@ -27,8 +26,8 @@ export class MapGame extends Container {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  // Hàng 15
     ];
 
-    private enemySpawn: EnemySpawner;
     private towerController: TowerController;
+    private enemySpawn: EnemySpawner;
     private projectileController: ProjectileController;
  
     private waveData: any[] = [GameConst.WAVE_1, GameConst.WAVE_2, GameConst.WAVE_3, GameConst.WAVE_4, GameConst.WAVE_5];
@@ -38,26 +37,25 @@ export class MapGame extends Container {
 
     constructor() {
         super();
+        MapGame.instance = this;
+        this.sortableChildren = true;
 
-        this.enemySpawn = new EnemySpawner(this.gridMap);
-        this.towerController = new TowerController(this, this.enemySpawn);
+        this.towerController = new TowerController(this);
+        this.enemySpawn = new EnemySpawner(this);
         this.projectileController = new ProjectileController(this);
+
         this.init();
         this.SpawnEnemy();
-
     }
 
     init() {
         this.width = 800;
         this.height = 600;
         this.LoadMap();
-
-        this.addChild(this.enemySpawn);
-
     }
     update(deltaTime: number) {
-        this.enemySpawn.update(deltaTime);
         this.towerController.update(deltaTime);
+        this.enemySpawn.update(deltaTime);
         this.projectileController.update(deltaTime);
 
         if (!this.enemySpawn.isSpawning && this.enemySpawn.getEnemies().length === 0 && this.currentWave !== 0) {
@@ -68,7 +66,12 @@ export class MapGame extends Container {
     }
 
     SpawnEnemy() {
-        const startSpawn = new Sprite(Asset.getTexture('slot_tower'));
+        const startSpawn = new Sprite(Texture.from('btn_back'));
+
+        startSpawn.width = 50;
+        startSpawn.height = 50;
+        startSpawn.x = 10;
+        startSpawn.y = 50;
 
         startSpawn.eventMode = 'static';
         startSpawn.cursor = 'pointer';
@@ -133,7 +136,7 @@ export class MapGame extends Container {
                         texturemap = Asset.getTexture('road');
                         break;
                     case 2: // Tháp
-                        texturemap = Asset.getTexture('slot_tower');
+                        texturemap = Asset.getTexture('build');
                         break;
                     case 3: // Vật thể khác
                         texturemap = Asset.getTexture('road');
@@ -151,17 +154,11 @@ export class MapGame extends Container {
                     sprite.eventMode = 'static';
                     sprite.cursor = 'pointer'
                     sprite.interactive = true;
-                    sprite.on('pointerdown', () => this.onTowerSlotClicked(j, i, sprite));
+                    sprite.on('pointerdown', () => EventHandle.emit('tower_slot_clicked', (sprite) ));
                 }
 
                 this.addChild(sprite);
             }
         }
     }
-
-    onTowerSlotClicked(x: number, y: number, sprite: Sprite) {
-        console.log(`Tower slot clicked at: (${x}, ${y})`);
-        EventHandle.emit('tower_slot_clicked', { sprite });
-    }
-
 }

@@ -5,6 +5,7 @@ import { ObjectPool } from "../ObjectPool/ObjectPool";
 import { EventHandle } from "../GameBuild/EventHandle";
 import { BottomPanel } from "../GameScene/UIBottom/BottomPanel";
 import { EnemySpawner } from "./SpawnEnemy";
+import Asset from "../GameBuild/Asset";
 
 
 export class TowerController {
@@ -12,40 +13,33 @@ export class TowerController {
     private map: Container;
     private towers: Tower[] = [];
     private objectPool: ObjectPool;
-    private enemySpawner: EnemySpawner;
 
-    constructor(map: Container, enemySpawner: EnemySpawner) {
+    constructor(map: Container) {
         TowerController.instance = this;
         this.objectPool = new ObjectPool();
         this.map = map;
-        this.enemySpawner = enemySpawner;
-
-       // this.listenEventHandle();
-    }
-
-    listenEventHandle(){
-        EventHandle.on('create_tower',(type:TowerType,sprite:Sprite) => this.createTower(type,sprite));
     }
 
     public createTower(type: TowerType, baseSprite: Sprite) {
         const tower = this.objectPool.getTowerFromPool(type);
+        tower.resetTower();
 
         baseSprite.removeAllListeners();
         tower.baseTower = baseSprite;
-        tower.spriteTower.position = baseSprite.position;
+        tower.spriteTower.sprite.position = baseSprite.position;
         this.towers.push(tower);
 
         baseSprite.on('pointerdown', () => {
             const optionTower = {
-                id:tower.id,
-                level: tower.level,
+                id: tower.id,
+                level: tower.levelTower.level,
                 towerName: tower.towerName,
                 towerDetail: tower.towerDetail,
-                damage: tower.damage,
-                speedAttack: tower.attackSpeed,
-                sprite: tower.imageTower,
+                damage: tower.damageTower.damage,
+                speedAttack: tower.attackSpeed.speed,
+                sprite: tower.imageTower.image,
                 range: {
-                    range: tower.range,
+                    range: tower.rangeTower.range,
                     x: tower.baseTower.position.x,
                     y: tower.baseTower.position.y
                 }
@@ -54,14 +48,35 @@ export class TowerController {
             BottomPanel.instance.setVisibleSystem('infor');
         });
 
-        this.map.addChild(tower.spriteTower);
+        tower.spriteTower.sprite.zIndex = 1;
+        this.map.addChild(tower.spriteTower.sprite);
+    }
+
+    public removeTower(tower: Tower) {
+        const index = this.towers.indexOf(tower);
+        if (index !== -1) {
+            this.towers.splice(index, 1);
+            this.map.removeChild(tower.spriteTower.sprite);
+            ObjectPool.instance.returnTowerToPool(tower.type, tower);
+        }
+
+
+        const slotSprite = new Sprite(Asset.getTexture('build'));
+        tower.baseTower.texture = slotSprite.texture;
+        slotSprite.position = tower.baseTower.position;
+        slotSprite.eventMode = 'static';
+        slotSprite.cursor = 'pointer';
+        slotSprite.interactive = true;
+        slotSprite.on('pointerdown', () => EventHandle.emit('tower_slot_clicked', (slotSprite)));
+        this.map.addChild(slotSprite);
+        BottomPanel.instance.setVisibleSystem('skill');
     }
 
     public update(deltaTime: number) {
         // Cập nhật tất cả các tháp
         this.towers.forEach(tower => {
             // Kiểm tra xem có kẻ địch nào trong tầm bắn
-            const enemiesInRange = this.enemySpawner.getEnemies().filter(enemy =>
+            const enemiesInRange = EnemySpawner.instance.getEnemies().filter(enemy =>
                 enemy.isAlive && tower.isInRange(enemy.getUpdatePositionEnemy())
             );
 

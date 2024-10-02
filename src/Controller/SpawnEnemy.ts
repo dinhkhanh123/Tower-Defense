@@ -4,17 +4,21 @@ import { EnemyType } from "../GameObject/Enemies/EnemyType";
 import { GameConst } from "../GameBuild/GameConst";
 import { ObjectPool } from "../ObjectPool/ObjectPool";
 import { EventHandle } from "../GameBuild/EventHandle";
+import { MapGame } from "../GameScene/Map/MapGame";
 
-export class EnemySpawner extends Container {
+export class EnemySpawner{
+    public static instance:EnemySpawner;
+    private map: Container;
     private gridMap: number[][];
     private enemies: Enemy[] = [];
     public waveNumber: number;
     public isSpawning: boolean = false;
     public currentEnemiesCount: number = 0;
 
-    constructor(gridmap: number[][]) {
-        super();
-        this.gridMap = gridmap;
+    constructor(map: Container) {
+        EnemySpawner.instance = this;
+        this.map = map;
+        this.gridMap = MapGame.instance.gridMap;
         this.waveNumber = 0;
   
         this.listenEventHandle();
@@ -30,7 +34,7 @@ export class EnemySpawner extends Container {
         });
     }
 
-    createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }) {
+    createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number },index:number) {
         const enemyType = EnemyType.Goblin;
         const enemy = ObjectPool.instance.getEnemyFromPool(enemyType);
 
@@ -45,14 +49,17 @@ export class EnemySpawner extends Container {
 
         this.enemies.push(enemy);
 
-        this.addChild(enemy.sprite);
+        enemy.sprite.zIndex = 2 + index;
+        console.log(enemy.sprite.zIndex );
+        this.map.sortChildren();
+        this.map.addChild(enemy.sprite);
     }
 
     removeEnemy(deadEnemy: Enemy) {
     const index = this.enemies.indexOf(deadEnemy);
         if (index !== -1) {    
             this.enemies.splice(index, 1);
-            this.removeChild(deadEnemy.sprite);  
+            this.map.removeChild(deadEnemy.sprite);  
     
             ObjectPool.instance.returnEnemyToPool(deadEnemy.type, deadEnemy);
         }
@@ -62,12 +69,14 @@ export class EnemySpawner extends Container {
         this.waveNumber ++;
         this.currentEnemiesCount = 0;
         this.isSpawning = true;
-
+        
+        let index = enemiesPerWave;
         const spawnDelay = 1000;
         for (let i = 0; i < enemiesPerWave; i++) {
             setTimeout(() => {
-                this.createEnemy(spawnPoint, goal);
+                this.createEnemy(spawnPoint, goal,index);
                 this.currentEnemiesCount++;
+                index--;
             }, i * spawnDelay + Math.random() * spawnDelay); 
         }
     
@@ -91,41 +100,5 @@ export class EnemySpawner extends Container {
     public getEnemies(): Enemy[] {
         return this.enemies;
     }
-
-
-    // if (this.isSpawning && this.currentEnemiesCount < this.enemiesToSpawn) {
-    //     if (currentTime - this.lastSpawnTime >= this.spawnInterval) {
-    //         this.createEnemy(this.spawnPoint, this.goal);
-    //         this.currentEnemiesCount++;
-    //         this.lastSpawnTime = currentTime;
-    //     }
-    // }
-
-
-
-    // if (this.currentEnemiesCount >= this.enemiesToSpawn) {
-    //     this.isSpawning = false;
-    // }
-
-    // update(delta: number, currentTime: number) {
-    //     // Kiểm tra nếu đã đủ thời gian để spawn một kẻ địch mới
-    //     if (currentTime - this.lastSpawnTime > this.spawnInterval) {
-    //         this.spawnEnemy();
-    //         this.lastSpawnTime = currentTime; // Cập nhật thời gian spawn cuối cùng
-    //     }
-
-    //     // Cập nhật tất cả các enemy
-    //     this.enemies.forEach((enemy, index) => {
-    //         enemy.update(delta);
-
-    //         if (!enemy.isAlive) {
-    //             this.removeChild(enemy.sprite);
-    //             ObjectPool.instance.returnEnemyToPool(enemy.type, enemy);
-    //             this.enemies.splice(index, 1);
-    //         }
-
-    //     });
-    // }
-
 
 }

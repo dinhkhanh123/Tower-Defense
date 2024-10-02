@@ -1,139 +1,115 @@
 {
   "frames": {
-    "range": {
+    "health": {
       "frame": {
         "x": 2,
         "y": 2,
-        "w": 343,
-        "h": 244
+        "w": 70,
+        "h": 70
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 343,
-        "h": 244
+        "w": 70,
+        "h": 70
       },
       "sourceSize": {
-        "w": 343,
-        "h": 244
+        "w": 70,
+        "h": 70
       },
       "pivot": {
         "x": 0.5,
         "y": 0.5
       }
     },
-    "range_1": {
+    "uprade": {
       "frame": {
         "x": 2,
-        "y": 250,
-        "w": 198,
-        "h": 198
+        "y": 76,
+        "w": 70,
+        "h": 70
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 70,
+        "h": 70
+      },
+      "sourceSize": {
+        "w": 70,
+        "h": 70
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "wave": {
+      "frame": {
+        "x": 2,
+        "y": 150,
+        "w": 70,
+        "h": 70
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 70,
+        "h": 70
+      },
+      "sourceSize": {
+        "w": 70,
+        "h": 70
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "coin": {
+      "frame": {
+        "x": 2,
+        "y": 224,
+        "w": 62,
+        "h": 57
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 62,
+        "h": 57
+      },
+      "sourceSize": {
+        "w": 62,
+        "h": 57
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "build": {
+      "frame": {
+        "x": 2,
+        "y": 285,
+        "w": 40,
+        "h": 26
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 1,
-        "y": 1,
-        "w": 198,
-        "h": 198
-      },
-      "sourceSize": {
-        "w": 200,
-        "h": 200
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "grass": {
-      "frame": {
-        "x": 204,
-        "y": 250,
-        "w": 40,
-        "h": 40
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
         "x": 0,
-        "y": 0,
+        "y": 7,
         "w": 40,
-        "h": 40
-      },
-      "sourceSize": {
-        "w": 40,
-        "h": 40
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "road": {
-      "frame": {
-        "x": 248,
-        "y": 250,
-        "w": 40,
-        "h": 40
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 40,
-        "h": 40
-      },
-      "sourceSize": {
-        "w": 40,
-        "h": 40
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "slot_tower": {
-      "frame": {
-        "x": 292,
-        "y": 250,
-        "w": 40,
-        "h": 40
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 40,
-        "h": 40
-      },
-      "sourceSize": {
-        "w": 40,
-        "h": 40
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "tower": {
-      "frame": {
-        "x": 204,
-        "y": 294,
-        "w": 40,
-        "h": 40
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 40,
-        "h": 40
+        "h": 26
       },
       "sourceSize": {
         "w": 40,
@@ -148,11 +124,11 @@
   "meta": {
     "app": "http://github.com/odrick/free-tex-packer-core",
     "version": "0.3.4",
-    "image": "map_atlas.png",
+    "image": "ui_atlas.png",
     "format": "RGBA8888",
     "size": {
-      "w": 347,
-      "h": 450
+      "w": 74,
+      "h": 313
     },
     "scale": 1
   }
