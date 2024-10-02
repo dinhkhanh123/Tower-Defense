@@ -1,4 +1,4 @@
-import { Container, Graphics, Sprite, Texture } from 'pixi.js';
+import { BitmapText, Container, Graphics, Sprite, Texture } from 'pixi.js';
 import { Tower } from "../../GameObject/Towers/Tower";
 import { TowerFactory } from "../../TowerFactory/TowerFactory";
 import { TowerType } from "../../GameObject/Towers/TowerType";
@@ -8,7 +8,7 @@ import { BottomPanel } from "./BottomPanel";
 
 export class TowerSystem extends Container {
     //private posTower!: { x: number; y: number };
-    private baseSprite!:Sprite;
+    private baseSprite!: Sprite;
     constructor() {
         super();
 
@@ -49,20 +49,35 @@ export class TowerSystem extends Container {
             towerSprite.image.width = 80;
             towerSprite.image.height = 100;
             towerSprite.image.interactive = true;
+            towerSprite.image.eventMode = 'static';
+            towerSprite.image.cursor = 'pointer';
 
             towerSprite.image.on('pointerdown', () => {
                 const selectedTowerType = towers[i].type;
+                EventHandle.emit('buy_tower', towers[i].id);
                 TowerController.instance.createTower(selectedTowerType, this.baseSprite);
                 BottomPanel.instance.setVisibleSystem('skill');
             });
 
             this.addChild(towerSprite.image);
+
+            const priceTowers = new BitmapText({
+                text: towers[i].priceTower.price.toString(),
+                style: {
+                    fontFamily: 'Peaberry',
+                    fontSize: 16,
+                    align: 'left'
+                }
+            });
+
+            priceTowers.position.set(100 * i + 75, 690);
+            this.addChild(priceTowers);
         }
     }
 
 
     listenToEvents() {
-        EventHandle.on('tower_slot_clicked', (sprite:Sprite) => {
+        EventHandle.on('tower_slot_clicked', (sprite: Sprite) => {
             this.visible = true;
             BottomPanel.instance.setVisibleSystem('tower');
             this.baseSprite = sprite;
