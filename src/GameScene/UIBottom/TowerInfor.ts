@@ -10,6 +10,7 @@ export class TowerInfor extends Container {
     private priceTower: number;
     private priceUpgrade!: number;
     private priceUpgradeTxt: BitmapText;
+    private privateSelltxt: BitmapText;
     private towerSprite: Sprite;
     private towerNameTxt: BitmapText;
     private towerDetailTxt: BitmapText;
@@ -29,6 +30,8 @@ export class TowerInfor extends Container {
         this.towerDetailTxt = new BitmapText();
         this.towerInforTxt = new BitmapText();
         this.priceUpgradeTxt = new BitmapText();
+        this.privateSelltxt = new BitmapText();
+
 
         this.towerRange = new Sprite();
 
@@ -121,11 +124,7 @@ export class TowerInfor extends Container {
 
 
         this.towerUprade.on('pointerdown', () => {
-
-
             EventHandle.emit('uprade_tower', this.towerId, this.priceUpgrade);
-
-
         });
 
         this.towerSell.rect(500, 670, 100, 30);
@@ -134,8 +133,18 @@ export class TowerInfor extends Container {
         this.towerSell.cursor = 'pointer';
         this.towerSell.interactive = true;
 
-        this.towerSell.on('pointerdown', () => {
+        this.privateSelltxt = new BitmapText({
+            text: this.privateSelltxt,
+            style: {
+                fontFamily: 'Peaberry',
+                fontSize: 16,
+                align: 'left'
+            }
+        });
 
+        this.privateSelltxt.position.set(550, 670);
+
+        this.towerSell.on('pointerdown', () => {
             EventHandle.emit('sell_tower', this.towerId, this.priceTower);
         });
 
@@ -149,6 +158,8 @@ export class TowerInfor extends Container {
         this.addChild(this.towerSell);
 
         this.addChild(this.priceUpgradeTxt);
+        this.addChild(this.privateSelltxt);
+
 
     }
 
@@ -173,13 +184,14 @@ export class TowerInfor extends Container {
             this.towerId = optionTower.id;
             this.levelTower = optionTower.level;
             this.priceTower = optionTower.priceTower;
-            // Cập nhật giá nâng cấp
+
             if (this.levelTower < 3) {
                 this.priceUpgrade = optionTower.upgradePrice[this.levelTower + 1];
                 this.priceUpgradeTxt.text = this.priceUpgrade.toString();
             } else {
-                this.priceUpgradeTxt.text = "Max Level";  // Hiển thị khi đã đạt cấp tối đa
+                this.priceUpgradeTxt.text = "Max";
             }
+            this.privateSelltxt.text = optionTower.priceTower;
             this.towerSprite.texture = optionTower.sprite.texture;
             this.towerNameTxt.text = optionTower.towerName.toString();
             this.towerDetailTxt.text = optionTower.towerDetail.toString();

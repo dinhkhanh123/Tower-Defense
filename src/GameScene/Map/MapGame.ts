@@ -7,7 +7,7 @@ import { TowerController } from "../../Controller/TowerController";
 import { ProjectileController } from "../../Controller/ProjectileController";
 
 export class MapGame extends Container {
-    public static instance:MapGame;
+    public static instance: MapGame;
     public gridMap: number[][] = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Hàng 1
         [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1], // Hàng 2
@@ -29,11 +29,6 @@ export class MapGame extends Container {
     private towerController: TowerController;
     private enemySpawn: EnemySpawner;
     private projectileController: ProjectileController;
- 
-    private waveData: any[] = [GameConst.WAVE_1, GameConst.WAVE_2, GameConst.WAVE_3, GameConst.WAVE_4, GameConst.WAVE_5];
-    private totalWaves: number = this.waveData.length; 
-    private currentWave: number = 0;
-
 
     constructor() {
         super();
@@ -46,6 +41,7 @@ export class MapGame extends Container {
 
         this.init();
         this.SpawnEnemy();
+
     }
 
     init() {
@@ -53,17 +49,8 @@ export class MapGame extends Container {
         this.height = 600;
         this.LoadMap();
     }
-    update(deltaTime: number) {
-        this.towerController.update(deltaTime);
-        this.enemySpawn.update(deltaTime);
-        this.projectileController.update(deltaTime);
 
-        if (!this.enemySpawn.isSpawning && this.enemySpawn.getEnemies().length === 0 && this.currentWave !== 0) {
-            if (this.currentWave < this.totalWaves) {
-                this.startNextWave();
-            }
-        }
-    }
+
 
     SpawnEnemy() {
         const startSpawn = new Sprite(Texture.from('btn_back'));
@@ -78,42 +65,17 @@ export class MapGame extends Container {
         startSpawn.interactive = true;
 
         startSpawn.on('pointerdown', () => {
-            this.startSpawn();
-            startSpawn.visible = false; 
+            EventHandle.emit('start_spawn');
+            startSpawn.visible = false;
         });
 
         this.addChild(startSpawn);
     }
 
-    startSpawn() {
-        
-        this.currentWave++;
-
-        switch (this.currentWave) {
-            case 1:
-                EventHandle.emit('startSpawn', GameConst.WAVE_1.spawnPoints, GameConst.WAVE_1.goad, GameConst.WAVE_1.enemySpawnNumber);
-                break;
-            case 2:
-                EventHandle.emit('startSpawn', GameConst.WAVE_2.spawnPoints, GameConst.WAVE_2.goad, GameConst.WAVE_2.enemySpawnNumber);
-                break;
-            case 3:
-                EventHandle.emit('startSpawn', GameConst.WAVE_3.spawnPoints, GameConst.WAVE_3.goad, GameConst.WAVE_3.enemySpawnNumber);
-                break;
-            case 4:
-                EventHandle.emit('startSpawn', GameConst.WAVE_4.spawnPoints, GameConst.WAVE_4.goad, GameConst.WAVE_4.enemySpawnNumber);
-                break;
-            case 5:
-                EventHandle.emit('startSpawn', GameConst.WAVE_5.spawnPoints1, GameConst.WAVE_5.goad, GameConst.WAVE_5.enemySpawnNumber);
-                EventHandle.emit('startSpawn', GameConst.WAVE_5.spawnPoints2, GameConst.WAVE_5.goad, GameConst.WAVE_5.enemySpawnNumber);
-
-                break;
-            default:
-                break;
-        }
-    }
-
-    startNextWave() {   
-        this.startSpawn();
+    update(deltaTime: number) {
+        this.towerController.update(deltaTime);
+        this.enemySpawn.update(deltaTime);
+        this.projectileController.update(deltaTime);
     }
 
     LoadMap() {
@@ -154,7 +116,7 @@ export class MapGame extends Container {
                     sprite.eventMode = 'static';
                     sprite.cursor = 'pointer'
                     sprite.interactive = true;
-                    sprite.on('pointerdown', () => EventHandle.emit('tower_slot_clicked', (sprite) ));
+                    sprite.on('pointerdown', () => EventHandle.emit('tower_slot_clicked', (sprite)));
                 }
 
                 this.addChild(sprite);

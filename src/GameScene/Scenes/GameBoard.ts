@@ -11,12 +11,12 @@ export class GameBoard extends Container {
     private rightPan;
     private bottomPanel;
     private playerController;
-    
+
     constructor() {
         super();
-        this.playerController = new PlayerController(1000,10,1);
+        this.playerController = new PlayerController(1000, 10);
 
-        this.mapGame = new MapGame();    
+        this.mapGame = new MapGame();
         this.rightPan = new RightPanel();
         this.bottomPanel = new BottomPanel();
 
@@ -29,7 +29,7 @@ export class GameBoard extends Container {
         this.addChild(this.bottomPanel);
     }
 
-    update(time:number){
+    update(time: number) {
         this.mapGame.update(time);
     }
 }

@@ -1,16 +1,17 @@
 import { BitmapText, Container, Graphics, Sprite, Texture } from "pixi.js";
 import Asset from "../../GameBuild/Asset";
 import { PlayerController } from "../../Controller/PlayerController";
+import { MapGame } from "../Map/MapGame";
 
 
-export class RightPanel extends Container{
-    public static instance:RightPanel;
+export class RightPanel extends Container {
+    public static instance: RightPanel;
     private cointTxt: BitmapText;
     private healthTxt: BitmapText;
-    private waveTxt:BitmapText;
-    constructor(){
+    private waveTxt: BitmapText;
+    constructor() {
         super();
-        if(!RightPanel.instance){
+        if (!RightPanel.instance) {
             RightPanel.instance = this;
         }
         this.cointTxt = new BitmapText();
@@ -22,13 +23,13 @@ export class RightPanel extends Container{
         this.updateCoinDisplay();
     }
 
-    init(){
+    init() {
         this.width = 224;
         this.height = 768;
 
         const rightPanGrap = new Sprite(Texture.from('background_right'));
         rightPanGrap.x = 800;
-        
+
         const logo = new Sprite(Texture.from('logo_game'));
         logo.anchor.set(0.5);
         logo.x = 910;
@@ -64,34 +65,37 @@ export class RightPanel extends Container{
 
     }
 
-    propertyTxt(){
+    propertyTxt() {
         this.healthTxt = new BitmapText({
-            text:this.cointTxt, 
-            style:{
-            fontFamily: 'Peaberry',
-            fontSize: 21,
-            align: 'left'
-        }});
+            text: this.healthTxt,
+            style: {
+                fontFamily: 'Peaberry',
+                fontSize: 21,
+                align: 'left'
+            }
+        });
 
         this.healthTxt.position.set(900, 210);
 
         this.waveTxt = new BitmapText({
-            text:this.cointTxt, 
-            style:{
-            fontFamily: 'Peaberry',
-            fontSize: 21,
-            align: 'left'
-        }});
+            text: this.waveTxt,
+            style: {
+                fontFamily: 'Peaberry',
+                fontSize: 21,
+                align: 'left'
+            }
+        });
 
         this.waveTxt.position.set(900, 260);
 
         this.cointTxt = new BitmapText({
-            text:this.cointTxt, 
-            style:{
-            fontFamily: 'Peaberry',
-            fontSize: 21,
-            align: 'left'
-        }});
+            text: this.cointTxt,
+            style: {
+                fontFamily: 'Peaberry',
+                fontSize: 21,
+                align: 'left'
+            }
+        });
 
         this.cointTxt.position.set(900, 310);
 
@@ -103,7 +107,7 @@ export class RightPanel extends Container{
 
     updateCoinDisplay() {
         this.healthTxt.text = PlayerController.instance.hpPlayer.toString();
-        this.waveTxt.text = PlayerController.instance.waveAttack.toString();
+        this.waveTxt.text = PlayerController.instance.currentWave + '/' + PlayerController.instance.waveData.length;
         this.cointTxt.text = PlayerController.instance.cointPlayer.toString();
     }
 }

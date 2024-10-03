@@ -7,8 +7,8 @@ import { EventHandle } from "../GameBuild/EventHandle";
 import { MapGame } from "../GameScene/Map/MapGame";
 import { PlayerController } from "./PlayerController";
 
-export class EnemySpawner{
-    public static instance:EnemySpawner;
+export class EnemySpawner {
+    public static instance: EnemySpawner;
     private map: Container;
     private gridMap: number[][];
     private enemies: Enemy[] = [];
@@ -21,21 +21,9 @@ export class EnemySpawner{
         this.map = map;
         this.gridMap = MapGame.instance.gridMap;
         this.waveNumber = 0;
-  
-        this.listenEventHandle();
     }
 
-    listenEventHandle() {
-        EventHandle.on('startSpawn', (spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, enemiesPerWave: number) => {
-            this.isSpawning = false;
-
-            if(this.enemies.length === 0 && !this.isSpawning){
-                this.spawnWave(spawnPoint,goal,enemiesPerWave);
-            }
-        });
-    }
-
-    createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number },index:number) {
+    createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, index: number) {
         const enemyType = EnemyType.Goblin;
         const enemy = ObjectPool.instance.getEnemyFromPool(enemyType);
 
@@ -49,60 +37,66 @@ export class EnemySpawner{
 
         this.enemies.push(enemy);
 
-        enemy.sprite.zIndex = 2 + index;
-        console.log(enemy.sprite.zIndex );
+        enemy.sprite.zIndex = 1000 - index;
+        console.log(enemy.sprite.zIndex);
         this.map.sortChildren();
         this.map.addChild(enemy.sprite);
     }
 
     removeEnemy(deadEnemy: Enemy) {
-    const index = this.enemies.indexOf(deadEnemy);
-        if (index !== -1) {    
+        const index = this.enemies.indexOf(deadEnemy);
+        if (index !== -1) {
             this.enemies.splice(index, 1);
-            this.map.removeChild(deadEnemy.sprite);  
-        
+            this.map.removeChild(deadEnemy.sprite);
+
             ObjectPool.instance.returnEnemyToPool(deadEnemy.type, deadEnemy);
         }
     }
 
-    spawnWave(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, enemiesPerWave: number) {
-        this.waveNumber ++;
+    spawnWave(spawnPoints: { x: number, y: number }[], goal: { x: number, y: number }, enemiesPerWave: number) {
+        this.waveNumber++;
         this.currentEnemiesCount = 0;
         this.isSpawning = true;
-        
-        let index = enemiesPerWave;
+
         const spawnDelay = 1000;
+
         for (let i = 0; i < enemiesPerWave; i++) {
-            setTimeout(() => {
-                this.createEnemy(spawnPoint, goal,index);
-                this.currentEnemiesCount++;
-                index--;
-            }, i * spawnDelay + Math.random() * spawnDelay); 
+            spawnPoints.forEach(spawnPoint => {
+                setTimeout(() => {
+                    this.createEnemy(spawnPoint, goal, i);
+                    this.currentEnemiesCount++;
+                }, i * spawnDelay + Math.random() * spawnDelay);
+            });
         }
-    
+
         setTimeout(() => {
             this.isSpawning = false;
             console.log(`Wave ${this.waveNumber} completed.`);
-        }, enemiesPerWave * spawnDelay); 
+        }, enemiesPerWave * spawnDelay);
     }
 
 
     update(deltaTime: number) {
         this.enemies.forEach((enemy) => {
             enemy.update(deltaTime);
-  
+
             if (!enemy.isAlive || enemy.hasReachedGoal()) {
                 this.removeEnemy(enemy);
             }
 
-            if(!enemy.isAlive){
+            if (!enemy.isAlive) {
                 PlayerController.instance.addMoney(enemy.money);
             }
 
-            if(enemy.hasReachedGoal()){
+            if (enemy.hasReachedGoal()) {
                 PlayerController.instance.takeDamage(enemy.damage);
             }
-        });     
+        });
+
+        if (!this.isSpawning && this.getEnemies().length === 0 && this.waveNumber !== 0) {
+            EventHandle.emit('start_spawn');
+        }
+
     }
 
     public getEnemies(): Enemy[] {
