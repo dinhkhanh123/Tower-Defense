@@ -63,21 +63,4 @@ export class ProjectileController {
             projectile.update(delta);
         });
     }
-
-
-    //method tao vien dan
-    // goi den pool de lay vien dan
-    // set target cho vien dan, set id cua dich cho vien dan, set vi tri hien tai cho vien dan, set dame, set toc do
-
-    // method xoa vien dan
-    // tim vien dan trong list roi xoa di
-    // tra vien dan ve pool
-    // xoa hinh anh cua vien dan khoi game
-
-    // EventHandle.on nhan su kien tao vien dan tu tower. no se can vi tri dong cua ene va vi tri hien tai cua tower
-    // event on nhan su kien xoa vien dan: id / chinh vien dan
-    // const i = this projecttiles.findIndex(pro => pro === chinh vien dan)
-
-    //update
-    // update cac projects....
 }

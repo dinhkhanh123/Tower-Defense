@@ -4,7 +4,8 @@ import Asset from "../../GameBuild/Asset";
 import { Enemy } from "../Enemies/Enemy";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { TowerController } from "../../Controller/TowerController";
-import { PlayerController } from "../../Controller/PlayerController";
+import { PlayerController } from '../../Controller/PlayerController';
+
 
 export class Tower {
     public id: number;
@@ -17,7 +18,9 @@ export class Tower {
     public damageTower: { initDamage: number, damage: number };
     public rangeTower: { initRange: number, range: number };
     public attackSpeed: { initSpeed: number, speed: number };
-    public priceTower: { initPrice: number, price: number }
+    public priceTower: { initPrice: number, price: number };
+    public upgradeCosts: { [level: number]: number };
+
     public baseTower!: Sprite;
     public target: Enemy[] = [];
 
@@ -25,7 +28,7 @@ export class Tower {
     private cooldownTime: number;
     private attackTime: number;
 
-    constructor(id: number, type: TowerType, damage: number, range: number, attackSpeed: number, towerName: string, towerDetail: string, price: number) {
+    constructor(id: number, type: TowerType, damage: number, range: number, attackSpeed: number, towerName: string, towerDetail: string, price: number,upgradeCoint:{[level: number]: number } ) {
         this.id = id;
         this.type = type;
         this.towerName = towerName;
@@ -37,7 +40,7 @@ export class Tower {
         this.spriteTower = { initSprite: new Sprite(Asset.getTexture(`${type}_${this.levelTower.initLevel}`)), sprite: new Sprite(Asset.getTexture(`${type}_${this.levelTower.initLevel}`)) };
         this.imageTower = { initImage: new Sprite(Asset.getTexture(`${type}_Img_${this.levelTower.initLevel}`)), image: new Sprite(Asset.getTexture(`${type}_Img_${this.levelTower.initLevel}`)) };
         this.priceTower = { initPrice: price, price: price };
-
+        this.upgradeCosts = upgradeCoint; 
         this.cooldownTime = 50 / this.attackSpeed.speed;
         this.attackTime = 0;
 
@@ -63,8 +66,8 @@ export class Tower {
         }
     }
 
-    private Uprade(idTower: number) {
-        if (idTower === this.id && this.levelTower.level < 3) {
+    private Uprade(idTower: number,priceUpgrade:number) {
+        if (idTower === this.id && this.levelTower.level < 3 && priceUpgrade <= PlayerController.instance.cointPlayer) {
             this.levelTower.level++;
             this.spriteTower.sprite.texture = Asset.getTexture(`${this.type}_${this.levelTower.level}`);
             this.imageTower.image.texture = Asset.getTexture(`${this.type}_Img_${this.levelTower.level}`);
@@ -80,6 +83,8 @@ export class Tower {
                 damage: this.damageTower.damage,
                 speedAttack: this.attackSpeed.speed,
                 sprite: this.imageTower.image,
+                priceTower:this.priceTower.price,
+                upgradePrice: this.upgradeCosts,
                 range: {
                     range: this.rangeTower.range,
                     x: this.spriteTower.sprite.position.x,
@@ -87,22 +92,23 @@ export class Tower {
                 }
             };
             EventHandle.emit('tower_clicked', optionTower);
+            PlayerController.instance.subtractMoney(priceUpgrade);
         }
     }
 
-    private Sell(idTower: number) {
+    private Sell(idTower: number,price:number) {
         if (idTower === this.id) {
 
-            TowerController.instance.removeTower(this);
+            TowerController.instance.removeTower(this,price);
         }
     }
 
     private Buy(idTower: number) {
-        if (idTower === this.id && PlayerController.instance) {
-
-            PlayerController.instance.subtractMoney(this.priceTower.price);
+        if (idTower === this.id) {
+            
+            PlayerController.instance.subtractMoney(this.priceTower.price);  
         }
-
+        
     }
 
     public isInRange(enemyPosition: PointData): boolean {
@@ -115,9 +121,8 @@ export class Tower {
 
 
     listenEventHandle() {
-        EventHandle.on('uprade_tower', (idTower: number) => this.Uprade(idTower));
-        EventHandle.on('sell_tower', (idTower: number) => this.Sell(idTower));
+        EventHandle.on('uprade_tower', (idTower: number,priceUpgrade) => this.Uprade(idTower,priceUpgrade));
+        EventHandle.on('sell_tower', (idTower: number,priceSell:number) => this.Sell(idTower,priceSell));
         EventHandle.on('buy_tower', (idTower: number) => this.Buy(idTower));
-
     }
 }

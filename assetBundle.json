@@ -25,7 +25,15 @@
             {
                 "alias": "btn_back",
                 "src": "./atlas/img/btn_back.png"
-            }
+            },
+            {
+               "alias": "healthbar_bg",
+                "src": "./atlas/img/bar-health-enemy.png" 
+            },
+            {
+                "alias": "healthbar_fg",
+                 "src": "./atlas/img/healthbar_fg.png" 
+             }
         ]
     }
   ]

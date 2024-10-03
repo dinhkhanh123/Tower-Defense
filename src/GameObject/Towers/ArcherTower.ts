@@ -5,13 +5,19 @@ import { Texture } from 'pixi.js';
 export class ArcherTower extends Tower {
     constructor(id: number) {
         const damage = 5;
-        const range = 80;
+        const range = 90;
         const attackSpeed = 1;
         const towerDetail = "Archer Tower";
         const towerName = TowerType.Archer.toString();
         const price = 100;
-
+        const upgradeCosts = {
+            2: 110,  
+            3: 160  
+        };
+ 
         // ID và loại tower là Archer
-        super(id, TowerType.Archer, damage, range, attackSpeed, towerName, towerDetail, price);
+        super(id, TowerType.Archer, damage, range, attackSpeed, towerName, towerDetail, price,upgradeCosts);
+
+
     }
 }

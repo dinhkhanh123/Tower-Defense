@@ -1,6 +1,7 @@
-import { TowerType } from './TowerType';
-import { Tower } from './Tower';
+
 import { Texture } from 'pixi.js';
+import { Tower } from './Tower';
+import { TowerType } from './TowerType';
 
 
 export class TechTower extends Tower {
@@ -11,8 +12,13 @@ export class TechTower extends Tower {
         const towerDetail = "Tech Tower";
         const towerName = TowerType.Tech.toString();
         const price = 200;
+        const upgradeCosts = {
+            2: 240,
+            3: 300
+        };
 
-        // ID và loại tower là Tech
-        super(id, TowerType.Tech, damage, range, attackSpeed, towerName, towerDetail, price);
+        super(id, TowerType.Tech, damage, range, attackSpeed, towerName, towerDetail, price,upgradeCosts);
+
+
     }
 }

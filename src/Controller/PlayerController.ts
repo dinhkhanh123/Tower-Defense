@@ -1,29 +1,39 @@
+import { RightPanel } from "../GameScene/UIRight/RightPanel";
+
 export class PlayerController {
     public static instance: PlayerController;
-    public coint: number;
-    public hp: number;
-    public wave: number;
+    public cointPlayer: number;
+    public hpPlayer: number;
+    public waveAttack: number;
 
-    constructor() {
+    public isGameStart:boolean;
+    public isGameOver:boolean;
+
+    constructor(coint:number,hp:number,wave:number) {
         if (!PlayerController.instance) {
             PlayerController.instance = this;
         }
 
-        // Khởi tạo các thuộc tính
-        this.coint = 500;
-        this.hp = 100;
-        this.wave = 1;
+        this.cointPlayer = coint;
+        this.hpPlayer = hp;
+        this.waveAttack = wave;
+
+        this.isGameStart = false;
+        this.isGameOver = false;
+    
     }
 
     public addMoney(amount: number) {
-        this.coint += amount;
-        console.log(`Money added: ${amount}. Total money: ${this.coint}`);
+        this.cointPlayer += amount;
+        RightPanel.instance.updateCoinDisplay();
+        console.log(`Money added: ${amount}. Total money: ${this.cointPlayer}`);
     }
 
     public subtractMoney(amount: number) {
-        if (this.coint >= amount) {
-            this.coint -= amount;
-            console.log(`Money subtracted: ${amount}. Total money: ${this.coint}`);
+        if (this.cointPlayer >= amount) {
+            this.cointPlayer -= amount;
+            console.log(`Money subtracted: ${amount}. Total money: ${this.cointPlayer}`);
+            RightPanel.instance.updateCoinDisplay();
 
         } else {
             console.log("Not enough money.");
@@ -31,21 +41,23 @@ export class PlayerController {
     }
 
     public takeDamage(damage: number): void {
-        this.hp -= damage;
-        if (this.hp < 0) {
-            this.hp = 0;
+        this.hpPlayer -= damage;
+        if (this.hpPlayer <= 0) {
+            this.hpPlayer = 0;
+            this.isGameOver = true;
+        
         }
-        console.log(`Took damage: ${damage}. Remaining HP: ${this.hp}`);
+        RightPanel.instance.updateCoinDisplay();
+        console.log(`Took damage: ${damage}. Remaining HP: ${this.hpPlayer}`);
     }
 
     public heal(amount: number): void {
-        this.hp += amount;
-        console.log(`Healed: ${amount}. Current HP: ${this.hp}`);
+        this.hpPlayer += amount;
+        console.log(`Healed: ${amount}. Current HP: ${this.hpPlayer}`);
     }
 
-
     public nextWave(): void {
-        this.wave += 1;
-        console.log(`Wave advanced to: ${this.wave}`);
+        this.waveAttack += 1;
+        console.log(`Wave advanced to: ${this.waveAttack}`);
     }
 }

@@ -10,12 +10,13 @@ export class MageTower extends Tower {
         const towerDetail = "Mage Tower";
         const towerName = TowerType.Mage.toString();
         const price = 150;
-
+        const upgradeCosts = {
+            2: 160,  
+            3: 210  
+        };
         // ID và loại tower là Mage
-        super(id, TowerType.Mage, damage, range, attackSpeed, towerName, towerDetail, price);
-    }
+        super(id, TowerType.Mage, damage, range, attackSpeed, towerName, towerDetail, price,upgradeCosts);
 
-    attack() {
-        console.log('Mage Tower casting spells!');
+  
     }
 }

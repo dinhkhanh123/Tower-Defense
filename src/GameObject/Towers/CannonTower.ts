@@ -10,8 +10,11 @@ export class CannonTower extends Tower {
         const towerDetail = "Canon Tower";
         const towerName = TowerType.Cannon.toString();
         const price = 250;
-
+        const upgradeCosts = {
+            2: 300,  
+            3: 350  
+        };
         // ID và loại tower là Mag
-        super(id, TowerType.Cannon, damage, range, attackSpeed, towerName, towerDetail, price);
+        super(id, TowerType.Cannon, damage, range, attackSpeed, towerName, towerDetail, price,upgradeCosts);
     }
 }

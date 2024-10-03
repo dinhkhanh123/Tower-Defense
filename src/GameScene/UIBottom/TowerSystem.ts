@@ -5,6 +5,7 @@ import { TowerType } from "../../GameObject/Towers/TowerType";
 import { TowerController } from "../../Controller/TowerController";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { BottomPanel } from "./BottomPanel";
+import { PlayerController } from '../../Controller/PlayerController';
 
 export class TowerSystem extends Container {
     //private posTower!: { x: number; y: number };
@@ -52,12 +53,19 @@ export class TowerSystem extends Container {
             towerSprite.image.eventMode = 'static';
             towerSprite.image.cursor = 'pointer';
 
-            towerSprite.image.on('pointerdown', () => {
-                const selectedTowerType = towers[i].type;
-                EventHandle.emit('buy_tower', towers[i].id);
-                TowerController.instance.createTower(selectedTowerType, this.baseSprite);
-                BottomPanel.instance.setVisibleSystem('skill');
-            });
+            
+                towerSprite.image.on('pointerdown', () => {
+                    const selectedTowerType = towers[i].type;
+
+                    if(towers[i].priceTower.price <= PlayerController.instance.cointPlayer){
+                        EventHandle.emit('buy_tower', towers[i].id);
+                        TowerController.instance.createTower(selectedTowerType, this.baseSprite);
+                        BottomPanel.instance.setVisibleSystem('skill');
+                    }
+                });
+         
+
+          
 
             this.addChild(towerSprite.image);
 

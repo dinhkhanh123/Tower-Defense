@@ -6,7 +6,7 @@ import { EventHandle } from "../GameBuild/EventHandle";
 import { BottomPanel } from "../GameScene/UIBottom/BottomPanel";
 import { EnemySpawner } from "./SpawnEnemy";
 import Asset from "../GameBuild/Asset";
-
+import { PlayerController } from "./PlayerController";
 
 export class TowerController {
     public static instance: TowerController;
@@ -28,7 +28,6 @@ export class TowerController {
         tower.baseTower = baseSprite;
         tower.spriteTower.sprite.position = baseSprite.position;
         this.towers.push(tower);
-
         baseSprite.on('pointerdown', () => {
             const optionTower = {
                 id: tower.id,
@@ -38,28 +37,33 @@ export class TowerController {
                 damage: tower.damageTower.damage,
                 speedAttack: tower.attackSpeed.speed,
                 sprite: tower.imageTower.image,
+                priceTower: tower.priceTower.price,
+                upgradePrice: tower.upgradeCosts,
                 range: {
                     range: tower.rangeTower.range,
                     x: tower.baseTower.position.x,
                     y: tower.baseTower.position.y
                 }
             };
+
+     
             EventHandle.emit('tower_clicked', optionTower);
             BottomPanel.instance.setVisibleSystem('infor');
-        });
+        }); 
 
         tower.spriteTower.sprite.zIndex = 1;
         this.map.addChild(tower.spriteTower.sprite);
     }
 
-    public removeTower(tower: Tower) {
+    public removeTower(tower: Tower,price:number) {
         const index = this.towers.indexOf(tower);
         if (index !== -1) {
             this.towers.splice(index, 1);
             this.map.removeChild(tower.spriteTower.sprite);
+
+            PlayerController.instance.addMoney(price);
             ObjectPool.instance.returnTowerToPool(tower.type, tower);
         }
-
 
         const slotSprite = new Sprite(Asset.getTexture('build'));
         tower.baseTower.texture = slotSprite.texture;
@@ -73,7 +77,6 @@ export class TowerController {
     }
 
     public update(deltaTime: number) {
-        // Cập nhật tất cả các tháp
         this.towers.forEach(tower => {
             // Kiểm tra xem có kẻ địch nào trong tầm bắn
             const enemiesInRange = EnemySpawner.instance.getEnemies().filter(enemy =>

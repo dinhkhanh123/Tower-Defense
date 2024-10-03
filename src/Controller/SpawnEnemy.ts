@@ -5,6 +5,7 @@ import { GameConst } from "../GameBuild/GameConst";
 import { ObjectPool } from "../ObjectPool/ObjectPool";
 import { EventHandle } from "../GameBuild/EventHandle";
 import { MapGame } from "../GameScene/Map/MapGame";
+import { PlayerController } from "./PlayerController";
 
 export class EnemySpawner{
     public static instance:EnemySpawner;
@@ -43,7 +44,6 @@ export class EnemySpawner{
         enemy.sprite.x = spawnPoint.x * GameConst.SQUARE_SIZE;
         enemy.sprite.y = spawnPoint.y * GameConst.SQUARE_SIZE;
 
-        enemy.sprite.anchor.set(0.5);
 
         enemy.setPosition(spawnPoint, goal, this.gridMap);
 
@@ -60,7 +60,7 @@ export class EnemySpawner{
         if (index !== -1) {    
             this.enemies.splice(index, 1);
             this.map.removeChild(deadEnemy.sprite);  
-    
+        
             ObjectPool.instance.returnEnemyToPool(deadEnemy.type, deadEnemy);
         }
     }
@@ -94,11 +94,18 @@ export class EnemySpawner{
             if (!enemy.isAlive || enemy.hasReachedGoal()) {
                 this.removeEnemy(enemy);
             }
+
+            if(!enemy.isAlive){
+                PlayerController.instance.addMoney(enemy.money);
+            }
+
+            if(enemy.hasReachedGoal()){
+                PlayerController.instance.takeDamage(enemy.damage);
+            }
         });     
     }
 
     public getEnemies(): Enemy[] {
         return this.enemies;
     }
-
 }

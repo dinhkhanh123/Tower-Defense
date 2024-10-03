@@ -1,12 +1,25 @@
-import { Container, Graphics, Sprite, Texture } from "pixi.js";
+import { BitmapText, Container, Graphics, Sprite, Texture } from "pixi.js";
 import Asset from "../../GameBuild/Asset";
+import { PlayerController } from "../../Controller/PlayerController";
 
 
 export class RightPanel extends Container{
-
+    public static instance:RightPanel;
+    private cointTxt: BitmapText;
+    private healthTxt: BitmapText;
+    private waveTxt:BitmapText;
     constructor(){
         super();
+        if(!RightPanel.instance){
+            RightPanel.instance = this;
+        }
+        this.cointTxt = new BitmapText();
+        this.waveTxt = new BitmapText();
+        this.healthTxt = new BitmapText();
+
         this.init();
+        this.propertyTxt();
+        this.updateCoinDisplay();
     }
 
     init(){
@@ -42,9 +55,6 @@ export class RightPanel extends Container{
         coin.width = 30;
         coin.height = 30;
 
-        
-
-
         this.addChild(rightPanGrap);
         this.addChild(logo);
         this.addChild(coin);
@@ -52,5 +62,48 @@ export class RightPanel extends Container{
         this.addChild(health);
 
 
+    }
+
+    propertyTxt(){
+        this.healthTxt = new BitmapText({
+            text:this.cointTxt, 
+            style:{
+            fontFamily: 'Peaberry',
+            fontSize: 21,
+            align: 'left'
+        }});
+
+        this.healthTxt.position.set(900, 210);
+
+        this.waveTxt = new BitmapText({
+            text:this.cointTxt, 
+            style:{
+            fontFamily: 'Peaberry',
+            fontSize: 21,
+            align: 'left'
+        }});
+
+        this.waveTxt.position.set(900, 260);
+
+        this.cointTxt = new BitmapText({
+            text:this.cointTxt, 
+            style:{
+            fontFamily: 'Peaberry',
+            fontSize: 21,
+            align: 'left'
+        }});
+
+        this.cointTxt.position.set(900, 310);
+
+        this.addChild(this.cointTxt);
+        this.addChild(this.waveTxt);
+        this.addChild(this.healthTxt);
+    }
+
+
+    updateCoinDisplay() {
+        this.healthTxt.text = PlayerController.instance.hpPlayer.toString();
+        this.waveTxt.text = PlayerController.instance.waveAttack.toString();
+        this.cointTxt.text = PlayerController.instance.cointPlayer.toString();
     }
 }

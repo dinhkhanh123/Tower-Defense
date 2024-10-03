@@ -1,19 +1,20 @@
 import { Sprite } from "pixi.js";
-import { Bandit } from "../GameObject/Enemies/Bandit";
-import { Brigand } from "../GameObject/Enemies/Brigand";
-import { Enemy } from "../GameObject/Enemies/Enemy";
-import { EnemyType } from "../GameObject/Enemies/EnemyType";
-import { Goblin } from "../GameObject/Enemies/Goblin";
-import Ogre from "../GameObject/Enemies/Ogre";
-import { Shaman } from "../GameObject/Enemies/Shaman";
-import { Projectile } from "../GameObject/Projectiles/Projectile";
-import { ArcherTower } from "../GameObject/Towers/ArcherTower";
-import { CannonTower } from "../GameObject/Towers/CannonTower";
-import { MageTower } from "../GameObject/Towers/MageTower";
-import { TechTower } from "../GameObject/Towers/TechTower";
+
 import { Tower } from "../GameObject/Towers/Tower";
 import { TowerType } from '../GameObject/Towers/TowerType';
 import Asset from "../GameBuild/Asset";
+import { ArcherTower } from "../GameObject/Towers/ArcherTower";
+import { MageTower } from "../GameObject/Towers/MageTower";
+import { TechTower } from "../GameObject/Towers/TechTower";
+import { CannonTower } from "../GameObject/Towers/CannonTower";
+import { EnemyType } from "../GameObject/Enemies/EnemyType";
+import { Enemy } from "../GameObject/Enemies/Enemy";
+import { Goblin } from "../GameObject/Enemies/EnemyData/Goblin";
+import { Shaman } from "../GameObject/Enemies/EnemyData/Shaman";
+import { Brigand } from "../GameObject/Enemies/EnemyData/Brigand";
+import { Bandit } from "../GameObject/Enemies/EnemyData/Bandit";
+import Ogre from "../GameObject/Enemies/EnemyData/Ogre";
+import { Projectile } from "../GameObject/Projectiles/Projectile";
 
 
 export class TowerFactory {

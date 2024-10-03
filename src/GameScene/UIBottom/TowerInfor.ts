@@ -5,13 +5,16 @@ import { Tower } from "../../GameObject/Towers/Tower";
 import Asset from "../../GameBuild/Asset";
 
 export class TowerInfor extends Container {
-    private towerId: Number;
-    private levelTower:number;
+    private towerId: number;
+    private levelTower: number;
+    private priceTower: number;
+    private priceUpgrade!: number;
+    private priceUpgradeTxt: BitmapText;
     private towerSprite: Sprite;
     private towerNameTxt: BitmapText;
     private towerDetailTxt: BitmapText;
-    private towerInforTxt:BitmapText;
-    private towerRange:Sprite
+    private towerInforTxt: BitmapText;
+    private towerRange: Sprite
 
     private towerUprade: Graphics;
     private towerSell: Graphics;
@@ -20,19 +23,24 @@ export class TowerInfor extends Container {
         super();
         this.towerId = 0;
         this.levelTower = 0;
+        this.priceTower = 0;
         this.towerSprite = new Sprite();
         this.towerNameTxt = new BitmapText();
         this.towerDetailTxt = new BitmapText();
         this.towerInforTxt = new BitmapText();
+        this.priceUpgradeTxt = new BitmapText();
+
         this.towerRange = new Sprite();
 
         this.towerUprade = new Graphics();
         this.towerSell = new Graphics();
 
         this.addChild(this.towerRange);
+
         this.init();
         this.textTower();
         this.listenToEvents();
+
     }
 
     init() {
@@ -58,10 +66,10 @@ export class TowerInfor extends Container {
 
     }
 
-    textTower(){
+    textTower() {
 
         this.towerSprite = new Sprite();
-        this.towerSprite.position.set(100, 610); 
+        this.towerSprite.position.set(100, 610);
         this.towerSprite.width = 80;
         this.towerSprite.height = 100;
 
@@ -94,32 +102,45 @@ export class TowerInfor extends Container {
         });
         this.towerInforTxt.position.set(200, 680);
 
-        this.towerUprade.rect(500,630,100,30);
+        this.towerUprade.rect(500, 630, 100, 30);
         this.towerUprade.fill(0x72BF78);
-        this.towerUprade.eventMode='static';
+        this.towerUprade.eventMode = 'static';
         this.towerUprade.cursor = 'pointer';
         this.towerUprade.interactive = true
 
-        this.towerUprade.on('pointerdown',()=>{
-            EventHandle.emit('uprade_tower', this.towerId);
+        this.priceUpgradeTxt = new BitmapText({
+            text: this.priceUpgradeTxt,
+            style: {
+                fontFamily: 'Peaberry',
+                fontSize: 16,
+                align: 'left'
+            }
         });
 
-        // if(this.levelTower === 3){
-        //     this.towerUprade.visible = false;
-        // }
+        this.priceUpgradeTxt.position.set(550, 630);
 
-        this.towerSell.rect(500,670,100,30);
+
+        this.towerUprade.on('pointerdown', () => {
+
+
+            EventHandle.emit('uprade_tower', this.towerId, this.priceUpgrade);
+
+
+        });
+
+        this.towerSell.rect(500, 670, 100, 30);
         this.towerSell.fill(0xE78F81);
         this.towerSell.eventMode = 'static';
         this.towerSell.cursor = 'pointer';
         this.towerSell.interactive = true;
 
-        this.towerSell.on('pointerdown',()=>{
-            EventHandle.emit('sell_tower', this.towerId);
+        this.towerSell.on('pointerdown', () => {
+
+            EventHandle.emit('sell_tower', this.towerId, this.priceTower);
         });
 
 
-        this.addChild(this.towerSprite); 
+        this.addChild(this.towerSprite);
         this.addChild(this.towerNameTxt);
         this.addChild(this.towerDetailTxt);
         this.addChild(this.towerInforTxt);
@@ -127,19 +148,22 @@ export class TowerInfor extends Container {
         this.addChild(this.towerUprade);
         this.addChild(this.towerSell);
 
+        this.addChild(this.priceUpgradeTxt);
 
     }
-    
+
 
     listenToEvents() {
-        EventHandle.on('tower_clicked', (optionTower:{
-            id:number,
+        EventHandle.on('tower_clicked', (optionTower: {
+            id: number,
             level: number;
             towerName: string;
             towerDetail: string;
             damage: number;
             speedAttack: number;
             sprite: Sprite;
+            priceTower: number;
+            upgradePrice: { [level: number]: number };
             range: {
                 range: number;
                 x: number;
@@ -148,16 +172,24 @@ export class TowerInfor extends Container {
         }) => {
             this.towerId = optionTower.id;
             this.levelTower = optionTower.level;
+            this.priceTower = optionTower.priceTower;
+            // Cập nhật giá nâng cấp
+            if (this.levelTower < 3) {
+                this.priceUpgrade = optionTower.upgradePrice[this.levelTower + 1];
+                this.priceUpgradeTxt.text = this.priceUpgrade.toString();
+            } else {
+                this.priceUpgradeTxt.text = "Max Level";  // Hiển thị khi đã đạt cấp tối đa
+            }
             this.towerSprite.texture = optionTower.sprite.texture;
             this.towerNameTxt.text = optionTower.towerName.toString();
             this.towerDetailTxt.text = optionTower.towerDetail.toString();
             this.towerInforTxt.text = 'Level: ' + optionTower.level + '  ' + 'Damage: ' + optionTower.damage + '  ' + 'Speed Attack: ' + optionTower.speedAttack;
             this.towerRange.texture = Asset.getTexture('range');
             this.towerRange.anchor.set(0.5);
-            this.towerRange.position.set(optionTower.range.x + 20 ,optionTower.range.y + 20);
-            this.towerRange.width = optionTower.range.range*2;
-            this.towerRange.height = optionTower.range.range*2;
-                    
+            this.towerRange.position.set(optionTower.range.x + 20, optionTower.range.y + 20);
+            this.towerRange.width = optionTower.range.range * 2;
+            this.towerRange.height = optionTower.range.range * 2;
+
         });
     }
 }
