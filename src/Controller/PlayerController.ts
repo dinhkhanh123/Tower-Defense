@@ -74,7 +74,8 @@ export class PlayerController {
             EnemySpawner.instance.spawnWave(
                 Array.isArray(waveInfo.spawnPoints) ? waveInfo.spawnPoints : [waveInfo.spawnPoints],
                 waveInfo.goad,
-                waveInfo.enemySpawnNumber
+                waveInfo.enemySpawnNumber,
+                waveInfo.typeEnemy
             );
 
         } else {

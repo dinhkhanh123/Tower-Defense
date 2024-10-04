@@ -118,8 +118,15 @@ export class MapGame extends Container {
                     sprite.interactive = true;
                     sprite.on('pointerdown', () => EventHandle.emit('tower_slot_clicked', (sprite)));
                 }
+            const defenseSprite = new Sprite(Asset.getTexture('defense'));
+            defenseSprite.anchor.set(0.5);
+            defenseSprite.scale.set(0.8);
+
+            defenseSprite.x = GameConst.WAVE_1.goad.x * GameConst.SQUARE_SIZE + 40;
+            defenseSprite.y = GameConst.WAVE_1.goad.y * GameConst.SQUARE_SIZE;
 
                 this.addChild(sprite);
+                this.addChild(defenseSprite);
             }
         }
     }

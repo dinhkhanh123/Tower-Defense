@@ -1,4 +1,4 @@
-import { Container, Sprite, Texture, Point, Assets } from "pixi.js";
+import { Container, Sprite, Texture, Point, Assets, AnimatedSprite } from "pixi.js";
 import { Enemy } from "../GameObject/Enemies/Enemy";
 import { EnemyType } from "../GameObject/Enemies/EnemyType";
 import { GameConst } from "../GameBuild/GameConst";
@@ -6,6 +6,7 @@ import { ObjectPool } from "../ObjectPool/ObjectPool";
 import { EventHandle } from "../GameBuild/EventHandle";
 import { MapGame } from "../GameScene/Map/MapGame";
 import { PlayerController } from "./PlayerController";
+import Asset from "../GameBuild/Asset";
 
 export class EnemySpawner {
     public static instance: EnemySpawner;
@@ -20,12 +21,12 @@ export class EnemySpawner {
         EnemySpawner.instance = this;
         this.map = map;
         this.gridMap = MapGame.instance.gridMap;
-        this.waveNumber = 0;
+        this.waveNumber = 0;    
     }
 
-    createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, index: number) {
-        const enemyType = EnemyType.Goblin;
-        const enemy = ObjectPool.instance.getEnemyFromPool(enemyType);
+    createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number },enemyType:EnemyType[]) {
+
+        const enemy = ObjectPool.instance.getEnemyFromPool(enemyType[Math.floor(Math.random() * enemyType.length)]);
 
         enemy.reset();
 
@@ -37,8 +38,6 @@ export class EnemySpawner {
 
         this.enemies.push(enemy);
 
-        enemy.sprite.zIndex = 1000 - index;
-        console.log(enemy.sprite.zIndex);
         this.map.sortChildren();
         this.map.addChild(enemy.sprite);
     }
@@ -53,17 +52,17 @@ export class EnemySpawner {
         }
     }
 
-    spawnWave(spawnPoints: { x: number, y: number }[], goal: { x: number, y: number }, enemiesPerWave: number) {
+    spawnWave(spawnPoints: { x: number, y: number }[], goal: { x: number, y: number }, enemiesPerWave: number, enemyType: EnemyType[]) {
         this.waveNumber++;
         this.currentEnemiesCount = 0;
         this.isSpawning = true;
 
-        const spawnDelay = 1000;
+        const spawnDelay = 2000;
 
         for (let i = 0; i < enemiesPerWave; i++) {
             spawnPoints.forEach(spawnPoint => {
                 setTimeout(() => {
-                    this.createEnemy(spawnPoint, goal, i);
+                    this.createEnemy(spawnPoint, goal,enemyType);
                     this.currentEnemiesCount++;
                 }, i * spawnDelay + Math.random() * spawnDelay);
             });
@@ -71,7 +70,6 @@ export class EnemySpawner {
 
         setTimeout(() => {
             this.isSpawning = false;
-            console.log(`Wave ${this.waveNumber} completed.`);
         }, enemiesPerWave * spawnDelay);
     }
 
@@ -93,11 +91,33 @@ export class EnemySpawner {
             }
         });
 
+        this.updateEnemyZIndex() ;
+
         if (!this.isSpawning && this.getEnemies().length === 0 && this.waveNumber !== 0) {
             EventHandle.emit('start_spawn');
         }
 
     }
+
+    private updateEnemyZIndex() {
+        this.enemies.forEach((enemy) => {
+            enemy.sprite.zIndex = 2;
+        });
+    
+        // Cập nhật zIndex cho từng enemy dựa trên tọa độ
+        for (let i = 0; i < this.enemies.length; i++) {
+            const enemy1 = this.enemies[i];
+            for (let j = 0; j < this.enemies.length; j++) {
+                const enemy2 = this.enemies[j];
+                if (enemy1 !== enemy2) {
+                    // Nếu enemy1 nằm dưới enemy2 (có y lớn hơn), tăng zIndex
+                    if (enemy1.sprite.y > enemy2.sprite.y || 
+                       (enemy1.sprite.y === enemy2.sprite.y && enemy1.sprite.x > enemy2.sprite.x)) {
+                        enemy1.sprite.zIndex++;
+                    }
+                }
+            }
+        }}
 
     public getEnemies(): Enemy[] {
         return this.enemies;

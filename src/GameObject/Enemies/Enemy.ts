@@ -1,4 +1,4 @@
-import { Container, Point, PointData, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Container, Point, PointData, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
 import { EnemyType } from "./EnemyType";
 import Asset from "../../GameBuild/Asset";
@@ -24,10 +24,8 @@ export class Enemy {
     private pathfinding!: Pathfinding;
     private currentPathIndex: number = 0;
 
-
     private healthBar: HealthBar;
-
-
+    private anim: AnimatedSprite;
 
     constructor(id: number, type: EnemyType, hp: number, speed: number, damage: number, money: number) {
         this.sprite = new Container();
@@ -39,16 +37,16 @@ export class Enemy {
         this._speed = { speedConst: speed, speedCount: speed };
         this.position = { x: this.sprite.x, y: this.sprite.y };
         this.isAlive = true;
-
-        const enemySprite = new Sprite(Asset.getTexture(type));
-        enemySprite.anchor.set(0.5);
-        this.sprite.addChild(enemySprite);
-
-
-
         this.healthBar = new HealthBar(this);
 
+        // const enemySprite = new Sprite(Asset.getTexture(type));
+        // enemySprite.anchor.set(0.5);
 
+        this.anim = new AnimatedSprite(Asset.getAnimation(`${this.type}_move_left`));
+        this.anim.anchor.set(0.5);
+        this.anim.scale.set(0.5);
+
+        this.sprite.addChild(this.anim);
         this.listenEventHandle();
     }
 
@@ -62,12 +60,9 @@ export class Enemy {
         this._hp.hpCount = this._hp.hpConst;
         this.isAlive = true;
         this.currentPathIndex = 0;
-
-            // Đặt lại thanh máu về trạng thái đầy đủ
-    const fullHealthPercent = 1;
-    this.healthBar.updateHealthBar(fullHealthPercent);
-
-
+        const fullHealthPercent = 1;
+        this.healthBar.updateHealthBar(fullHealthPercent);
+        this.anim.play();
     }
 
     setPosition(pointStart: { x: number, y: number }, pointEnd: { x: number, y: number }, gridMap: number[][]) {
@@ -90,6 +85,33 @@ export class Enemy {
             if (dist > 1) {
                 this.sprite.x += (dx / dist) * this._speed.speedCount * delta;
                 this.sprite.y += (dy / dist) * this._speed.speedCount * delta;
+
+                // Cập nhật hoạt ảnh dựa trên hướng di chuyển
+                let newTexture;
+
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 0) {
+                        newTexture = Asset.getAnimation(`${this.type}_move_right`);
+                    } else {
+                        newTexture = Asset.getAnimation(`${this.type}_move_left`);
+                    }
+                } else {
+                    if (dy > 0) {
+                        newTexture = Asset.getAnimation(`${this.type}_move_down`);
+                    } else {
+                        newTexture = Asset.getAnimation(`${this.type}_move_up`);
+                    }
+                }
+
+                // Chỉ thay đổi textures khi cần thiết
+                if (this.anim.textures !== newTexture) {
+                    this.anim.textures = newTexture;
+                    this.anim.play();
+                }
+
+                this.anim.animationSpeed = 0.1;
+
+                this.sprite.addChild(this.anim);
             } else {
                 this.currentPathIndex++;
             }
@@ -119,7 +141,6 @@ export class Enemy {
         }
     }
 
-
     hasReachedGoal(): boolean {
         const dx = this.goalPosition.x * GameConst.SQUARE_SIZE - this.sprite.x;
         const dy = this.goalPosition.y * GameConst.SQUARE_SIZE - this.sprite.y;
@@ -127,42 +148,4 @@ export class Enemy {
 
         return distance < 1;
     }
-
-    updateTexture(dx: number, dy: number) {
-        // const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
-        // if (angle >= -45 && angle < 45) {
-        //     this.sprite = new Sprite(Texture.from('enemy2'));
-        // } else if (angle >= 45 && angle < 135) {
-        //     this.sprite = new Sprite(Texture.from('enemy1'));
-        // } else if (angle >= -135 && angle < -45) {
-        //     this.sprite = new Sprite(Texture.from('enemy2'));
-        // } else {
-        //     this.sprite = new Sprite(Texture.from('enemy1'));
-        // }
-    }
-
 }
-    //Kiểm tra nếu kẻ thù đã đến cuối lộ trình
-    // hasReachedEnd(): boolean {
-    //     return this.currentPathIndex >= this.path.length - 1;
-    // }
-// if (this.currentPathIndex < this.path.length) {
-//     const target = this.path[this.currentPathIndex];
-//     const dx = target.x * GameConst.SQUARE_SIZE - this.sprite.x;
-//     const dy = target.y * GameConst.SQUARE_SIZE - this.sprite.y;
-//     const dist = Math.sqrt(dx * dx + dy * dy);
-
-//     if (dist > 1) {
-//         const angle = Math.atan2(dy, dx);
-
-//         this.sprite.rotation = angle;
-
-//        // this.updateTexture(dx, dy);
-
-//         this.sprite.x += (dx / dist) * this.speed * delta;
-//         this.sprite.y += (dy / dist) * this.speed * delta;
-//     } else {
-//         this.currentPathIndex++; 
-//     }
-// }

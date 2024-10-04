@@ -4,7 +4,7 @@ import { EnemyType } from "../EnemyType";
 export default class Ogre extends Enemy{
     constructor(id:number){
         const hp = 50;
-        const speed = 2;
+        const speed = .9;
         const damage = 5;
         const money = 20;
 

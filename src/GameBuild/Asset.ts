@@ -2,6 +2,7 @@ import { Assets, Texture } from 'pixi.js';
 
 export default class Asset {
     static texture: Record<string, Texture> = {};
+    static animations: Record<string, any> = {};
 
     // Hàm để load các file atlas JSON và lưu các texture
     static async loadAtlas(atlasFiles: string[]) {
@@ -24,6 +25,11 @@ export default class Asset {
         await Assets.load(bitmapFile);
     }
 
+    static async loadAnimations(animationFile: string) {
+        const data = await Assets.load(animationFile);
+        Asset.animations = data.animations; // Lưu trữ dữ liệu animations
+    }
+
     // Hàm để lấy texture theo tên
     static getTexture(name: string): Texture {
         const texture = this.texture[name];
@@ -31,5 +37,13 @@ export default class Asset {
             throw new Error(`Texture ${name} not found in atlas.`);
         }
         return texture;
+    }
+
+    static getAnimation(name: string) {
+        const animation = this.animations[name];
+        if (!animation) {
+            throw new Error(`Animation ${name} not found.`);
+        }
+        return animation;
     }
 }
