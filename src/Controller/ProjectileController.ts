@@ -19,13 +19,13 @@ export class ProjectileController {
     createProjectile(tower: Tower, enemyId: number, enemyPosition: PointData) {
         const projectile = ObjectPool.instance.getProjectileFromPool(tower.type);
 
-        projectile.sprite.x = tower.spriteTower.sprite.x;
-        projectile.sprite.y = tower.spriteTower.sprite.y;
+        projectile.sprite.x = tower.spriteTower.sprite.x + 20;
+        projectile.sprite.y = tower.spriteTower.sprite.y + 20;
 
         projectile.sprite.scale.set(0.5);
         projectile.sprite.anchor.set(0.5);
 
-        projectile.setTarget(enemyId, enemyPosition, tower.attackSpeed.speed * 5, tower.damageTower.damage);
+        projectile.setTarget(enemyId, enemyPosition, tower.attackSpeed.speed , tower.damageTower.damage);
 
         this.projectiles.push(projectile);
 
@@ -42,7 +42,6 @@ export class ProjectileController {
 
             // Trả viên đạn về pool
             ObjectPool.instance.returnProjectileToPool(towerType, projectile);
-
 
             // Xóa hình ảnh khỏi game
             this.map.removeChild(projectile.sprite);

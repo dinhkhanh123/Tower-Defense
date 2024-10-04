@@ -33,7 +33,23 @@
             {
                 "alias": "healthbar_fg",
                  "src": "./atlas/img/healthbar_fg.png" 
-             }
+            },
+            {
+                "alias": "bg_pedia",
+                 "src": "./atlas/img/bg_pedia-sheet0.png" 
+            },
+            {
+                "alias": "bg_info",
+                 "src": "./atlas/img/info-sheet0.png" 
+            },
+            {
+                "alias": "win_info",
+                "src": "./atlas/img/win_sheet.png"                
+            },
+            {
+                "alias": "lost_info",
+                "src": "./atlas/img/loss_sheet.png"                
+            }
         ]
     }
   ]

@@ -5,6 +5,7 @@ import { GameStart } from './GameScene/Scenes/GameStart';
 import Asset from './GameBuild/Asset';
 import bundles from '../assetBundle.json';
 import { EventHandle } from './GameBuild/EventHandle';
+import { GameResult } from './GameScene/Scenes/GameResult';
 
 (async () =>
 {
@@ -35,9 +36,11 @@ import { EventHandle } from './GameBuild/EventHandle';
  
     const gameStart = new GameStart();
     const gameBoard = new GameBoard();
+    const gameResult = new GameResult();
 
-    
     app.stage.addChild(gameBoard);
+    
+    app.stage.addChild(gameResult);
     EventHandle.on('startGame', () => {
         app.stage.removeChild(gameStart); 
         app.stage.addChild(gameBoard); 

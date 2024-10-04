@@ -13,11 +13,20 @@ export class TowerController {
     private map: Container;
     private towers: Tower[] = [];
     private objectPool: ObjectPool;
+    private isGameOver:boolean = false;
 
     constructor(map: Container) {
         TowerController.instance = this;
         this.objectPool = new ObjectPool();
         this.map = map;
+
+        this.listenEvenHandle();
+    }
+
+    listenEvenHandle(){
+        EventHandle.on('disable_all_interactions', () => {
+            this.disableTower();
+        });
     }
 
     public createTower(type: TowerType, baseSprite: Sprite) {
@@ -29,6 +38,7 @@ export class TowerController {
         tower.spriteTower.sprite.position = baseSprite.position;
         this.towers.push(tower);
         baseSprite.on('pointerdown', () => {
+            if (this.isGameOver) return; 
             const optionTower = {
                 id: tower.id,
                 level: tower.levelTower.level,
@@ -46,7 +56,6 @@ export class TowerController {
                 }
             };
 
-     
             EventHandle.emit('tower_clicked', optionTower);
             BottomPanel.instance.setVisibleSystem('infor');
         }); 
@@ -77,6 +86,7 @@ export class TowerController {
     }
 
     public update(deltaTime: number) {
+        if(this.isGameOver) return;
         this.towers.forEach(tower => {
             // Kiểm tra xem có kẻ địch nào trong tầm bắn
             const enemiesInRange = EnemySpawner.instance.getEnemies().filter(enemy =>
@@ -99,4 +109,9 @@ export class TowerController {
             }
         });
     }
+
+    disableTower(){
+        this.isGameOver = true;
+    }
+    
 }

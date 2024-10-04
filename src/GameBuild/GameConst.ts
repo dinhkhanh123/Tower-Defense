@@ -8,28 +8,28 @@ export namespace GameConst {
     export const WAVE_1 = {
         spawnPoints: { x: 0, y: 2 },
         goad: { x: 0, y: 13 },
-        enemySpawnNumber: 10,
+        enemySpawnNumber: 5,
         typeEnemy: [EnemyType.Goblin,EnemyType.Ogre],
     }
 
     export const WAVE_2 = {
         spawnPoints: { x: 19, y: 2 },
         goad: { x: 0, y: 13 },
-        enemySpawnNumber: 15,
+        enemySpawnNumber: 5,
         typeEnemy: [EnemyType.Goblin,EnemyType.Ogre,EnemyType.Shaman],
     }
 
     export const WAVE_3 = {
         spawnPoints: { x: 0, y: 2 },
         goad: { x: 0, y: 13 },
-        enemySpawnNumber: 15,
+        enemySpawnNumber: 5,
         typeEnemy: [EnemyType.Goblin,EnemyType.Ogre,EnemyType.Brigand,EnemyType.Shaman],
     }
 
     export const WAVE_4 = {
         spawnPoints: { x: 19, y: 2 },
         goad: { x: 0, y: 13 },
-        enemySpawnNumber: 20,
+        enemySpawnNumber: 10,
         typeEnemy: [EnemyType.Goblin,EnemyType.Bandit,EnemyType.Brigand,EnemyType.Shaman,EnemyType.Ogre],
     }
 

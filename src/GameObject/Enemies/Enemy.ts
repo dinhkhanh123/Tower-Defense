@@ -54,6 +54,9 @@ export class Enemy {
         EventHandle.on('projectile_hit', (towerType: TowerType, projectile: Projectile, idEnemy: number) => {
             this.takeDamage(idEnemy, projectile.damage);
         });
+        EventHandle.on('disable_all_interactions', () => {
+            this.disableEnemy();
+        });
     }
 
     reset() {
@@ -147,5 +150,8 @@ export class Enemy {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         return distance < 1;
+    }
+    disableEnemy(){
+        this.anim.stop();
     }
 }

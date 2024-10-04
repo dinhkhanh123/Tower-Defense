@@ -7,6 +7,7 @@ import { EventHandle } from "../GameBuild/EventHandle";
 import { MapGame } from "../GameScene/Map/MapGame";
 import { PlayerController } from "./PlayerController";
 import Asset from "../GameBuild/Asset";
+import { GameResult } from "../GameScene/Scenes/GameResult";
 
 export class EnemySpawner {
     public static instance: EnemySpawner;
@@ -15,6 +16,7 @@ export class EnemySpawner {
     private enemies: Enemy[] = [];
     public waveNumber: number;
     public isSpawning: boolean = false;
+    private isGameEnded: boolean = false; 
     public currentEnemiesCount: number = 0;
 
     constructor(map: Container) {
@@ -25,7 +27,7 @@ export class EnemySpawner {
     }
 
     createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number },enemyType:EnemyType[]) {
-
+        if (this.isGameEnded) return;
         const enemy = ObjectPool.instance.getEnemyFromPool(enemyType[Math.floor(Math.random() * enemyType.length)]);
 
         enemy.reset();
@@ -57,7 +59,7 @@ export class EnemySpawner {
         this.currentEnemiesCount = 0;
         this.isSpawning = true;
 
-        const spawnDelay = 2000;
+        const spawnDelay = 500;
 
         for (let i = 0; i < enemiesPerWave; i++) {
             spawnPoints.forEach(spawnPoint => {
@@ -75,6 +77,7 @@ export class EnemySpawner {
 
 
     update(deltaTime: number) {
+        if (this.isGameEnded) return;
         this.enemies.forEach((enemy) => {
             enemy.update(deltaTime);
 
@@ -87,7 +90,15 @@ export class EnemySpawner {
             }
 
             if (enemy.hasReachedGoal()) {
-                PlayerController.instance.takeDamage(enemy.damage);
+                if(PlayerController.instance.hpPlayer > 0){
+                    PlayerController.instance.takeDamage(enemy.damage);
+                }
+                
+                if(PlayerController.instance.hpPlayer <= 0){
+                    GameResult.instance.displayResult(false); 
+                     this.endGame();  
+                }
+                
             }
         });
 
@@ -95,6 +106,11 @@ export class EnemySpawner {
 
         if (!this.isSpawning && this.getEnemies().length === 0 && this.waveNumber !== 0) {
             EventHandle.emit('start_spawn');
+        }
+
+        if (!this.isSpawning && this.getEnemies().length === 0 && this.waveNumber === PlayerController.instance.totalWaves) {
+            GameResult.instance.displayResult(true);
+            this.endGame(); 
         }
 
     }
@@ -122,4 +138,14 @@ export class EnemySpawner {
     public getEnemies(): Enemy[] {
         return this.enemies;
     }
+
+        // Phương thức để ngừng tất cả hoạt động khi game kết thúc
+        public endGame(): void {
+            this.isGameEnded = true;  // Đánh dấu game đã kết thúc
+            // Dừng logic cho quái vật, nút và các thành phần khác
+            this.enemies.forEach(enemy => {
+                enemy.sprite.interactive = false;  // Vô hiệu hóa tương tác của quái
+            });
+            EventHandle.emit('disable_all_interactions');  // Tắt tất cả sự kiện tương tác
+        }
 }

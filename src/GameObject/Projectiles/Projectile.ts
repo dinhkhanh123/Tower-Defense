@@ -26,7 +26,7 @@ export class Projectile {
     public setTarget(enemyId: number, targetPosition: PointData, speed: number, damage: number) {
         this.enemyId = enemyId;
         this.targetPosition = targetPosition;
-        this.speed = speed;
+        this.speed = speed * 5;
         this.damage = damage;
     }
 

@@ -29,6 +29,7 @@ export class MapGame extends Container {
     private towerController: TowerController;
     private enemySpawn: EnemySpawner;
     private projectileController: ProjectileController;
+    private isGameOver: boolean = false; 
 
     constructor() {
         super();
@@ -41,7 +42,13 @@ export class MapGame extends Container {
 
         this.init();
         this.SpawnEnemy();
+        this.listenEventHandle();
+    }
 
+    listenEventHandle(){
+        EventHandle.on('disable_all_interactions', () => {
+            this.endGame();
+        });
     }
 
     init() {
@@ -49,8 +56,6 @@ export class MapGame extends Container {
         this.height = 600;
         this.LoadMap();
     }
-
-
 
     SpawnEnemy() {
         const startSpawn = new Sprite(Texture.from('btn_back'));
@@ -116,11 +121,17 @@ export class MapGame extends Container {
                     sprite.eventMode = 'static';
                     sprite.cursor = 'pointer'
                     sprite.interactive = true;
-                    sprite.on('pointerdown', () => EventHandle.emit('tower_slot_clicked', (sprite)));
+                    sprite.on('pointerdown', () => {
+                        // Kiểm tra nếu game chưa kết thúc thì mới xử lý
+                        if (!this.isGameOver) {
+                            EventHandle.emit('tower_slot_clicked', sprite);
+                        }
+                    });
                 }
             const defenseSprite = new Sprite(Asset.getTexture('defense'));
             defenseSprite.anchor.set(0.5);
             defenseSprite.scale.set(0.8);
+            defenseSprite.alpha = 0.05;
 
             defenseSprite.x = GameConst.WAVE_1.goad.x * GameConst.SQUARE_SIZE + 40;
             defenseSprite.y = GameConst.WAVE_1.goad.y * GameConst.SQUARE_SIZE;
@@ -129,5 +140,9 @@ export class MapGame extends Container {
                 this.addChild(defenseSprite);
             }
         }
+    }
+
+    endGame() {
+        this.isGameOver = true;
     }
 }
