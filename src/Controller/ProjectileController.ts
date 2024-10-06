@@ -3,29 +3,40 @@ import { EventHandle } from '../GameBuild/EventHandle';
 import { ObjectPool } from '../ObjectPool/ObjectPool';
 import { Tower } from '../GameObject/Towers/Tower';
 import { Enemy } from '../GameObject/Enemies/Enemy';
-import { Container, PointData } from 'pixi.js';
+import { AnimatedSprite, Container, PointData } from 'pixi.js';
 import { GameConst } from '../GameBuild/GameConst';
 import { TowerType } from '../GameObject/Towers/TowerType';
+import Asset from '../GameBuild/Asset';
 
 export class ProjectileController {
     private map: Container;
-    projectiles: Projectile[] = [];
+    private projectiles: Projectile[] = [];
 
     constructor(map: Container) {
         this.map = map;
+
         this.listenEvenHandle();
+    }
+
+    listenEvenHandle() {
+        EventHandle.on('create_projectile', (tower: Tower, enemyId: number, enemyPosition: PointData) => {
+            this.createProjectile(tower, enemyId, enemyPosition);
+        });
+        EventHandle.on('projectile_hit', (towerType: TowerType, projectile: Projectile) => {
+            this.removeProjectile(towerType, projectile);
+        });
     }
 
     createProjectile(tower: Tower, enemyId: number, enemyPosition: PointData) {
         const projectile = ObjectPool.instance.getProjectileFromPool(tower.type);
 
-        projectile.sprite.x = tower.spriteTower.sprite.x + 20;
-        projectile.sprite.y = tower.spriteTower.sprite.y + 20;
+        projectile.sprite.x = tower.spriteAniTower.x;
+        projectile.sprite.y = tower.spriteAniTower.y;
 
         projectile.sprite.scale.set(0.5);
         projectile.sprite.anchor.set(0.5);
 
-        projectile.setTarget(enemyId, enemyPosition, tower.attackSpeed.speed , tower.damageTower.damage);
+        projectile.setTarget(enemyId, enemyPosition, tower.attackSpeed.speed, tower.damageTower.damage);
 
         this.projectiles.push(projectile);
 
@@ -45,17 +56,34 @@ export class ProjectileController {
 
             // Xóa hình ảnh khỏi game
             this.map.removeChild(projectile.sprite);
+
+            // Tạo animation khi đạn trúng mục tiêu
+            const weaponAni = new AnimatedSprite(Asset.getAnimation(`${towerType}_weapon_ani`));
+
+            // Đặt vị trí của animation tại vị trí mà viên đạn trúng mục tiêu
+            weaponAni.x = projectile.sprite.x + 10;
+            weaponAni.y = projectile.sprite.y + 30;
+
+            // Thêm animation vào map và phát animation
+            this.map.addChild(weaponAni);
+            weaponAni.animationSpeed = 0.5;
+            weaponAni.loop = false;
+            weaponAni._anchor.set(0.5);
+            weaponAni.zIndex = 5;
+            weaponAni.play();
+
+            // Kiểm tra khi animation đến frame cuối cùng
+            weaponAni.onFrameChange = () => {
+                if (weaponAni.currentFrame === weaponAni.totalFrames - 1) {
+                    this.map.removeChild(weaponAni);
+                    weaponAni.destroy();
+                }
+            };
+
         }
     }
 
-    listenEvenHandle() {
-        EventHandle.on('create_projectile', (tower: Tower, enemyId: number, enemyPosition: PointData) => {
-            this.createProjectile(tower, enemyId, enemyPosition);
-        });
-        EventHandle.on('projectile_hit', (towerType: TowerType, projectile: Projectile) => {
-            this.removeProjectile(towerType, projectile);
-        });
-    }
+
 
     update(delta: number) {
         this.projectiles.forEach((projectile) => {

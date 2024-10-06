@@ -3,12 +3,12 @@ import { GameConst } from "../../GameBuild/GameConst";
 import Asset from "../../GameBuild/Asset";
 
 export class GameResult extends Container {
-    public static instance:GameResult;
+    public static instance: GameResult;
     private exitButton: Sprite;
 
     constructor() {
         super();
-        if(!GameResult.instance){
+        if (!GameResult.instance) {
             GameResult.instance = this;
         }
         // Tạo background cho màn hình kết quả
@@ -23,6 +23,9 @@ export class GameResult extends Container {
 
         // nút "Thoát"
         this.exitButton = this.createButton(600, 200);
+        this.exitButton.interactive = true;
+        this.exitButton.eventMode = 'static';
+        this.exitButton.on('pointerdown', () => this.onExit());
         this.addChild(this.exitButton);
 
         // Ẩn màn hình kết quả lúc khởi tạo
@@ -62,34 +65,33 @@ export class GameResult extends Container {
 
 
     public displayResult(isWin: boolean): void {
-        this.visible = false;  
+        this.visible = false;
         if (isWin) {
-            this.showWinScreen();  
+            this.showWinScreen();
         } else {
-            this.showLoseScreen(); 
+            this.showLoseScreen();
         }
     }
 
-    
-        // // Phương thức để thêm màn hình vào stage của game
-        // public addToStage(stage: Container): void {
-        //   //  stage.addChild(this.resultContainer);
-        // }
-    
-        // // Phương thức xử lý khi nhấn nút "Chơi lại"
-        // private onReplay(): void {
-        //     console.log("Replay game");
-        //     // Thực hiện các thao tác để khởi động lại game
-        //     // Ví dụ: reset trạng thái game và ẩn màn hình kết quả
-        //    // this.resultContainer.visible = false;
-        // }
-    
-        // // Phương thức xử lý khi nhấn nút "Thoát"
-        // private onExit(): void {
-        //     console.log("Exit game");
-        //     // Thực hiện các thao tác khi người chơi muốn thoát game
-        //     // Có thể redirect hoặc dừng game
-        // }
+
+    // // Phương thức để thêm màn hình vào stage của game
+    // public addToStage(stage: Container): void {
+    //   //  stage.addChild(this.resultContainer);
+    // }
+
+    // // Phương thức xử lý khi nhấn nút "Chơi lại"
+    // private onReplay(): void {
+    //     console.log("Replay game");
+    //     // Thực hiện các thao tác để khởi động lại game
+    //     // Ví dụ: reset trạng thái game và ẩn màn hình kết quả
+    //    // this.resultContainer.visible = false;
+    // }
+
+    // // Phương thức xử lý khi nhấn nút "Thoát"
+    private onExit(): void {
+        console.log("Exit game");
+        this.visible = false;
+    }
 }
         // // Thêm event listener cho nút chơi lại
         // this.replayButton.interactive = true;
@@ -97,6 +99,3 @@ export class GameResult extends Container {
         // this.replayButton.on('pointerdown', () => this.onReplay());
 
         // // Thêm event listener cho nút thoát
-        // this.exitButton.interactive = true;
-        // this.exitButton.buttonMode = true;
-        // this.exitButton.on('pointerdown', () => this.onExit());

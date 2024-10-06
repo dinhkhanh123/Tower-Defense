@@ -123,7 +123,7 @@ export class Enemy {
     }
 
     public getUpdatePositionEnemy(): PointData {
-        this.position = { x: this.sprite.x, y: this.sprite.y };
+        this.position = { x: this.sprite.x - 20, y: this.sprite.y - 20 };
         return this.position;
     }
 
@@ -151,7 +151,7 @@ export class Enemy {
 
         return distance < 1;
     }
-    disableEnemy(){
+    disableEnemy() {
         this.anim.stop();
     }
 }

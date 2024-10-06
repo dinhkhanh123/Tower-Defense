@@ -1,4 +1,4 @@
-import { PointData, Sprite } from "pixi.js";
+import { AnimatedSprite, PointData, Sprite } from "pixi.js";
 import { TowerType } from "./TowerType";
 import Asset from "../../GameBuild/Asset";
 import { Enemy } from "../Enemies/Enemy";
@@ -21,6 +21,7 @@ export class Tower {
     public priceTower: { initPrice: number, price: number };
     public upgradeCosts: { [level: number]: number };
 
+    public spriteAniTower: AnimatedSprite;
     public baseTower!: Sprite;
     public target: Enemy[] = [];
 
@@ -28,7 +29,7 @@ export class Tower {
     private cooldownTime: number;
     private attackTime: number;
 
-    constructor(id: number, type: TowerType, damage: number, range: number, attackSpeed: number, towerName: string, towerDetail: string, price: number,upgradeCoint:{[level: number]: number } ) {
+    constructor(id: number, type: TowerType, damage: number, range: number, attackSpeed: number, towerName: string, towerDetail: string, price: number, upgradeCoint: { [level: number]: number }) {
         this.id = id;
         this.type = type;
         this.towerName = towerName;
@@ -40,9 +41,15 @@ export class Tower {
         this.spriteTower = { initSprite: new Sprite(Asset.getTexture(`${type}_${this.levelTower.initLevel}`)), sprite: new Sprite(Asset.getTexture(`${type}_${this.levelTower.initLevel}`)) };
         this.imageTower = { initImage: new Sprite(Asset.getTexture(`${type}_Img_${this.levelTower.initLevel}`)), image: new Sprite(Asset.getTexture(`${type}_Img_${this.levelTower.initLevel}`)) };
         this.priceTower = { initPrice: price, price: price };
-        this.upgradeCosts = upgradeCoint; 
+        this.upgradeCosts = upgradeCoint;
         this.cooldownTime = 50 / this.attackSpeed.speed;
         this.attackTime = 0;
+
+        this.spriteAniTower = new AnimatedSprite(Asset.getAnimation(`${type}_ani`));
+        this.spriteAniTower.anchor.set(0.5);
+        this.spriteAniTower.scale.set(0.5);
+        this.spriteAniTower.animationSpeed = 0.2;
+
 
         this.listenEventHandle();
     }
@@ -59,6 +66,14 @@ export class Tower {
 
     public Attack(enemyId: number, enemyPosition: PointData, detatime: number) {
 
+        // Tính toán góc giữa tháp và vị trí của kẻ địch
+        const dx = enemyPosition.x - this.spriteTower.sprite.x;
+        const dy = enemyPosition.y - this.spriteTower.sprite.y;
+        const angle = Math.atan2(dy, dx); // Lấy góc theo radian
+
+        // Áp dụng góc cho spriteAniTower để xoay nó về hướng kẻ địch
+        this.spriteAniTower.rotation = angle + Math.PI / 2;
+
         this.attackTime += detatime;
         if (this.attackTime >= this.cooldownTime) {
             EventHandle.emit('create_projectile', this, enemyId, enemyPosition);
@@ -66,7 +81,7 @@ export class Tower {
         }
     }
 
-    private Uprade(idTower: number,priceUpgrade:number) {
+    private Uprade(idTower: number, priceUpgrade: number) {
         if (idTower === this.id && this.levelTower.level < 3 && priceUpgrade <= PlayerController.instance.cointPlayer) {
             this.levelTower.level++;
             this.spriteTower.sprite.texture = Asset.getTexture(`${this.type}_${this.levelTower.level}`);
@@ -83,7 +98,7 @@ export class Tower {
                 damage: this.damageTower.damage,
                 speedAttack: this.attackSpeed.speed,
                 sprite: this.imageTower.image,
-                priceTower:this.priceTower.price,
+                priceTower: this.priceTower.price,
                 upgradePrice: this.upgradeCosts,
                 range: {
                     range: this.rangeTower.range,
@@ -96,19 +111,19 @@ export class Tower {
         }
     }
 
-    private Sell(idTower: number,price:number) {
+    private Sell(idTower: number, price: number) {
         if (idTower === this.id) {
 
-            TowerController.instance.removeTower(this,price);
+            TowerController.instance.removeTower(this, price);
         }
     }
 
     private Buy(idTower: number) {
         if (idTower === this.id) {
-            
-            PlayerController.instance.subtractMoney(this.priceTower.price);  
+
+            PlayerController.instance.subtractMoney(this.priceTower.price);
         }
-        
+
     }
 
     public isInRange(enemyPosition: PointData): boolean {
@@ -121,8 +136,8 @@ export class Tower {
 
 
     listenEventHandle() {
-        EventHandle.on('uprade_tower', (idTower: number,priceUpgrade) => this.Uprade(idTower,priceUpgrade));
-        EventHandle.on('sell_tower', (idTower: number,priceSell:number) => this.Sell(idTower,priceSell));
+        EventHandle.on('uprade_tower', (idTower: number, priceUpgrade) => this.Uprade(idTower, priceUpgrade));
+        EventHandle.on('sell_tower', (idTower: number, priceSell: number) => this.Sell(idTower, priceSell));
         EventHandle.on('buy_tower', (idTower: number) => this.Buy(idTower));
     }
 }

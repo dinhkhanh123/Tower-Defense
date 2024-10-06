@@ -18,16 +18,27 @@ export default class Asset {
                 Asset.texture[name] = atlas.textures[name];
             });
         }
-        
+
     }
 
-    static async loadBitmap(bitmapFile: string){
+    static async loadBitmap(bitmapFile: string) {
         await Assets.load(bitmapFile);
     }
 
-    static async loadAnimations(animationFile: string) {
-        const data = await Assets.load(animationFile);
-        Asset.animations = data.animations; // Lưu trữ dữ liệu animations
+    // Sửa đổi để load nhiều file animation JSON
+    static async loadAnimations(animationFiles: string[]) {
+        for (const animationFile of animationFiles) {
+            const data = await Assets.load(animationFile);
+
+            // Lặp qua từng animation và lưu vào Asset.animations mà không bị ghi đè
+            Object.keys(data.animations).forEach(animationName => {
+                if (!Asset.animations[animationName]) {
+                    Asset.animations[animationName] = data.animations[animationName];
+                } else {
+                    console.warn(`Animation ${animationName} already exists. Skipping.`);
+                }
+            });
+        }
     }
 
     // Hàm để lấy texture theo tên

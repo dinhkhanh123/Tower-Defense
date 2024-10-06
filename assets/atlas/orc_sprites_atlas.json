@@ -1730,33 +1730,107 @@
     }
   },
   "animations": {
+    "Bandit_move_down": [
+      "Bandit_move_down_01",
+      "Bandit_move_down_02",
+      "Bandit_move_down_03"
+    ],
+    "Bandit_move_left": [
+      "Bandit_move_left_01",
+      "Bandit_move_left_02",
+      "Bandit_move_left_03"
+    ],
+    "Bandit_move_right": [
+      "Bandit_move_right_01",
+      "Bandit_move_right_02",
+      "Bandit_move_right_03"
+    ],
+    "Bandit_move_up": [
+      "Bandit_move_up_01",
+      "Bandit_move_up_02",
+      "Bandit_move_up_03"
+    ],
 
-       "Bandit_move_down": ["Bandit_move_down_01", "Bandit_move_down_02", "Bandit_move_down_03"],
-       "Bandit_move_left": ["Bandit_move_left_01", "Bandit_move_left_02", "Bandit_move_left_03"],
-       "Bandit_move_right": ["Bandit_move_right_01", "Bandit_move_right_02", "Bandit_move_right_03"],
-       "Bandit_move_up": ["Bandit_move_up_01", "Bandit_move_up_02", "Bandit_move_up_03"],
-    
-       "Shaman_move_down": ["Shaman_move_down_01", "Shaman_move_down_02", "Shaman_move_down_03"],
-       "Shaman_move_left": ["Shaman_move_left_01", "Shaman_move_left_02", "Shaman_move_left_03"],
-       "Shaman_move_right": ["Shaman_move_right_01", "Shaman_move_right_02", "Shaman_move_right_03"],
-       "Shaman_move_up": ["Shaman_move_up_01", "Shaman_move_up_02", "Shaman_move_up_03"],
-   
-       "Brigand_move_down": ["Brigand_move_down_01", "Brigand_move_down_02", "Brigand_move_down_03"],
-       "Brigand_move_left": ["Brigand_move_left_01", "Brigand_move_left_02", "Brigand_move_left_03"],
-       "Brigand_move_right": ["Brigand_move_right_01", "Brigand_move_right_02", "Brigand_move_right_03"],
-       "Brigand_move_up": ["Brigand_move_up_01", "Brigand_move_up_02", "Brigand_move_up_03"],
-     
-       "Ogre_move_down": ["Ogre_move_down_01", "Ogre_move_down_02", "Ogre_move_down_03"],
-       "Ogre_move_left": ["Ogre_move_left_01", "Ogre_move_left_02", "Ogre_move_left_03"],
-       "Ogre_move_right": ["Ogre_move_right_01", "Ogre_move_right_02", "Ogre_move_right_03"],
-       "Ogre_move_up": ["Ogre_move_up_01", "Ogre_move_up_02", "Ogre_move_up_03"],
-  
-       "Goblin_move_down": ["Goblin_move_down_01", "Goblin_move_down_02", "Goblin_move_down_03"],
-       "Goblin_move_right": ["Goblin_move_left_01", "Goblin_move_left_02", "Goblin_move_left_03"],
-       "Goblin_move_left": ["Goblin_move_right_01", "Goblin_move_right_02", "Goblin_move_right_03"],
-       "Goblin_move_up": ["Goblin_move_up_01", "Goblin_move_up_02", "Goblin_move_up_03"]
-     
- },
+    "Shaman_move_down": [
+      "Shaman_move_down_01",
+      "Shaman_move_down_02",
+      "Shaman_move_down_03"
+    ],
+    "Shaman_move_left": [
+      "Shaman_move_left_01",
+      "Shaman_move_left_02",
+      "Shaman_move_left_03"
+    ],
+    "Shaman_move_right": [
+      "Shaman_move_right_01",
+      "Shaman_move_right_02",
+      "Shaman_move_right_03"
+    ],
+    "Shaman_move_up": [
+      "Shaman_move_up_01",
+      "Shaman_move_up_02",
+      "Shaman_move_up_03"
+    ],
+
+    "Brigand_move_down": [
+      "Brigand_move_down_01",
+      "Brigand_move_down_02",
+      "Brigand_move_down_03"
+    ],
+    "Brigand_move_left": [
+      "Brigand_move_left_01",
+      "Brigand_move_left_02",
+      "Brigand_move_left_03"
+    ],
+    "Brigand_move_right": [
+      "Brigand_move_right_01",
+      "Brigand_move_right_02",
+      "Brigand_move_right_03"
+    ],
+    "Brigand_move_up": [
+      "Brigand_move_up_01",
+      "Brigand_move_up_02",
+      "Brigand_move_up_03"
+    ],
+
+    "Ogre_move_down": [
+      "Ogre_move_down_01",
+      "Ogre_move_down_02",
+      "Ogre_move_down_03"
+    ],
+    "Ogre_move_left": [
+      "Ogre_move_left_01",
+      "Ogre_move_left_02",
+      "Ogre_move_left_03"
+    ],
+    "Ogre_move_right": [
+      "Ogre_move_right_01",
+      "Ogre_move_right_02",
+      "Ogre_move_right_03"
+    ],
+    "Ogre_move_up": ["Ogre_move_up_01", "Ogre_move_up_02", "Ogre_move_up_03"],
+
+    "Goblin_move_down": [
+      "Goblin_move_down_01",
+      "Goblin_move_down_02",
+      "Goblin_move_down_03"
+    ],
+    "Goblin_move_right": [
+      "Goblin_move_left_01",
+      "Goblin_move_left_02",
+      "Goblin_move_left_03"
+    ],
+    "Goblin_move_left": [
+      "Goblin_move_right_01",
+      "Goblin_move_right_02",
+      "Goblin_move_right_03"
+    ],
+    "Goblin_move_up": [
+      "Goblin_move_up_01",
+      "Goblin_move_up_02",
+      "Goblin_move_up_03"
+    ]
+  },
   "meta": {
     "app": "http://github.com/odrick/free-tex-packer-core",
     "version": "0.3.4",

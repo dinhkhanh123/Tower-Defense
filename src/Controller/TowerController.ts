@@ -13,7 +13,7 @@ export class TowerController {
     private map: Container;
     private towers: Tower[] = [];
     private objectPool: ObjectPool;
-    private isGameOver:boolean = false;
+    private isGameOver: boolean = false;
 
     constructor(map: Container) {
         TowerController.instance = this;
@@ -23,7 +23,7 @@ export class TowerController {
         this.listenEvenHandle();
     }
 
-    listenEvenHandle(){
+    listenEvenHandle() {
         EventHandle.on('disable_all_interactions', () => {
             this.disableTower();
         });
@@ -36,9 +36,12 @@ export class TowerController {
         baseSprite.removeAllListeners();
         tower.baseTower = baseSprite;
         tower.spriteTower.sprite.position = baseSprite.position;
+        tower.spriteAniTower.position.x = baseSprite.position.x + 20;
+        tower.spriteAniTower.position.y = baseSprite.position.y + 5;
+
         this.towers.push(tower);
         baseSprite.on('pointerdown', () => {
-            if (this.isGameOver) return; 
+            if (this.isGameOver) return;
             const optionTower = {
                 id: tower.id,
                 level: tower.levelTower.level,
@@ -58,17 +61,20 @@ export class TowerController {
 
             EventHandle.emit('tower_clicked', optionTower);
             BottomPanel.instance.setVisibleSystem('infor');
-        }); 
+        });
 
         tower.spriteTower.sprite.zIndex = 1;
+        tower.spriteAniTower.zIndex = 3;
         this.map.addChild(tower.spriteTower.sprite);
+        this.map.addChild(tower.spriteAniTower);
     }
 
-    public removeTower(tower: Tower,price:number) {
+    public removeTower(tower: Tower, price: number) {
         const index = this.towers.indexOf(tower);
         if (index !== -1) {
             this.towers.splice(index, 1);
             this.map.removeChild(tower.spriteTower.sprite);
+            this.map.removeChild(tower.spriteAniTower);
 
             PlayerController.instance.addMoney(price);
             ObjectPool.instance.returnTowerToPool(tower.type, tower);
@@ -86,7 +92,7 @@ export class TowerController {
     }
 
     public update(deltaTime: number) {
-        if(this.isGameOver) return;
+        if (this.isGameOver) return;
         this.towers.forEach(tower => {
             // Kiểm tra xem có kẻ địch nào trong tầm bắn
             const enemiesInRange = EnemySpawner.instance.getEnemies().filter(enemy =>
@@ -103,15 +109,17 @@ export class TowerController {
                 let currentTarget = tower.target[0];
                 if (!currentTarget.isAlive || !tower.isInRange(currentTarget.getUpdatePositionEnemy())) {
                     tower.target.shift();
+                    tower.spriteAniTower.gotoAndStop(0);
                 } else {
                     tower.Attack(currentTarget.id, currentTarget.getUpdatePositionEnemy(), deltaTime);
+                    tower.spriteAniTower.play();
                 }
             }
         });
     }
 
-    disableTower(){
+    disableTower() {
         this.isGameOver = true;
     }
-    
+
 }
