@@ -38,10 +38,10 @@ import { sound } from '@pixi/sound';
     // const atlasData = await Assets.load('./atlas/weapon_tower_ani_atlas.json');
     // await atlasData.parse();
 
-    const sprites = await AssetLoad.loadSoundSprite('./sounds/game-sounds.json'); 
-    
-    sound.add('game-sound', {url: Assets.get('game-sound').resources[0], sprites: Assets.get('game-sound').spritemap});
-    sound.play('game-sound', {sprite:'win'});
+    await AssetLoad.loadSoundSprite('./sounds/game-sounds.json');
+
+    sound.add('game-sound', { url: Assets.get('game-sound').resources[0], sprites: Assets.get('game-sound').spritemap });
+
     const gameStart = new GameStart();
     const gameBoard = new GameBoard();
     const gameResult = new GameResult();

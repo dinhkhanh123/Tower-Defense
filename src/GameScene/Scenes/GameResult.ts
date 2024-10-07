@@ -1,6 +1,7 @@
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
 import Asset from "../../GameBuild/Asset";
+import { sound } from "@pixi/sound";
 
 export class GameResult extends Container {
     public static instance: GameResult;
@@ -50,6 +51,8 @@ export class GameResult extends Container {
 
         this.addChild(win_sprite);
         this.visible = true;
+
+        sound.play('game-sound', { sprite: 'win', loop: false });
     }
 
     // Phương thức hiển thị màn hình thua

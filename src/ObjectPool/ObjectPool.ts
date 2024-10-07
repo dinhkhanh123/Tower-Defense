@@ -31,9 +31,9 @@ export class ObjectPool {
             }
         });
 
-        Object.values(EnemyType).forEach((enemyType)=>{
+        Object.values(EnemyType).forEach((enemyType) => {
             this._enemyPool[enemyType] = [];
-            for(let i = 0; i < 5; i++){
+            for (let i = 0; i < 5; i++) {
                 const enemy = TowerFactory.createEnemy(enemyType);
                 this._enemyPool[enemyType].push(enemy);
             }
@@ -56,7 +56,7 @@ export class ObjectPool {
 
     // Hàm lấy Enemy từ pool
     public getEnemyFromPool(enemyType: EnemyType): Enemy {
-        if (this._enemyPool[enemyType]?.length <= 0) {
+        if (this._enemyPool[enemyType] ?.length <= 0) {
             const enemy = TowerFactory.createEnemy(enemyType);
             return enemy;
         } else {
@@ -66,11 +66,11 @@ export class ObjectPool {
 
     // Hàm trả Enemy về pool
     public returnEnemyToPool(enemyType: EnemyType, enemy: Enemy) {
-        
+
         this._enemyPool[enemyType].push(enemy);
     }
 
-   // Hàm lấy Projectile từ pool
+    // Hàm lấy Projectile từ pool
     public getProjectileFromPool(towerType: TowerType): Projectile {
         if (this._projectilePool[towerType] ?.length <= 0) {
             return TowerFactory.createProjectile(towerType);
@@ -82,5 +82,18 @@ export class ObjectPool {
     // Hàm trả Projectile về pool
     public returnProjectileToPool(towerType: TowerType, projectile: Projectile) {
         this._projectilePool[towerType].push(projectile);
+    }
+
+    // **Hàm lấy Enemy từ pool dựa trên ID**
+    public getEnemyById(enemyId: number): Enemy | null {
+        // Duyệt qua tất cả các enemy trong _enemyPool
+        const allEnemies = Object.values(this._enemyPool);
+        for (const enemyList of allEnemies) {
+            const enemy = enemyList.find(e => e.id === enemyId);
+            if (enemy) {
+                return enemy;  // Trả về enemy tìm thấy
+            }
+        }
+        return null;  // Không tìm thấy
     }
 }

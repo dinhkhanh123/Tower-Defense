@@ -1,8 +1,5 @@
 {
-  "resources": [
-    "./sounds/game-sounds.mp3",
-    "./sounds/game-sounds.ogg"
-  ],
+  "resources": ["./sounds/game-sounds.mp3", "./sounds/game-sounds.ogg"],
   "spritemap": {
     "silence": {
       "start": 0,
@@ -25,5 +22,5 @@
       "loop": false
     }
   },
- "autoplay": "win"
+  "autoplay": ""
 }

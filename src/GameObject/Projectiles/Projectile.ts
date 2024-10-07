@@ -9,10 +9,10 @@ export class Projectile {
     public sprite: Sprite;
     private speed: number;
     public damage: number;
-    private targetPosition: PointData;
+    public targetPosition: PointData;
     private towerType: TowerType;
     public enemyId: number;
-    
+
 
     constructor(id: number, sprite: Sprite, towerType: TowerType) {
         this.id = id;
@@ -32,11 +32,20 @@ export class Projectile {
     }
 
     public move(delta: number) {
+        // Lấy enemy từ ObjectPool dựa vào enemyId
+        const enemy = this.getEnemyById(this.enemyId);
+        if (!enemy) {
+            return; // Nếu không tìm thấy enemy thì không làm gì
+        }
+
+        // Cập nhật targetPosition với vị trí hiện tại của enemy
+        this.targetPosition = { x: enemy.sprite.x, y: enemy.sprite.y };
+
         const dx = this.targetPosition.x - this.sprite.x;
         const dy = this.targetPosition.y - this.sprite.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        
+
         this.sprite.rotation = Math.atan2(dy, dx);
 
         // Nếu viên đạn tới gần mục tiêu, thực hiện va chạm
@@ -49,7 +58,20 @@ export class Projectile {
         }
     }
     update(delta: number) {
+
         this.move(delta);
+    }
+
+    // Hàm xử lý lấy enemy từ ObjectPool dựa trên ID
+    private getEnemyById(enemyId: number): Enemy | null {
+        const allEnemies = Object.values(ObjectPool.instance["_enemyPool"]);
+        for (const enemyList of allEnemies) {
+            const enemy = enemyList.find(e => e.id === enemyId);
+            if (enemy) {
+                return enemy;
+            }
+        }
+        return null;
     }
     // Xử lý khi viên đạn chạm vào mục tiêu
     private hitTarget() {

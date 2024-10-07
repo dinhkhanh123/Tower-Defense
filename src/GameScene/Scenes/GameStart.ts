@@ -16,7 +16,7 @@ export class GameStart extends Container {
         this.height = GameConst.GAME_HEIGHT;
 
         //bacground
-      
+
 
         // Create start button
         const startButton = new Graphics();
