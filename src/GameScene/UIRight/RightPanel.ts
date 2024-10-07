@@ -1,5 +1,5 @@
 import { BitmapText, Container, Graphics, Sprite, Texture } from "pixi.js";
-import Asset from "../../GameBuild/Asset";
+import AssetLoad from "../../GameBuild/Asset";
 import { PlayerController } from "../../Controller/PlayerController";
 import { MapGame } from "../Map/MapGame";
 
@@ -35,21 +35,21 @@ export class RightPanel extends Container {
         logo.x = 910;
         logo.y = 120;
 
-        const health = new Sprite(Asset.getTexture('health'));
+        const health = new Sprite(AssetLoad.getTexture('health'));
         health.anchor.set(0.5);
         health.x = 860;
         health.y = 230;
         health.width = 30;
         health.height = 30;
 
-        const wave = new Sprite(Asset.getTexture('wave'));
+        const wave = new Sprite(AssetLoad.getTexture('wave'));
         wave.anchor.set(0.5);
         wave.x = 860;
         wave.y = 280;
         wave.width = 30;
         wave.height = 30;
 
-        const coin = new Sprite(Asset.getTexture('coin'));
+        const coin = new Sprite(AssetLoad.getTexture('coin'));
         coin.anchor.set(0.5);
         coin.x = 860;
         coin.y = 330;

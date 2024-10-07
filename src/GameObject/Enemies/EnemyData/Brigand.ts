@@ -4,7 +4,7 @@ import { EnemyType } from "../EnemyType";
 export class Brigand extends Enemy{
     constructor(id:number){
         const hp = 25;
-        const speed = 1;
+        const speed = .5;
         const damage = 4;
         const money = 8;
 

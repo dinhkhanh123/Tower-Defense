@@ -1,0 +1,29 @@
+{
+  "resources": [
+    "./sounds/game-sounds.mp3",
+    "./sounds/game-sounds.ogg"
+  ],
+  "spritemap": {
+    "silence": {
+      "start": 0,
+      "end": 1,
+      "loop": true
+    },
+    "arrow": {
+      "start": 2,
+      "end": 2.472018140589569,
+      "loop": false
+    },
+    "slash": {
+      "start": 4,
+      "end": 4.592018140589569,
+      "loop": false
+    },
+    "win": {
+      "start": 6,
+      "end": 8.947845804988662,
+      "loop": false
+    }
+  },
+ "autoplay": "win"
+}

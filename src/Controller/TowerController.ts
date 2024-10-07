@@ -1,11 +1,11 @@
-import { Container, Sprite } from "pixi.js";
+import { Container, Sprite, Texture } from "pixi.js";
 import { Tower } from "../GameObject/Towers/Tower";
 import { TowerType } from "../GameObject/Towers/TowerType";
 import { ObjectPool } from "../ObjectPool/ObjectPool";
 import { EventHandle } from "../GameBuild/EventHandle";
 import { BottomPanel } from "../GameScene/UIBottom/BottomPanel";
 import { EnemySpawner } from "./SpawnEnemy";
-import Asset from "../GameBuild/Asset";
+import AssetLoad from "../GameBuild/Asset";
 import { PlayerController } from "./PlayerController";
 
 export class TowerController {
@@ -32,15 +32,19 @@ export class TowerController {
     public createTower(type: TowerType, baseSprite: Sprite) {
         const tower = this.objectPool.getTowerFromPool(type);
         tower.resetTower();
-
+        this.map.removeChild(baseSprite);
         baseSprite.removeAllListeners();
-        tower.baseTower = baseSprite;
+
+        tower.baseTower = baseSprite;    
         tower.spriteTower.sprite.position = baseSprite.position;
         tower.spriteAniTower.position.x = baseSprite.position.x + 20;
         tower.spriteAniTower.position.y = baseSprite.position.y + 5;
 
         this.towers.push(tower);
-        baseSprite.on('pointerdown', () => {
+        tower.spriteTower.sprite.interactive = true;
+        tower.spriteTower.sprite.eventMode = 'static';
+        tower.spriteTower.sprite.cursor = 'pointer';
+        tower.spriteTower.sprite.on('pointerdown', () => {
             if (this.isGameOver) return;
             const optionTower = {
                 id: tower.id,
@@ -58,7 +62,7 @@ export class TowerController {
                     y: tower.baseTower.position.y
                 }
             };
-
+            
             EventHandle.emit('tower_clicked', optionTower);
             BottomPanel.instance.setVisibleSystem('infor');
         });
@@ -80,7 +84,7 @@ export class TowerController {
             ObjectPool.instance.returnTowerToPool(tower.type, tower);
         }
 
-        const slotSprite = new Sprite(Asset.getTexture('build'));
+        const slotSprite = new Sprite(AssetLoad.getTexture('build'));
         tower.baseTower.texture = slotSprite.texture;
         slotSprite.position = tower.baseTower.position;
         slotSprite.eventMode = 'static';

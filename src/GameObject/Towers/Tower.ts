@@ -1,6 +1,6 @@
 import { AnimatedSprite, PointData, Sprite } from "pixi.js";
 import { TowerType } from "./TowerType";
-import Asset from "../../GameBuild/Asset";
+import AssetLoad from "../../GameBuild/Asset";
 import { Enemy } from "../Enemies/Enemy";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { TowerController } from "../../Controller/TowerController";
@@ -38,14 +38,14 @@ export class Tower {
         this.damageTower = { initDamage: damage, damage: damage };
         this.rangeTower = { initRange: range, range: range };
         this.attackSpeed = { initSpeed: attackSpeed, speed: attackSpeed };
-        this.spriteTower = { initSprite: new Sprite(Asset.getTexture(`${type}_${this.levelTower.initLevel}`)), sprite: new Sprite(Asset.getTexture(`${type}_${this.levelTower.initLevel}`)) };
-        this.imageTower = { initImage: new Sprite(Asset.getTexture(`${type}_Img_${this.levelTower.initLevel}`)), image: new Sprite(Asset.getTexture(`${type}_Img_${this.levelTower.initLevel}`)) };
+        this.spriteTower = { initSprite: new Sprite(AssetLoad.getTexture(`${type}_${this.levelTower.initLevel}`)), sprite: new Sprite(AssetLoad.getTexture(`${type}_${this.levelTower.initLevel}`)) };
+        this.imageTower = { initImage: new Sprite(AssetLoad.getTexture(`${type}_Img_${this.levelTower.initLevel}`)), image: new Sprite(AssetLoad.getTexture(`${type}_Img_${this.levelTower.initLevel}`)) };
         this.priceTower = { initPrice: price, price: price };
         this.upgradeCosts = upgradeCoint;
         this.cooldownTime = 50 / this.attackSpeed.speed;
         this.attackTime = 0;
 
-        this.spriteAniTower = new AnimatedSprite(Asset.getAnimation(`${type}_ani`));
+        this.spriteAniTower = new AnimatedSprite(AssetLoad.getAnimation(`${type}_ani`));
         this.spriteAniTower.anchor.set(0.5);
         this.spriteAniTower.scale.set(0.5);
         this.spriteAniTower.animationSpeed = 0.2;
@@ -84,8 +84,8 @@ export class Tower {
     private Uprade(idTower: number, priceUpgrade: number) {
         if (idTower === this.id && this.levelTower.level < 3 && priceUpgrade <= PlayerController.instance.cointPlayer) {
             this.levelTower.level++;
-            this.spriteTower.sprite.texture = Asset.getTexture(`${this.type}_${this.levelTower.level}`);
-            this.imageTower.image.texture = Asset.getTexture(`${this.type}_Img_${this.levelTower.level}`);
+            this.spriteTower.sprite.texture = AssetLoad.getTexture(`${this.type}_${this.levelTower.level}`);
+            this.imageTower.image.texture = AssetLoad.getTexture(`${this.type}_Img_${this.levelTower.level}`);
             this.damageTower.damage += 2;
             this.attackSpeed.speed += .5;
             this.rangeTower.range += 10;

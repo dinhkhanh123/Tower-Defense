@@ -6,7 +6,6 @@ import { ObjectPool } from "../ObjectPool/ObjectPool";
 import { EventHandle } from "../GameBuild/EventHandle";
 import { MapGame } from "../GameScene/Map/MapGame";
 import { PlayerController } from "./PlayerController";
-import Asset from "../GameBuild/Asset";
 import { GameResult } from "../GameScene/Scenes/GameResult";
 
 export class EnemySpawner {

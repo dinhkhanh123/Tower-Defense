@@ -1,29 +1,30 @@
 import { Assets, Container, Graphics, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
 import { EnemySpawner } from '../../Controller/SpawnEnemy';
-import Asset from "../../GameBuild/Asset";
+import AssetLoad from "../../GameBuild/Asset";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { TowerController } from "../../Controller/TowerController";
 import { ProjectileController } from "../../Controller/ProjectileController";
+import { Tower } from "../../GameObject/Towers/Tower";
 
 export class MapGame extends Container {
     public static instance: MapGame;
     public gridMap: number[][] = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Hàng 1
-        [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1], // Hàng 2
-        [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 2, 1, 1, 1, 1, 1, 1, 1], // Hàng 3
-        [0, 0, 0, 1, 1, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 0, 0, 0, 0, 0], // Hàng 4
-        [0, 3, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 3, 3, 0], // Hàng 5
-        [0, 3, 0, 1, 1, 2, 0, 0, 2, 0, 0, 2, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 6
-        [0, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 3, 0], // Hàng 7
-        [0, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 3, 3, 0], // Hàng 8
-        [0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 2, 1, 1, 0, 0, 0, 0, 0], // Hàng 9
-        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0], // Hàng 10
-        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 3, 3, 0], // Hàng 11
-        [0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 12
+        [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 2, 1, 1, 1, 1, 1, 1, 1], // Hàng 2
+        [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1], // Hàng 3
+        [0, 0, 0, 1, 1, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 2, 0, 0, 0, 0], // Hàng 4
+        [0, 3, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 5
+        [0, 2, 0, 1, 2, 0, 0, 0, 2, 0, 0, 2, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 6
+        [0, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 3, 3, 0], // Hàng 7
+        [0, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 3, 0], // Hàng 8
+        [0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0], // Hàng 9
+        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0], // Hàng 10
+        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 11
+        [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 12
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 3, 0], // Hàng 13
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 3, 0], // Hàng 14
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  // Hàng 15
+        [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]  // Hàng 15
     ];
 
     private towerController: TowerController;
@@ -39,6 +40,7 @@ export class MapGame extends Container {
         this.towerController = new TowerController(this);
         this.enemySpawn = new EnemySpawner(this);
         this.projectileController = new ProjectileController(this);
+
 
         this.init();
         this.SpawnEnemy();
@@ -84,6 +86,8 @@ export class MapGame extends Container {
     }
 
     LoadMap() {
+        const bg_map = new Sprite(Texture.from('map_game_01'));
+        this.addChild(bg_map);
         const grap = new Graphics();
         const cellSize = GameConst.SQUARE_SIZE;
 
@@ -97,16 +101,16 @@ export class MapGame extends Container {
                 let texturemap: Texture;
                 switch (cellValue) {
                     case 0: // Cỏ
-                        texturemap = Asset.getTexture('grass');
+                        texturemap = Texture.EMPTY;
                         break;
                     case 1: // Đường
-                        texturemap = Asset.getTexture('road');
+                        texturemap = Texture.EMPTY;
                         break;
                     case 2: // Tháp
-                        texturemap = Asset.getTexture('build');
+                        texturemap = AssetLoad.getTexture('build');
                         break;
                     case 3: // Vật thể khác
-                        texturemap = Asset.getTexture('road');
+                        texturemap = Texture.EMPTY;
                         break;
                     default:
                         texturemap = Texture.EMPTY;
@@ -122,13 +126,12 @@ export class MapGame extends Container {
                     sprite.cursor = 'pointer'
                     sprite.interactive = true;
                     sprite.on('pointerdown', () => {
-                        // Kiểm tra nếu game chưa kết thúc thì mới xử lý
                         if (!this.isGameOver) {
                             EventHandle.emit('tower_slot_clicked', sprite);
                         }
                     });
                 }
-            const defenseSprite = new Sprite(Asset.getTexture('defense'));
+            const defenseSprite = new Sprite(AssetLoad.getTexture('defense'));
             defenseSprite.anchor.set(0.5);
             defenseSprite.scale.set(0.8);
             defenseSprite.alpha = 0.05;

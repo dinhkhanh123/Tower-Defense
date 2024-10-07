@@ -2,7 +2,7 @@ import { Sprite } from "pixi.js";
 
 import { Tower } from "../GameObject/Towers/Tower";
 import { TowerType } from '../GameObject/Towers/TowerType';
-import Asset from "../GameBuild/Asset";
+import AssetLoad from "../GameBuild/Asset";
 import { ArcherTower } from "../GameObject/Towers/ArcherTower";
 import { MageTower } from "../GameObject/Towers/MageTower";
 import { TechTower } from "../GameObject/Towers/TechTower";
@@ -75,7 +75,7 @@ export class TowerFactory {
 
     public static createProjectile(type:TowerType):Projectile{
         const id = this.projectileId++;
-        const sprite = new Sprite(Asset.getTexture(`projectile_${type}`));
+        const sprite = new Sprite(AssetLoad.getTexture(`projectile_${type}`));
         
         return new Projectile(id,sprite,type);
     }

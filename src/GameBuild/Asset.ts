@@ -1,45 +1,46 @@
+import { sound } from '@pixi/sound';
 import { Assets, Texture } from 'pixi.js';
 
-export default class Asset {
+export default class AssetLoad {
     static texture: Record<string, Texture> = {};
     static animations: Record<string, any> = {};
+    static sounds: Record<string, HTMLAudioElement> = {};
 
     // Hàm để load các file atlas JSON và lưu các texture
     static async loadAtlas(atlasFiles: string[]) {
         for (const atlasFile of atlasFiles) {
-            // Load file atlas JSON
             const atlas = await Assets.load(atlasFile);
-
-            // Lấy tên của các textures từ atlas JSON
             const textureNames = Object.keys(atlas.textures);
 
-            // Lưu các texture vào Asset.texture
             textureNames.forEach(name => {
-                Asset.texture[name] = atlas.textures[name];
+                AssetLoad.texture[name] = atlas.textures[name];
             });
         }
-
     }
 
     static async loadBitmap(bitmapFile: string) {
         await Assets.load(bitmapFile);
     }
+    
+    static async loadSoundSprite(soundJsonPath: string) {
+       await Assets.load({alias:"game-sound",src:soundJsonPath});
+       console.log(Assets.get('game-sound'));
+    }
 
-    // Sửa đổi để load nhiều file animation JSON
     static async loadAnimations(animationFiles: string[]) {
         for (const animationFile of animationFiles) {
             const data = await Assets.load(animationFile);
 
-            // Lặp qua từng animation và lưu vào Asset.animations mà không bị ghi đè
             Object.keys(data.animations).forEach(animationName => {
-                if (!Asset.animations[animationName]) {
-                    Asset.animations[animationName] = data.animations[animationName];
+                if (!AssetLoad.animations[animationName]) {
+                    AssetLoad.animations[animationName] = data.animations[animationName];
                 } else {
                     console.warn(`Animation ${animationName} already exists. Skipping.`);
                 }
             });
         }
     }
+
 
     // Hàm để lấy texture theo tên
     static getTexture(name: string): Texture {

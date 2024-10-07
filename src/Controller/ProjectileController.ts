@@ -6,7 +6,7 @@ import { Enemy } from '../GameObject/Enemies/Enemy';
 import { AnimatedSprite, Container, PointData } from 'pixi.js';
 import { GameConst } from '../GameBuild/GameConst';
 import { TowerType } from '../GameObject/Towers/TowerType';
-import Asset from '../GameBuild/Asset';
+import AssetLoad from '../GameBuild/Asset';
 
 export class ProjectileController {
     private map: Container;
@@ -51,24 +51,22 @@ export class ProjectileController {
             // Xóa viên đạn khỏi danh sách projectiles
             this.projectiles.splice(index, 1);
 
-            // Trả viên đạn về pool
             ObjectPool.instance.returnProjectileToPool(towerType, projectile);
 
-            // Xóa hình ảnh khỏi game
             this.map.removeChild(projectile.sprite);
 
             // Tạo animation khi đạn trúng mục tiêu
-            const weaponAni = new AnimatedSprite(Asset.getAnimation(`${towerType}_weapon_ani`));
+            const weaponAni = new AnimatedSprite(AssetLoad.getAnimation(`${towerType}_weapon_ani`));
 
             // Đặt vị trí của animation tại vị trí mà viên đạn trúng mục tiêu
-            weaponAni.x = projectile.sprite.x + 10;
-            weaponAni.y = projectile.sprite.y + 30;
+            weaponAni.x = projectile.sprite.x ;
+            weaponAni.y = projectile.sprite.y - 10;
 
-            // Thêm animation vào map và phát animation
+
             this.map.addChild(weaponAni);
             weaponAni.animationSpeed = 0.5;
             weaponAni.loop = false;
-            weaponAni._anchor.set(0.5);
+           // weaponAni._anchor.set(0.5);
             weaponAni.zIndex = 5;
             weaponAni.play();
 
@@ -83,9 +81,8 @@ export class ProjectileController {
         }
     }
 
-
-
     update(delta: number) {
+        
         this.projectiles.forEach((projectile) => {
             projectile.update(delta);
         });

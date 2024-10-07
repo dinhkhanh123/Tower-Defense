@@ -1,7 +1,7 @@
 import { AnimatedSprite, Container, Point, PointData, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
 import { EnemyType } from "./EnemyType";
-import Asset from "../../GameBuild/Asset";
+import AssetLoad from '../../GameBuild/Asset';
 import { Pathfinding } from "../../GameScene/Map/Pathfinding";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { Projectile } from "../Projectiles/Projectile";
@@ -42,7 +42,7 @@ export class Enemy {
         // const enemySprite = new Sprite(Asset.getTexture(type));
         // enemySprite.anchor.set(0.5);
 
-        this.anim = new AnimatedSprite(Asset.getAnimation(`${this.type}_move_left`));
+        this.anim = new AnimatedSprite(AssetLoad.getAnimation(`${this.type}_move_left`));
         this.anim.anchor.set(0.5);
         this.anim.scale.set(0.5);
 
@@ -94,15 +94,15 @@ export class Enemy {
 
                 if (Math.abs(dx) > Math.abs(dy)) {
                     if (dx > 0) {
-                        newTexture = Asset.getAnimation(`${this.type}_move_right`);
+                        newTexture = AssetLoad.getAnimation(`${this.type}_move_right`);
                     } else {
-                        newTexture = Asset.getAnimation(`${this.type}_move_left`);
+                        newTexture = AssetLoad.getAnimation(`${this.type}_move_left`);
                     }
                 } else {
                     if (dy > 0) {
-                        newTexture = Asset.getAnimation(`${this.type}_move_down`);
+                        newTexture = AssetLoad.getAnimation(`${this.type}_move_down`);
                     } else {
-                        newTexture = Asset.getAnimation(`${this.type}_move_up`);
+                        newTexture = AssetLoad.getAnimation(`${this.type}_move_up`);
                     }
                 }
 

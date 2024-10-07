@@ -49,7 +49,11 @@
             {
                 "alias": "lost_info",
                 "src": "./atlas/img/loss_sheet.png"                
-            }
+            },
+            {
+                "alias":"map_game_01",
+                "src" : "./atlas/img/map_game_1.png"
+             }
         ]
     }
   ]

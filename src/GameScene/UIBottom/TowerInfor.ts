@@ -2,7 +2,7 @@ import { BitmapText, Container, Graphics, Sprite, Text, TextStyle, Texture } fro
 import { BottomPanel } from "./BottomPanel";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { Tower } from "../../GameObject/Towers/Tower";
-import Asset from "../../GameBuild/Asset";
+import AssetLoad from "../../GameBuild/Asset";
 
 export class TowerInfor extends Container {
     private towerId: number;
@@ -196,7 +196,7 @@ export class TowerInfor extends Container {
             this.towerNameTxt.text = optionTower.towerName.toString();
             this.towerDetailTxt.text = optionTower.towerDetail.toString();
             this.towerInforTxt.text = 'Level: ' + optionTower.level + '  ' + 'Damage: ' + optionTower.damage + '  ' + 'Speed Attack: ' + optionTower.speedAttack;
-            this.towerRange.texture = Asset.getTexture('range');
+            this.towerRange.texture = AssetLoad.getTexture('range');
             this.towerRange.anchor.set(0.5);
             this.towerRange.position.set(optionTower.range.x + 20, optionTower.range.y + 20);
             this.towerRange.width = optionTower.range.range * 2;

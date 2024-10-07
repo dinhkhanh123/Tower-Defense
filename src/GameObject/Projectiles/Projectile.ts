@@ -12,6 +12,7 @@ export class Projectile {
     private targetPosition: PointData;
     private towerType: TowerType;
     public enemyId: number;
+    
 
     constructor(id: number, sprite: Sprite, towerType: TowerType) {
         this.id = id;
