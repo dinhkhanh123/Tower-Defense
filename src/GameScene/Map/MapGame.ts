@@ -33,8 +33,8 @@ export class MapGame extends Container {
     private towerController: TowerController;
     private enemySpawn: EnemySpawner;
     private projectileController: ProjectileController;
-    private isGameOver: boolean = false; 
-    private isSound:boolean = false;
+    private isGameOver: boolean = false;
+    private isSound: boolean = false;
 
     constructor() {
         super();
@@ -51,7 +51,7 @@ export class MapGame extends Container {
         this.listenEventHandle();
     }
 
-    listenEventHandle(){
+    listenEventHandle() {
         EventHandle.on('disable_all_interactions', () => {
             this.endGame();
         });
@@ -61,7 +61,7 @@ export class MapGame extends Container {
         this.width = 800;
         this.height = 600;
         this.LoadMap();
-      
+
     }
 
     SpawnEnemy() {
@@ -78,7 +78,7 @@ export class MapGame extends Container {
 
         startSpawn.on('pointerdown', () => {
             EventHandle.emit('start_spawn');
-            startSpawn.visible = false;     
+            startSpawn.visible = false;
         });
 
         this.addChild(startSpawn);
@@ -126,6 +126,17 @@ export class MapGame extends Container {
                 sprite.width = cellSize;
                 sprite.height = cellSize;
 
+                if (cellValue === 1) {
+                    sprite.eventMode = 'static';
+                    sprite.cursor = 'pointer'
+                    sprite.interactive = true;
+                    sprite.on('pointerdown', () => {
+                        if (!this.isGameOver) {
+
+                        }
+                    });
+                }
+
                 if (cellValue === 2) {
                     sprite.eventMode = 'static';
                     sprite.cursor = 'pointer'
@@ -136,13 +147,13 @@ export class MapGame extends Container {
                         }
                     });
                 }
-            const defenseSprite = new Sprite(AssetLoad.getTexture('defense'));
-            defenseSprite.anchor.set(0.5);
-            defenseSprite.scale.set(0.8);
-            defenseSprite.alpha = 0.05;
+                const defenseSprite = new Sprite(AssetLoad.getTexture('defense'));
+                defenseSprite.anchor.set(0.5);
+                defenseSprite.scale.set(0.8);
+                defenseSprite.alpha = 0.05;
 
-            defenseSprite.x = GameConst.WAVE_1.goad.x * GameConst.SQUARE_SIZE + 40;
-            defenseSprite.y = GameConst.WAVE_1.goad.y * GameConst.SQUARE_SIZE;
+                defenseSprite.x = GameConst.WAVE_1.goad.x * GameConst.SQUARE_SIZE + 40;
+                defenseSprite.y = GameConst.WAVE_1.goad.y * GameConst.SQUARE_SIZE;
 
                 this.addChild(sprite);
                 this.addChild(defenseSprite);

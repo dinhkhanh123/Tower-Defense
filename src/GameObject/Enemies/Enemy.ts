@@ -131,13 +131,20 @@ export class Enemy {
         this.move(delta);
     }
 
-    takeDamage(id: number, damage: number) {
+    takeDamage(id: number, baseDamage: number) {
         if (id === this.id) {
-            this._hp.hpCount -= damage;
+            // Tạo lượng damage ngẫu nhiên dựa trên phần trăm (ví dụ: 80% đến 120%)
+            const randomMultiplier = 0.8 + Math.random() * 0.4;
+            const finalDamage = baseDamage * randomMultiplier;
+
+            console.log(finalDamage);
+            this._hp.hpCount -= finalDamage;
+
             if (this._hp.hpCount <= 0) {
                 this._hp.hpCount = 0;
                 this.isAlive = false;
             }
+
             // Tính phần trăm máu còn lại
             const healthPercent = this._hp.hpCount / this._hp.hpConst;
             this.healthBar.updateHealthBar(healthPercent);

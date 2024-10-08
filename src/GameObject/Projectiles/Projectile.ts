@@ -11,8 +11,6 @@ export class Projectile {
     public damage: number;
     public target!: Enemy;
     private towerType: TowerType;
- 
-
 
     constructor(id: number, sprite: Sprite, towerType: TowerType) {
         this.id = id;
@@ -22,7 +20,7 @@ export class Projectile {
         this.damage = 0;
     }
 
-    public setTarget(enemyTarget:Enemy, speed: number, damage: number) {
+    public setTarget(enemyTarget: Enemy, speed: number, damage: number) {
         this.target = enemyTarget;
         this.speed = speed * 5;
         this.damage = damage;
@@ -51,20 +49,9 @@ export class Projectile {
         this.move(delta);
     }
 
-    // Hàm xử lý lấy enemy từ ObjectPool dựa trên ID
-    private getEnemyById(enemyId: number): Enemy | null {
-        const allEnemies = Object.values(ObjectPool.instance["_enemyPool"]);
-        for (const enemyList of allEnemies) {
-            const enemy = enemyList.find(e => e.id === enemyId);
-            if (enemy) {
-                return enemy;
-            }
-        }
-        return null;
-    }
     // Xử lý khi viên đạn chạm vào mục tiêu
     private hitTarget() {
-        EventHandle.emit('projectile_hit', this.towerType,this,this.target.id);
+        EventHandle.emit('projectile_hit', this.towerType, this, this.target.id);
     }
 }
 
