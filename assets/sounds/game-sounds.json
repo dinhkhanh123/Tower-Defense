@@ -1,0 +1,89 @@
+{
+  "resources": [
+    "./sounds/game-sounds.mp3",
+    "./sounds/game-sounds.ogg"
+  ],
+  "spritemap": {
+    "silence": {
+      "start": 0,
+      "end": 1,
+      "loop": true
+    },
+    "Archer": {
+      "start": 2,
+      "end": 2.472018140589569,
+      "loop": false
+    },
+    "battlemusic": {
+      "start": 4,
+      "end": 209.89714285714285,
+      "loop": true
+    },
+    "bomb": {
+      "start": 211,
+      "end": 216.61600907029478,
+      "loop": false
+    },
+    "button": {
+      "start": 218,
+      "end": 218.03773242630385,
+      "loop": false
+    },
+    "Cannon": {
+      "start": 220,
+      "end": 221.73600907029478,
+      "loop": false
+    },
+    "firerain": {
+      "start": 223,
+      "end": 226.16954648526078,
+      "loop": false
+    },
+    "gamelose": {
+      "start": 228,
+      "end": 233.90367346938774,
+      "loop": false
+    },
+    "gametitle": {
+      "start": 235,
+      "end": 345.55126984126986,
+      "loop": false
+    },
+    "getstar": {
+      "start": 347,
+      "end": 348.79201814058956,
+      "loop": false
+    },
+    "info": {
+      "start": 350,
+      "end": 351.5,
+      "loop": false
+    },
+    "Mage": {
+      "start": 353,
+      "end": 355.5209977324263,
+      "loop": false
+    },
+    "slash": {
+      "start": 357,
+      "end": 357.5920181405896,
+      "loop": false
+    },
+    "Tech": {
+      "start": 359,
+      "end": 360.89097505668934,
+      "loop": false
+    },
+    "upgrade": {
+      "start": 362,
+      "end": 362.7677097505669,
+      "loop": false
+    },
+    "win": {
+      "start": 364,
+      "end": 366.9478458049887,
+      "loop": false
+    }
+  },
+  "autoplay": "gametitle"
+}

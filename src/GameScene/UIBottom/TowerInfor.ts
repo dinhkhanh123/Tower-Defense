@@ -1,8 +1,7 @@
 import { BitmapText, Container, Graphics, Sprite, Text, TextStyle, Texture } from "pixi.js";
 import { BottomPanel } from "./BottomPanel";
 import { EventHandle } from "../../GameBuild/EventHandle";
-import { Tower } from "../../GameObject/Towers/Tower";
-import AssetLoad from "../../GameBuild/Asset";
+import AssetLoad from '../../GameBuild/Asset';
 
 export class TowerInfor extends Container {
     private towerId: number;
@@ -17,8 +16,6 @@ export class TowerInfor extends Container {
     private towerInforTxt: BitmapText;
     private towerRange: Sprite
 
-    private towerUprade: Graphics;
-    private towerSell: Graphics;
 
     constructor() {
         super();
@@ -35,8 +32,6 @@ export class TowerInfor extends Container {
 
         this.towerRange = new Sprite();
 
-        this.towerUprade = new Graphics();
-        this.towerSell = new Graphics();
 
         this.addChild(this.towerRange);
 
@@ -45,124 +40,6 @@ export class TowerInfor extends Container {
         this.listenToEvents();
 
     }
-
-    init() {
-        const towerInfor = new Graphics();
-
-        towerInfor.rect(0, 600, 800, 168);
-        towerInfor.fill(0xD2E0FB);
-
-        const closeTowerPan = new Sprite(Texture.from('btn_close'));
-        closeTowerPan.x = 780;
-        closeTowerPan.y = 620;
-        closeTowerPan.width = 30;
-        closeTowerPan.height = 30;
-        closeTowerPan.anchor.set(0.5);
-
-        closeTowerPan.interactive = true;
-        closeTowerPan.eventMode = 'static';
-        closeTowerPan.on('pointerdown', () => BottomPanel.instance.setVisibleSystem('skill'));
-
-
-        this.addChild(towerInfor);
-        this.addChild(closeTowerPan);
-
-    }
-
-    textTower() {
-
-        this.towerSprite = new Sprite();
-        this.towerSprite.position.set(100, 610);
-        this.towerSprite.width = 80;
-        this.towerSprite.height = 100;
-
-        this.towerNameTxt = new BitmapText({
-            text: this.towerNameTxt,
-            style: {
-                fontFamily: 'Peaberry',
-                fontSize: 24,
-                align: 'left'
-            },
-        });
-        this.towerNameTxt.position.set(200, 610);
-
-        this.towerDetailTxt = new BitmapText({
-            text: this.towerDetailTxt,
-            style: {
-                fontFamily: 'MonospacePeaberr',
-                fontSize: 16,
-                align: 'left'
-            },
-        });
-        this.towerDetailTxt.position.set(200, 650);
-
-        this.towerInforTxt = new BitmapText({
-            style: {
-                fontFamily: 'MonospacePeaberr',
-                fontSize: 12,
-                align: 'left'
-            },
-        });
-        this.towerInforTxt.position.set(200, 680);
-
-        this.towerUprade.rect(500, 630, 100, 30);
-        this.towerUprade.fill(0x72BF78);
-        this.towerUprade.eventMode = 'static';
-        this.towerUprade.cursor = 'pointer';
-        this.towerUprade.interactive = true
-
-        this.priceUpgradeTxt = new BitmapText({
-            text: this.priceUpgradeTxt,
-            style: {
-                fontFamily: 'Peaberry',
-                fontSize: 16,
-                align: 'left'
-            }
-        });
-
-        this.priceUpgradeTxt.position.set(550, 630);
-
-
-        this.towerUprade.on('pointerdown', () => {
-            EventHandle.emit('uprade_tower', this.towerId, this.priceUpgrade);
-        });
-
-        this.towerSell.rect(500, 670, 100, 30);
-        this.towerSell.fill(0xE78F81);
-        this.towerSell.eventMode = 'static';
-        this.towerSell.cursor = 'pointer';
-        this.towerSell.interactive = true;
-
-        this.privateSelltxt = new BitmapText({
-            text: this.privateSelltxt,
-            style: {
-                fontFamily: 'Peaberry',
-                fontSize: 16,
-                align: 'left'
-            }
-        });
-
-        this.privateSelltxt.position.set(550, 670);
-
-        this.towerSell.on('pointerdown', () => {
-            EventHandle.emit('sell_tower', this.towerId, this.priceTower);
-        });
-
-
-        this.addChild(this.towerSprite);
-        this.addChild(this.towerNameTxt);
-        this.addChild(this.towerDetailTxt);
-        this.addChild(this.towerInforTxt);
-
-        this.addChild(this.towerUprade);
-        this.addChild(this.towerSell);
-
-        this.addChild(this.priceUpgradeTxt);
-        this.addChild(this.privateSelltxt);
-
-
-    }
-
 
     listenToEvents() {
         EventHandle.on('tower_clicked', (optionTower: {
@@ -203,5 +80,88 @@ export class TowerInfor extends Container {
             this.towerRange.height = optionTower.range.range * 2;
 
         });
+    }
+
+    init() {
+        const towerInfor = new Graphics();
+
+        towerInfor.rect(0, 600, 800, 168);
+        towerInfor.fill(0xD2E0FB);
+
+        const closeTowerPan = this.createButton(780, 620, 30, 30, 'btn_close');
+        closeTowerPan.on('pointerdown', () => BottomPanel.instance.setVisibleSystem('skill'));
+
+
+        this.addChild(towerInfor);
+        this.addChild(closeTowerPan);
+
+    }
+
+    textTower() {
+        this.towerSprite = new Sprite();
+        this.towerSprite.position.set(100, 610);
+        this.towerSprite.width = 80;
+        this.towerSprite.height = 100;
+
+        this.towerNameTxt = this.createText(200, 610, 'GoldPeaberry', 24);
+
+        this.towerDetailTxt = this.createText(200, 650, 'MonospacePeaberr', 16);
+
+        this.towerInforTxt = this.createText(200, 680, 'MonospacePeaberr', 12);
+
+        const towerUprade = this.createButton(550, 645, 100, 30, 'ui_bar_btn');
+        this.createSprite(500,640,40,40,'ui_build');
+        this.priceUpgradeTxt = this.createText(550, 630, 'ShinyPeaberry', 16);
+        towerUprade.on('pointerdown', () => {
+            EventHandle.emit('uprade_tower', this.towerId, this.priceUpgrade);
+        });
+
+        const towerSell = this.createButton(550, 685, 100, 30, 'ui_bar_btn');
+        this.createSprite(500,685,40,40,'ui_money');
+        this.privateSelltxt = this.createText(550, 670, 'ShinyPeaberry', 16);
+        towerSell.on('pointerdown', () => {
+            EventHandle.emit('sell_tower', this.towerId, this.priceTower);
+        });
+
+        this.addChild(this.towerSprite);
+    }
+
+    private createButton(x: number, y: number, w: number, h: number, texture: string): Sprite {
+        const button = new Sprite(Texture.from(texture));
+        button.anchor.set(0.5);
+        button.width = w;
+        button.height = h;
+        button.position.set(x, y);
+        button.interactive = true;
+        button.eventMode = 'static';
+        button.cursor = 'pointer';
+
+        this.addChild(button);
+        return button;
+    }
+
+    private createText(x: number, y: number, font: string, size: number): BitmapText {
+        const bitmapTxt = new BitmapText({
+            style: {
+                fontFamily: font,
+                fontSize: size,
+                align: 'left'
+            },
+        });
+        bitmapTxt.position.set(x, y);
+
+        this.addChild(bitmapTxt);
+        return bitmapTxt;
+    }
+
+    private createSprite(x: number, y: number, w: number, h: number, texture: string): Sprite {
+        const sprite = new Sprite(AssetLoad.getTexture(texture));
+        sprite.anchor.set(0.5);
+        sprite.width = w;
+        sprite.height = h;
+        sprite.position.set(x, y);
+
+        this.addChild(sprite);
+        return sprite;
     }
 }

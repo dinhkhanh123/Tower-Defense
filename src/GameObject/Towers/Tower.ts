@@ -5,6 +5,8 @@ import { Enemy } from "../Enemies/Enemy";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { TowerController } from "../../Controller/TowerController";
 import { PlayerController } from '../../Controller/PlayerController';
+import { sound } from "@pixi/sound";
+import { SoundManager } from "../../Controller/SoundController";
 
 
 export class Tower {
@@ -64,19 +66,19 @@ export class Tower {
         this.priceTower.price = this.priceTower.initPrice;
     }
 
-    public Attack(enemyId: number, enemyPosition: PointData, detatime: number) {
+    public Attack(target: Enemy, detatime: number) {
 
         // Tính toán góc giữa tháp và vị trí của kẻ địch
-        const dx = enemyPosition.x - this.spriteTower.sprite.x;
-        const dy = enemyPosition.y - this.spriteTower.sprite.y;
+        const dx = target.sprite.x - this.spriteTower.sprite.x;
+        const dy = target.sprite.y - this.spriteTower.sprite.y;
         const angle = Math.atan2(dy, dx); // Lấy góc theo radian
 
         // Áp dụng góc cho spriteAniTower để xoay nó về hướng kẻ địch
         this.spriteAniTower.rotation = angle + Math.PI / 2;
-
         this.attackTime += detatime;
         if (this.attackTime >= this.cooldownTime) {
-            EventHandle.emit('create_projectile', this, enemyId, enemyPosition);
+            EventHandle.emit('create_projectile', this, target);
+            SoundManager.getInstance().play('game-sound', { sprite: this.type, loop: false });
             this.attackTime = 0;
         }
     }
@@ -123,7 +125,6 @@ export class Tower {
 
             PlayerController.instance.subtractMoney(this.priceTower.price);
         }
-
     }
 
     public isInRange(enemyPosition: PointData): boolean {
@@ -133,7 +134,6 @@ export class Tower {
         );
         return distance <= this.rangeTower.range;
     }
-
 
     listenEventHandle() {
         EventHandle.on('uprade_tower', (idTower: number, priceUpgrade) => this.Uprade(idTower, priceUpgrade));

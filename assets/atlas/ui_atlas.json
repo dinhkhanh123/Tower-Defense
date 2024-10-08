@@ -1,9 +1,105 @@
 {
   "frames": {
-    "health": {
+    "ui-health": {
       "frame": {
         "x": 2,
         "y": 2,
+        "w": 180,
+        "h": 75
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 2,
+        "w": 180,
+        "h": 75
+      },
+      "sourceSize": {
+        "w": 180,
+        "h": 80
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ui-wave": {
+      "frame": {
+        "x": 2,
+        "y": 81,
+        "w": 180,
+        "h": 76
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 2,
+        "w": 180,
+        "h": 76
+      },
+      "sourceSize": {
+        "w": 180,
+        "h": 80
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ui-coin": {
+      "frame": {
+        "x": 2,
+        "y": 161,
+        "w": 179,
+        "h": 75
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 2,
+        "w": 179,
+        "h": 75
+      },
+      "sourceSize": {
+        "w": 180,
+        "h": 80
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "logo_game": {
+      "frame": {
+        "x": 186,
+        "y": 2,
+        "w": 125,
+        "h": 113
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 1,
+        "y": 8,
+        "w": 125,
+        "h": 113
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "health": {
+      "frame": {
+        "x": 185,
+        "y": 161,
         "w": 70,
         "h": 70
       },
@@ -27,7 +123,7 @@
     "uprade": {
       "frame": {
         "x": 2,
-        "y": 76,
+        "y": 240,
         "w": 70,
         "h": 70
       },
@@ -50,8 +146,8 @@
     },
     "wave": {
       "frame": {
-        "x": 2,
-        "y": 150,
+        "x": 76,
+        "y": 240,
         "w": 70,
         "h": 70
       },
@@ -74,12 +170,12 @@
     },
     "coin": {
       "frame": {
-        "x": 2,
-        "y": 224,
+        "x": 150,
+        "y": 240,
         "w": 62,
         "h": 57
       },
-      "rotated": false,
+      "rotated": true,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
@@ -96,10 +192,106 @@
         "y": 0.5
       }
     },
+    "mute": {
+      "frame": {
+        "x": 211,
+        "y": 235,
+        "w": 60,
+        "h": 60
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 60,
+        "h": 60
+      },
+      "sourceSize": {
+        "w": 60,
+        "h": 60
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "sound": {
+      "frame": {
+        "x": 303,
+        "y": 2,
+        "w": 60,
+        "h": 60
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 60,
+        "h": 60
+      },
+      "sourceSize": {
+        "w": 60,
+        "h": 60
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ui_build": {
+      "frame": {
+        "x": 303,
+        "y": 66,
+        "w": 60,
+        "h": 60
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 60,
+        "h": 60
+      },
+      "sourceSize": {
+        "w": 60,
+        "h": 60
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ui_money": {
+      "frame": {
+        "x": 303,
+        "y": 130,
+        "w": 60,
+        "h": 60
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 60,
+        "h": 60
+      },
+      "sourceSize": {
+        "w": 60,
+        "h": 60
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
     "build": {
       "frame": {
-        "x": 2,
-        "y": 285,
+        "x": 186,
+        "y": 131,
         "w": 40,
         "h": 26
       },
@@ -127,8 +319,8 @@
     "image": "ui_atlas.png",
     "format": "RGBA8888",
     "size": {
-      "w": 74,
-      "h": 313
+      "w": 365,
+      "h": 312
     },
     "scale": 1
   }

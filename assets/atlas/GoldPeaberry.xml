@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--Created using Glyph Designer - http://71squared.com/glyphdesigner-->
 <font>
-    <info face="Peaberry" size="32" bold="0" italic="0" charset="" unicode="0" stretchH="100" smooth="1" aa="1" padding="0,0,0,0" spacing="2,2"/>
+    <info face="GoldPeaberry" size="32" bold="0" italic="0" charset="" unicode="0" stretchH="100" smooth="1" aa="1" padding="0,0,0,0" spacing="2,2"/>
     <common lineHeight="40" base="27" scaleW="268" scaleH="368" pages="1" packed="0"/>
     <pages>
         <page id="0" file="GoldPeaberry.png"/>

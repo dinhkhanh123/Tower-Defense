@@ -2,6 +2,7 @@ import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
 import Asset from "../../GameBuild/Asset";
 import { sound } from "@pixi/sound";
+import { SoundManager } from "../../Controller/SoundController";
 
 export class GameResult extends Container {
     public static instance: GameResult;
@@ -52,7 +53,7 @@ export class GameResult extends Container {
         this.addChild(win_sprite);
         this.visible = true;
 
-        sound.play('game-sound', { sprite: 'win', loop: false });
+        SoundManager.getInstance().play('game-sound', { sprite: 'win', loop: false });
     }
 
     // Phương thức hiển thị màn hình thua
@@ -64,6 +65,8 @@ export class GameResult extends Container {
 
         this.addChild(lose_sprite);
         this.visible = true;
+
+        SoundManager.getInstance().play('game-sound', { sprite: 'gamelose', loop: false });
     }
 
 

@@ -7,11 +7,13 @@ import { AnimatedSprite, Container, PointData } from 'pixi.js';
 import { GameConst } from '../GameBuild/GameConst';
 import { TowerType } from '../GameObject/Towers/TowerType';
 import AssetLoad from '../GameBuild/Asset';
+import { sound } from '@pixi/sound';
+import { SoundManager } from './SoundController';
 
 export class ProjectileController {
     private map: Container;
     private projectiles: Projectile[] = [];
-    private enemyPos!: PointData;
+
 
     constructor(map: Container) {
         this.map = map;
@@ -20,16 +22,15 @@ export class ProjectileController {
     }
 
     listenEvenHandle() {
-        EventHandle.on('create_projectile', (tower: Tower, enemyId: number, enemyPosition: PointData) => {
-            this.createProjectile(tower, enemyId, enemyPosition);
-            this.enemyPos = enemyPosition;
+        EventHandle.on('create_projectile', (tower: Tower, target:Enemy) => {
+            this.createProjectile(tower, target);
         });
         EventHandle.on('projectile_hit', (towerType: TowerType, projectile: Projectile) => {
             this.removeProjectile(towerType, projectile);
         });
     }
 
-    createProjectile(tower: Tower, enemyId: number, enemyPosition: PointData) {
+    createProjectile(tower: Tower, target:Enemy) {
         const projectile = ObjectPool.instance.getProjectileFromPool(tower.type);
 
         projectile.sprite.x = tower.spriteAniTower.x;
@@ -38,7 +39,7 @@ export class ProjectileController {
         projectile.sprite.scale.set(0.5);
         projectile.sprite.anchor.set(0.5);
 
-        projectile.setTarget(enemyId, enemyPosition, tower.attackSpeed.speed, tower.damageTower.damage);
+        projectile.setTarget(target, tower.attackSpeed.speed, tower.damageTower.damage);
 
         this.projectiles.push(projectile);
 
@@ -56,20 +57,22 @@ export class ProjectileController {
             ObjectPool.instance.returnProjectileToPool(towerType, projectile);
 
             this.map.removeChild(projectile.sprite);
+         
+           SoundManager.getInstance().play('game-sound', { sprite: 'slash', loop: false, volume: 0.8 });
+          
 
             // Tạo animation khi đạn trúng mục tiêu
             const weaponAni = new AnimatedSprite(AssetLoad.getAnimation(`${towerType}_weapon_ani`));
 
             // Đặt vị trí của animation tại vị trí mà viên đạn trúng mục tiêu
-            weaponAni.x = projectile.sprite.x;
-            weaponAni.y = projectile.sprite.y - 10;
+            weaponAni.x = projectile.sprite.x - 30;
+            weaponAni.y = projectile.sprite.y - 30;
 
 
             this.map.addChild(weaponAni);
             weaponAni.animationSpeed = 0.5;
             weaponAni.loop = false;
-            // weaponAni._anchor.set(0.5);
-            weaponAni.zIndex = 5;
+            weaponAni.zIndex = 1000;
             weaponAni.play();
 
             // Kiểm tra khi animation đến frame cuối cùng

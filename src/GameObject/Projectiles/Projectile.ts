@@ -9,9 +9,9 @@ export class Projectile {
     public sprite: Sprite;
     private speed: number;
     public damage: number;
-    public targetPosition: PointData;
+    public target!: Enemy;
     private towerType: TowerType;
-    public enemyId: number;
+ 
 
 
     constructor(id: number, sprite: Sprite, towerType: TowerType) {
@@ -20,29 +20,18 @@ export class Projectile {
         this.towerType = towerType;
         this.speed = 0;
         this.damage = 0;
-        this.enemyId = 0;
-        this.targetPosition = { x: 0, y: 0 };
     }
 
-    public setTarget(enemyId: number, targetPosition: PointData, speed: number, damage: number) {
-        this.enemyId = enemyId;
-        this.targetPosition = targetPosition;
+    public setTarget(enemyTarget:Enemy, speed: number, damage: number) {
+        this.target = enemyTarget;
         this.speed = speed * 5;
         this.damage = damage;
     }
 
     public move(delta: number) {
-        // Lấy enemy từ ObjectPool dựa vào enemyId
-        const enemy = this.getEnemyById(this.enemyId);
-        if (!enemy) {
-            return; // Nếu không tìm thấy enemy thì không làm gì
-        }
 
-        // Cập nhật targetPosition với vị trí hiện tại của enemy
-        this.targetPosition = { x: enemy.sprite.x, y: enemy.sprite.y };
-
-        const dx = this.targetPosition.x - this.sprite.x;
-        const dy = this.targetPosition.y - this.sprite.y;
+        const dx = this.target.sprite.x - this.sprite.x;
+        const dy = this.target.sprite.y - this.sprite.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
 
@@ -58,7 +47,7 @@ export class Projectile {
         }
     }
     update(delta: number) {
-
+        this.target.getUpdatePositionEnemy();
         this.move(delta);
     }
 
@@ -75,7 +64,7 @@ export class Projectile {
     }
     // Xử lý khi viên đạn chạm vào mục tiêu
     private hitTarget() {
-        EventHandle.emit('projectile_hit', this.towerType, this, this.enemyId);
+        EventHandle.emit('projectile_hit', this.towerType,this,this.target.id);
     }
 }
 

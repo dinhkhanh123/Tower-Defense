@@ -6,6 +6,9 @@ import { EventHandle } from "../../GameBuild/EventHandle";
 import { TowerController } from "../../Controller/TowerController";
 import { ProjectileController } from "../../Controller/ProjectileController";
 import { Tower } from "../../GameObject/Towers/Tower";
+import { sound } from "@pixi/sound";
+import { SoundManager } from "../../Controller/SoundController";
+import { GameSave } from "../../GameBuild/GameSave";
 
 export class MapGame extends Container {
     public static instance: MapGame;
@@ -31,6 +34,7 @@ export class MapGame extends Container {
     private enemySpawn: EnemySpawner;
     private projectileController: ProjectileController;
     private isGameOver: boolean = false; 
+    private isSound:boolean = false;
 
     constructor() {
         super();
@@ -57,6 +61,7 @@ export class MapGame extends Container {
         this.width = 800;
         this.height = 600;
         this.LoadMap();
+      
     }
 
     SpawnEnemy() {
@@ -73,7 +78,7 @@ export class MapGame extends Container {
 
         startSpawn.on('pointerdown', () => {
             EventHandle.emit('start_spawn');
-            startSpawn.visible = false;
+            startSpawn.visible = false;     
         });
 
         this.addChild(startSpawn);

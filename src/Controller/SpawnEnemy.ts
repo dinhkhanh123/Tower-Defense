@@ -15,17 +15,17 @@ export class EnemySpawner {
     private enemies: Enemy[] = [];
     public waveNumber: number;
     public isSpawning: boolean = false;
-    private isGameEnded: boolean = false; 
+    private isGameEnded: boolean = false;
     public currentEnemiesCount: number = 0;
 
     constructor(map: Container) {
         EnemySpawner.instance = this;
         this.map = map;
         this.gridMap = MapGame.instance.gridMap;
-        this.waveNumber = 0;    
+        this.waveNumber = 0;
     }
 
-    createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number },enemyType:EnemyType[]) {
+    createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, enemyType: EnemyType[]) {
         if (this.isGameEnded) return;
         const enemy = ObjectPool.instance.getEnemyFromPool(enemyType[Math.floor(Math.random() * enemyType.length)]);
 
@@ -58,12 +58,12 @@ export class EnemySpawner {
         this.currentEnemiesCount = 0;
         this.isSpawning = true;
 
-        const spawnDelay = 500;
+        const spawnDelay = 2000;
 
         for (let i = 0; i < enemiesPerWave; i++) {
             spawnPoints.forEach(spawnPoint => {
                 setTimeout(() => {
-                    this.createEnemy(spawnPoint, goal,enemyType);
+                    this.createEnemy(spawnPoint, goal, enemyType);
                     this.currentEnemiesCount++;
                 }, i * spawnDelay + Math.random() * spawnDelay);
             });
@@ -89,19 +89,18 @@ export class EnemySpawner {
             }
 
             if (enemy.hasReachedGoal()) {
-                if(PlayerController.instance.hpPlayer > 0){
+                if (PlayerController.instance.hpPlayer > 0) {
                     PlayerController.instance.takeDamage(enemy.damage);
                 }
-                
-                if(PlayerController.instance.hpPlayer <= 0){
-                    GameResult.instance.displayResult(false); 
-                     this.endGame();  
+
+                if (PlayerController.instance.hpPlayer <= 0) {
+                    GameResult.instance.displayResult(false);
+                    this.endGame();
                 }
-                
             }
         });
 
-        this.updateEnemyZIndex() ;
+        this.updateEnemyZIndex();
 
         if (!this.isSpawning && this.getEnemies().length === 0 && this.waveNumber !== 0) {
             EventHandle.emit('start_spawn');
@@ -109,7 +108,7 @@ export class EnemySpawner {
 
         if (!this.isSpawning && this.getEnemies().length === 0 && this.waveNumber === PlayerController.instance.totalWaves) {
             GameResult.instance.displayResult(true);
-            this.endGame(); 
+            this.endGame();
         }
 
     }
@@ -118,7 +117,7 @@ export class EnemySpawner {
         this.enemies.forEach((enemy) => {
             enemy.sprite.zIndex = 2;
         });
-    
+
         // Cập nhật zIndex cho từng enemy dựa trên tọa độ
         for (let i = 0; i < this.enemies.length; i++) {
             const enemy1 = this.enemies[i];
@@ -126,25 +125,25 @@ export class EnemySpawner {
                 const enemy2 = this.enemies[j];
                 if (enemy1 !== enemy2) {
                     // Nếu enemy1 nằm dưới enemy2 (có y lớn hơn), tăng zIndex
-                    if (enemy1.sprite.y > enemy2.sprite.y || 
-                       (enemy1.sprite.y === enemy2.sprite.y && enemy1.sprite.x > enemy2.sprite.x)) {
+                    if (enemy1.sprite.y > enemy2.sprite.y ||
+                        (enemy1.sprite.y === enemy2.sprite.y && enemy1.sprite.x > enemy2.sprite.x)) {
                         enemy1.sprite.zIndex++;
                     }
                 }
             }
-        }}
+        }
+    }
 
     public getEnemies(): Enemy[] {
         return this.enemies;
     }
 
-        // Phương thức để ngừng tất cả hoạt động khi game kết thúc
-        public endGame(): void {
-            this.isGameEnded = true;  // Đánh dấu game đã kết thúc
-            // Dừng logic cho quái vật, nút và các thành phần khác
-            this.enemies.forEach(enemy => {
-                enemy.sprite.interactive = false;  // Vô hiệu hóa tương tác của quái
-            });
-            EventHandle.emit('disable_all_interactions');  // Tắt tất cả sự kiện tương tác
-        }
+    public endGame(): void {
+        this.isGameEnded = true;
+        // Dừng logic cho quái vật, nút và các thành phần khác
+        this.enemies.forEach(enemy => {
+            enemy.sprite.interactive = false;  // Vô hiệu hóa tương tác của quái
+        });
+        EventHandle.emit('disable_all_interactions');  // Tắt tất cả sự kiện tương tác
+    }
 }

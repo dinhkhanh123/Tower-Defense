@@ -115,7 +115,7 @@ export class TowerController {
                     tower.target.shift();
                     tower.spriteAniTower.gotoAndStop(0);
                 } else {
-                    tower.Attack(currentTarget.id, currentTarget.getUpdatePositionEnemy(), deltaTime);
+                    tower.Attack( currentTarget, deltaTime);
                     tower.spriteAniTower.play();
                 }
             }
@@ -125,5 +125,4 @@ export class TowerController {
     disableTower() {
         this.isGameOver = true;
     }
-
 }

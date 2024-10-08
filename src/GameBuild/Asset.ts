@@ -18,13 +18,14 @@ export default class AssetLoad {
         }
     }
 
-    static async loadBitmap(bitmapFile: string) {
-        await Assets.load(bitmapFile);
+    static async loadBitmap(bitmapFiles: string[]) {
+        for(const bitmapFile of bitmapFiles){
+            await Assets.load(bitmapFile);
+        }     
     }
     
     static async loadSoundSprite(soundJsonPath: string) {
        await Assets.load({alias:"game-sound",src:soundJsonPath});
-       console.log(Assets.get('game-sound'));
     }
 
     static async loadAnimations(animationFiles: string[]) {

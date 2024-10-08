@@ -5,6 +5,8 @@ import { BottomPanel } from '../UIBottom/BottomPanel';
 import { Enemy } from "../../GameObject/Enemies/Enemy";
 import { RightPanel } from "../UIRight/RightPanel";
 import { PlayerController } from "../../Controller/PlayerController";
+import { SoundManager } from "../../Controller/SoundController";
+import { sound } from "@pixi/sound";
 
 export class GameBoard extends Container {
     private mapGame;
@@ -20,7 +22,11 @@ export class GameBoard extends Container {
         this.rightPan = new RightPanel();
         this.bottomPanel = new BottomPanel();
 
+        const soundManager = SoundManager.getInstance();
+        const soundButton = soundManager.getSoundButton();
+ 
         this.init();
+        this.addChild(soundButton);
     }
 
     init() {

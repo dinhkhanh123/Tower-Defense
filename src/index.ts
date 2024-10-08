@@ -1,9 +1,9 @@
-import { AnimatedSprite, Application, Assets, Spritesheet, Texture } from 'pixi.js';
+import { AnimatedSprite, Application, Assets,  } from 'pixi.js';
 import { GameConst } from './GameBuild/GameConst';
 import { GameBoard } from './GameScene/Scenes/GameBoard';
 import { GameStart } from './GameScene/Scenes/GameStart';
 import AssetLoad from './GameBuild/Asset';
-import bundles from '../assetBundle.json';
+import bundles from '../assets/assetBundle.json';
 import { EventHandle } from './GameBuild/EventHandle';
 import { GameResult } from './GameScene/Scenes/GameResult';
 import { sound } from '@pixi/sound';
@@ -24,12 +24,8 @@ import { sound } from '@pixi/sound';
         './atlas/projectile_atlas.json',
     ]);
     //load bitmap
-    await AssetLoad.loadBitmap('./atlas/GoldPeaberry.xml');
-    await AssetLoad.loadBitmap('./atlas/GoldPeaberry.fnt');
-    await AssetLoad.loadBitmap('./atlas/Peaberry.xml');
-    await AssetLoad.loadBitmap('./atlas/Peaberry.fnt');
+    await AssetLoad.loadBitmap(['./atlas/GoldPeaberry.xml','./atlas/GoldPeaberry.fnt','./atlas/Peaberry.xml','./atlas/Peaberry.fnt','./atlas/ShinyPeaberry.fnt','./atlas/ShinyPeaberry.xml']);
     //load animation
-    // Load multiple animation files
     await AssetLoad.loadAnimations([
         './atlas/orc_sprites_atlas.json',
         './atlas/weapon_tower_ani_atlas.json',
@@ -42,13 +38,12 @@ import { sound } from '@pixi/sound';
 
     sound.add('game-sound', { url: Assets.get('game-sound').resources[0], sprites: Assets.get('game-sound').spritemap });
 
+
     const gameStart = new GameStart();
     const gameBoard = new GameBoard();
     const gameResult = new GameResult();
 
-    app.stage.addChild(gameBoard);
 
-    app.stage.addChild(gameResult);
     EventHandle.on('startGame', () => {
         app.stage.removeChild(gameStart);
         app.stage.addChild(gameBoard);
@@ -57,6 +52,12 @@ import { sound } from '@pixi/sound';
     app.ticker.add((time) => {
         gameBoard.update(time.deltaTime);
     });
+
+
+    app.stage.addChild(gameBoard);
+
+    app.stage.addChild(gameResult);
+
     document.body.appendChild(app.canvas);
 })();
 
