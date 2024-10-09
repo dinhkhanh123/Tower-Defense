@@ -12,6 +12,7 @@ import { GameSave } from "../../GameBuild/GameSave";
 import { SkillSystem } from "../UIBottom/SkillSystem";
 import { Hero } from '../../GameObject/Hero/Hero';
 import { HeroController } from "../../Controller/HeroController";
+import { PlayerController } from "../../Controller/PlayerController";
 
 export class MapGame extends Container {
     public static instance: MapGame;
@@ -145,6 +146,8 @@ export class MapGame extends Container {
                     sprite.eventMode = 'static';
                     sprite.cursor = 'pointer'
                     sprite.interactive = true;
+
+                    const coin = PlayerController.instance.cointPlayer;
                     sprite.on('pointerdown', () => {
                         if (!this.isGameOver) {
                             EventHandle.emit('tower_slot_clicked', sprite);

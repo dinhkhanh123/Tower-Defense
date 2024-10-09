@@ -24,7 +24,7 @@ import { sound } from '@pixi/sound';
         './atlas/projectile_atlas.json',
     ]);
     //load bitmap
-    await AssetLoad.loadBitmap(['./atlas/GoldPeaberry.xml','./atlas/GoldPeaberry.fnt','./atlas/Peaberry.xml','./atlas/Peaberry.fnt','./atlas/ShinyPeaberry.fnt','./atlas/ShinyPeaberry.xml']);
+    await AssetLoad.loadBitmap(['./atlas/GoldPeaberry.xml','./atlas/GoldPeaberry.fnt','./atlas/Peaberry.xml','./atlas/Peaberry.fnt','./atlas/ShinyPeaberry.fnt','./atlas/ShinyPeaberry.xml','./atlas/RedPeaberry.fnt','./atlas/RedPeaberry.xml']);
     //load animation
     await AssetLoad.loadAnimations([
         './atlas/orc_sprites_atlas.json',

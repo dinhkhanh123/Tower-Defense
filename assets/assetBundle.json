@@ -65,6 +65,14 @@
             {
                 "alias":"ui_card",
                 "src":"./atlas/img/ui_card_tower.png"
+            },
+            {
+                "alias":"skill_1_A",
+                "src":"./atlas/img/FireRain_A.png"
+            },
+            {
+                "alias":"skill_1_U",
+                "src":"./atlas/img/FireRain_U.png"
             }
         ]
     }

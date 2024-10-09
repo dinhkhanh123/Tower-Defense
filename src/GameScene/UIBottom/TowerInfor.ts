@@ -1,6 +1,11 @@
-import { BitmapText, Container, Graphics, Sprite, Text, TextStyle, Texture } from "pixi.js";
-import { BottomPanel } from "./BottomPanel";
+import { BitmapText, Container, Graphics, Sprite, Texture } from 'pixi.js';
+import { Tower } from "../../GameObject/Towers/Tower";
+import { TowerFactory } from "../../TowerFactory/TowerFactory";
+import { TowerType } from "../../GameObject/Towers/TowerType";
+import { TowerController } from "../../Controller/TowerController";
 import { EventHandle } from "../../GameBuild/EventHandle";
+import { BottomPanel } from "./BottomPanel";
+import { PlayerController } from '../../Controller/PlayerController';
 import AssetLoad from '../../GameBuild/Asset';
 
 export class TowerInfor extends Container {
@@ -14,8 +19,7 @@ export class TowerInfor extends Container {
     private towerNameTxt: BitmapText;
     private towerDetailTxt: BitmapText;
     private towerInforTxt: BitmapText;
-    private towerRange: Sprite
-
+    private towerRange: Sprite;
 
     constructor() {
         super();
@@ -28,17 +32,16 @@ export class TowerInfor extends Container {
         this.towerInforTxt = new BitmapText();
         this.priceUpgradeTxt = new BitmapText();
         this.privateSelltxt = new BitmapText();
-
-
         this.towerRange = new Sprite();
-
 
         this.addChild(this.towerRange);
 
         this.init();
         this.textTower();
         this.listenToEvents();
-
+        
+        // Start the update loop
+        this.update();
     }
 
     listenToEvents() {
@@ -68,7 +71,7 @@ export class TowerInfor extends Container {
             } else {
                 this.priceUpgradeTxt.text = "Max";
             }
-            this.privateSelltxt.text = optionTower.priceTower;
+            this.privateSelltxt.text = optionTower.priceTower.toString();
             this.towerSprite.texture = optionTower.sprite.texture;
             this.towerNameTxt.text = optionTower.towerName.toString();
             this.towerDetailTxt.text = optionTower.towerDetail.toString();
@@ -78,35 +81,28 @@ export class TowerInfor extends Container {
             this.towerRange.position.set(optionTower.range.x + 20, optionTower.range.y + 20);
             this.towerRange.width = optionTower.range.range * 2;
             this.towerRange.height = optionTower.range.range * 2;
-
         });
     }
 
     init() {
         const towerInfor = new Graphics();
-
         towerInfor.rect(0, 600, 800, 168);
         towerInfor.fill(0xD2E0FB);
 
         const closeTowerPan = this.createButton(780, 620, 30, 30, 'btn_close');
         closeTowerPan.on('pointerdown', () => BottomPanel.instance.setVisibleSystem('skill'));
 
-
         this.addChild(towerInfor);
         this.addChild(closeTowerPan);
-
     }
 
     textTower() {
-        this.towerSprite = new Sprite();
         this.towerSprite.position.set(100, 610);
         this.towerSprite.width = 80;
         this.towerSprite.height = 100;
 
         this.towerNameTxt = this.createText(200, 610, 'GoldPeaberry', 24);
-
         this.towerDetailTxt = this.createText(200, 650, 'MonospacePeaberr', 16);
-
         this.towerInforTxt = this.createText(200, 680, 'MonospacePeaberr', 12);
 
         const towerUprade = this.createButton(550, 645, 100, 30, 'ui_bar_btn');
@@ -124,6 +120,21 @@ export class TowerInfor extends Container {
         });
 
         this.addChild(this.towerSprite);
+    }
+
+    update() {
+        const playerCoins = PlayerController.instance.cointPlayer;
+
+        // Check if player can afford the upgrade and sell price
+        if (this.levelTower < 3 && playerCoins < this.priceUpgrade) {
+            this.priceUpgradeTxt.style.fontFamily = 'RedPeaberry'; // Change font if cannot afford upgrade
+        } else {
+            this.priceUpgradeTxt.style.fontFamily = 'ShinyPeaberry'; // Reset font
+        }
+
+  
+        // Call this function continuously (you can use a requestAnimationFrame or similar method)
+        requestAnimationFrame(this.update.bind(this)); // Keep updating
     }
 
     private createButton(x: number, y: number, w: number, h: number, texture: string): Sprite {
