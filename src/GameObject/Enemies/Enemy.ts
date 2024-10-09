@@ -23,6 +23,7 @@ export class Enemy {
     private goalPosition!: { x: number, y: number };
     private pathfinding!: Pathfinding;
     private currentPathIndex: number = 0;
+    public isTargeted: boolean = false;
 
     private healthBar: HealthBar;
     private anim: AnimatedSprite;
@@ -74,7 +75,15 @@ export class Enemy {
         this.pathfinding = new Pathfinding(gridMap)
 
     }
-
+    public updateTargetStatus(isInRange: boolean) {
+        if (isInRange) {
+            this.isTargeted = true;
+            this.anim.stop(); // Dừng hoạt ảnh
+        } else {
+            this.isTargeted = false;
+            this.anim.play(); // Tiếp tục hoạt ảnh nếu không là target
+        }
+    }
     move(delta: number) {
 
         const path = this.pathfinding.bfs(this.currentPosition, this.goalPosition);
@@ -119,7 +128,6 @@ export class Enemy {
                 this.currentPathIndex++;
             }
         }
-
     }
 
     public getUpdatePositionEnemy(): PointData {

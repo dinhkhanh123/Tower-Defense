@@ -57,8 +57,15 @@
             {
                 "alias":"ui_bar_btn",
                 "src":"./atlas/img/ui_bar_btn.png"
+            },
+            {
+                "alias":"hero_avatar",
+                "src":"./atlas/img/hero_avatar.png"
+            },
+            {
+                "alias":"ui_card",
+                "src":"./atlas/img/ui_card_tower.png"
             }
-            
         ]
     }
   ]

@@ -8,13 +8,21 @@ import { BottomPanel } from "./BottomPanel";
 import { PlayerController } from '../../Controller/PlayerController';
 
 export class TowerSystem extends Container {
-    //private posTower!: { x: number; y: number };
+    private static instance : TowerSystem;
     private baseSprite!: Sprite;
+
     constructor() {
         super();
 
         this.init();
         this.listenToEvents();
+    }
+
+    public static getInstance(): TowerSystem {
+        if (!TowerSystem.instance) {
+            TowerSystem.instance = new TowerSystem();
+        }
+        return TowerSystem.instance;
     }
 
     init() {
@@ -44,42 +52,8 @@ export class TowerSystem extends Container {
 
         for (let i = 0; i < towers.length; i++) {
 
-            const towerSprite = towers[i].imageTower;
-            towerSprite.image.x = 100 * i + 50;
-            towerSprite.image.y = 610;
-            towerSprite.image.width = 80;
-            towerSprite.image.height = 100;
-            towerSprite.image.interactive = true;
-            towerSprite.image.eventMode = 'static';
-            towerSprite.image.cursor = 'pointer';
-
-            
-                towerSprite.image.on('pointerdown', () => {
-                    const selectedTowerType = towers[i].type;
-
-                    if(towers[i].priceTower.price <= PlayerController.instance.cointPlayer){
-                        EventHandle.emit('buy_tower', towers[i].id);
-                        TowerController.instance.createTower(selectedTowerType, this.baseSprite);
-                        BottomPanel.instance.setVisibleSystem('skill');
-                    }
-                });
-         
-
-          
-
-            this.addChild(towerSprite.image);
-
-            const priceTowers = new BitmapText({
-                text: towers[i].priceTower.price.toString(),
-                style: {
-                    fontFamily: 'Peaberry',
-                    fontSize: 16,
-                    align: 'left'
-                }
-            });
-
-            priceTowers.position.set(100 * i + 75, 690);
-            this.addChild(priceTowers);
+            const card = this.createTowerCard(towers[i], 100 * i + 50, 610);
+            this.addChild(card);
         }
     }
 
@@ -91,4 +65,55 @@ export class TowerSystem extends Container {
             this.baseSprite = sprite;
         });
     }
+    createTowerCard(tower: Tower, x: number, y: number): Container {
+        // Tạo container cho card
+        const card = new Container();
+        card.position.set(x, y);
+
+        // Background của card
+        const bgCard = new Sprite(Texture.from('ui_card'));
+        bgCard.width = 80;
+        bgCard.height = 100;
+
+        card.interactive = true;
+        card.eventMode = 'static';
+        card.cursor = 'pointer';
+
+        // Xử lý sự kiện click lên tháp
+        card.on('pointerdown', () => {
+            const selectedTowerType = tower.type;
+
+            if (tower.priceTower.price <= PlayerController.instance.cointPlayer) {
+                EventHandle.emit('buy_tower', tower.id);
+                TowerController.instance.createTower(selectedTowerType, this.baseSprite);
+                BottomPanel.instance.setVisibleSystem('skill');
+            }
+        });
+        card.addChild(bgCard);
+
+        // Ảnh của tower
+        const towerSprite = tower.imageTower.image;
+        towerSprite.width = 30;
+        towerSprite.height = 45;
+        towerSprite.x = 25;
+        towerSprite.y = 20;
+   
+
+        card.addChild(towerSprite);
+     
+        // Hiển thị giá của tháp
+        const priceTowers = new BitmapText({
+            text: tower.priceTower.price.toString(),
+            style: {
+                fontFamily: 'ShinyPeaberry',
+                fontSize: 12,
+                align: 'left'
+            }
+        });
+        priceTowers.position.set(28, 70);
+        card.addChild(priceTowers);
+        
+        return card;
+    }
+
 }

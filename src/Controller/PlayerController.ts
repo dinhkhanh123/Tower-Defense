@@ -1,5 +1,6 @@
 import { EventHandle } from "../GameBuild/EventHandle";
 import { GameConst } from "../GameBuild/GameConst";
+import { TowerSystem } from "../GameScene/UIBottom/TowerSystem";
 import { RightPanel } from "../GameScene/UIRight/RightPanel";
 import { EnemySpawner } from "./SpawnEnemy";
 

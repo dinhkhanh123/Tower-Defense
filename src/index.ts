@@ -30,6 +30,7 @@ import { sound } from '@pixi/sound';
         './atlas/orc_sprites_atlas.json',
         './atlas/weapon_tower_ani_atlas.json',
         './atlas/ani_weapon_tower_atlas.json',
+        './atlas/charactor_atlas.json',
     ]);
     // const atlasData = await Assets.load('./atlas/weapon_tower_ani_atlas.json');
     // await atlasData.parse();

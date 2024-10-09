@@ -9,46 +9,49 @@ import { Tower } from "../../GameObject/Towers/Tower";
 import { sound } from "@pixi/sound";
 import { SoundManager } from "../../Controller/SoundController";
 import { GameSave } from "../../GameBuild/GameSave";
+import { SkillSystem } from "../UIBottom/SkillSystem";
+import { Hero } from '../../GameObject/Hero/Hero';
+import { HeroController } from "../../Controller/HeroController";
 
 export class MapGame extends Container {
     public static instance: MapGame;
     public gridMap: number[][] = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Hàng 1
-        [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 2, 1, 1, 1, 1, 1, 1, 1], // Hàng 2
-        [1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1], // Hàng 3
-        [0, 0, 0, 1, 1, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 2, 0, 0, 0, 0], // Hàng 4
-        [0, 3, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 5
-        [0, 2, 0, 1, 2, 0, 0, 0, 2, 0, 0, 2, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 6
-        [0, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 3, 3, 0], // Hàng 7
-        [0, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 3, 0], // Hàng 8
-        [0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0], // Hàng 9
-        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0], // Hàng 10
-        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 11
-        [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 1, 1, 0, 0, 3, 3, 0], // Hàng 12
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 3, 0], // Hàng 13
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3, 3, 0], // Hàng 14
+        [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0], // Hàng 2
+        [1, 1, 1, 1, 0, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1], // Hàng 3
+        [0, 0, 0, 1, 0, 0, 3, 3, 3, 3, 3, 0, 0, 1, 0, 2, 0, 0, 0, 0], // Hàng 4
+        [0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 5
+        [0, 2, 0, 1, 2, 0, 0, 0, 2, 0, 0, 2, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 6
+        [0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 3, 3, 0], // Hàng 7
+        [0, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 3, 3, 0], // Hàng 8
+        [0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], // Hàng 9
+        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0], // Hàng 10
+        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 11
+        [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 12
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 13
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 3, 3, 0], // Hàng 14
         [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]  // Hàng 15
     ];
 
     private towerController: TowerController;
     private enemySpawn: EnemySpawner;
     private projectileController: ProjectileController;
+    private heroController:HeroController;
     private isGameOver: boolean = false;
     private isSound: boolean = false;
 
     constructor() {
         super();
         MapGame.instance = this;
-        this.sortableChildren = true;
-
-        this.towerController = new TowerController(this);
-        this.enemySpawn = new EnemySpawner(this);
-        this.projectileController = new ProjectileController(this);
-
-
         this.init();
         this.SpawnEnemy();
         this.listenEventHandle();
+        
+        this.towerController = new TowerController(this);
+        this.enemySpawn = new EnemySpawner(this);
+        this.projectileController = new ProjectileController(this);
+        this.heroController = new HeroController(this);
+        this.sortableChildren = true;
     }
 
     listenEventHandle() {
@@ -88,6 +91,7 @@ export class MapGame extends Container {
         this.towerController.update(deltaTime);
         this.enemySpawn.update(deltaTime);
         this.projectileController.update(deltaTime);
+        this.heroController.update(deltaTime);
     }
 
     LoadMap() {
@@ -128,11 +132,11 @@ export class MapGame extends Container {
 
                 if (cellValue === 1) {
                     sprite.eventMode = 'static';
-                    sprite.cursor = 'pointer'
                     sprite.interactive = true;
                     sprite.on('pointerdown', () => {
-                        if (!this.isGameOver) {
-
+                        if (!this.isGameOver && SkillSystem.instance.isHeroSelected) {
+                        const position = { x: j, y: i };
+                        EventHandle.emit('click_position_hero', position);
                         }
                     });
                 }

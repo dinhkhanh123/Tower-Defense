@@ -1,73 +1,171 @@
-import { Container, Sprite } from "pixi.js";
+import { AnimatedSprite, Container, Graphics, PointData, Sprite, Texture } from "pixi.js";
 import { Pathfinding } from "../../GameScene/Map/Pathfinding";
 import Asset from "../../GameBuild/Asset";
 import { GameConst } from "../../GameBuild/GameConst";
+import AssetLoad from "../../GameBuild/Asset";
 import { Enemy } from "../Enemies/Enemy";
 
 export class Hero {
-    public sprite: Container;
+    private id: number;
+    private heroName: string;
+    private heroLevel: number;
+    private heroHp: number;
+    private heroDamage: number;
+    private attackRadius: number = 30;
+    public heroSprite: Container;
+    private heroSpeed: number;
     private currentPosition!: { x: number, y: number };
     private goalPosition!: { x: number, y: number };
     private pathfinding!: Pathfinding;
     private currentPathIndex: number = 0;
-    private attackRadius: number = 100;
-    private damage: number = 10;
-    private speed = 2;
+    private isAlive: boolean;
+    public isMoving: boolean = false;
+    public heroAni: AnimatedSprite;
+    public target: Enemy[] = [];
+    private attackAnimationTextures: { [key: string]: string } = {
+        up: 'attack_up',
+        down: 'attack_down',
+        left: 'attack_left',
+        right: 'attack_right'
+    };
 
-    constructor(position: { x: number, y: number }) {
-        this.sprite = new Container();
-        this.currentPosition = position;
-        this.goalPosition = position;
-        this.initHeroSprite();
-    }
+    constructor(id: number, name: string, hp: number, speed: number, damage: number, texture: string) {
+        this.id = id;
+        this.heroName = name;
+        this.heroLevel = 1;
+        this.heroHp = hp;
+        this.heroDamage = damage;
+        this.heroSpeed = speed;
+        this.isAlive = true;
+        this.heroSprite = new Container;
+        this.heroAni = new AnimatedSprite(AssetLoad.getAnimation(`move_right`));
+        this.heroAni.anchor.set(0.5);
+        this.heroAni.scale.set(0.6);
+        this.heroSprite.zIndex = 1000;
 
-    // Tạo hero sprite
-    private initHeroSprite() {
-        const heroSprite = new Sprite(Asset.getTexture("hero"));
-        heroSprite.anchor.set(0.5);
-        this.sprite.addChild(heroSprite);
+
+        const radius = new Sprite(AssetLoad.getTexture('range'));
+        radius.anchor.set(0.5);
+        radius.position = this.heroSprite.position;
+
+        radius.width = this.attackRadius * 2;
+        radius.height = this.attackRadius * 2;
+
+        this.heroSprite.addChild(radius);
+        this.heroSprite.addChild(this.heroAni);
     }
 
     setPosition(pointStart: { x: number, y: number }, pointEnd: { x: number, y: number }, gridMap: number[][]) {
         this.currentPosition = { x: pointStart.x, y: pointStart.y };
         this.goalPosition = { x: pointEnd.x, y: pointEnd.y };
         this.pathfinding = new Pathfinding(gridMap);
+        const path = this.pathfinding.bfs(this.currentPosition, this.goalPosition);
+        if (path) {
+            this.isMoving = true; 
+            this.currentPathIndex = 0; 
+        } else {
+            this.isMoving = false; 
+        }
+    }
+
+    private getCurrentDirection(): string {
+        if (this.heroAni.textures === AssetLoad.getAnimation(`move_up`)) {
+            return 'up';
+        } else if (this.heroAni.textures === AssetLoad.getAnimation(`move_down`)) {
+            return 'down';
+        } else if (this.heroAni.textures === AssetLoad.getAnimation(`move_left`)) {
+            return 'left';
+        } else {
+            return 'right'; 
+        }
+    }
+
+    attack(target: Enemy) {
+        // Kiểm tra nếu kẻ thù đang trong tầm đánh
+        if (this.isInRange(target.getUpdatePositionEnemy())) {
+            // Kiểm tra nếu Hero không đang tấn công (animation chưa bắt đầu hoặc đã hoàn thành)
+            if (!this.heroAni.playing) {
+                // Phát animation tấn công dựa trên hướng hiện tại
+                const currentDirection = this.getCurrentDirection();
+                this.heroAni.textures = AssetLoad.getAnimation(this.attackAnimationTextures[currentDirection]);
+                this.heroAni.play();
+
+                // Kiểm tra frame hiện tại trong khi animation đang chạy
+                this.heroAni.onFrameChange = (currentFrame: number) => {
+                    // Nếu frame hiện tại là frame cuối cùng trong animation
+                    if (currentFrame === this.heroAni.totalFrames - 1) {
+                        console.log(`${this.heroName} đã gây ${this.heroDamage} damage cho `);
+                        target.takeDamage(target.id, this.heroDamage); // Gây damage cho kẻ thù
+
+                        // Sau khi gây damage, tắt sự kiện onFrameChange để tránh gây damage nhiều lần
+                        this.heroAni.onFrameChange = undefined;
+                        this.heroAni.gotoAndStop(0); // Dừng animation ở frame đầu tiên
+                    }
+                };
+            }
+        }
     }
 
     move(delta: number) {
-        const path = this.pathfinding.bfs(this.currentPosition, this.goalPosition);
+        // Chỉ cập nhật vị trí nếu đang di chuyển và đã có mục tiêu
+        if (!this.isMoving || !this.goalPosition) return;
 
+        const path = this.pathfinding.astar(this.currentPosition, this.goalPosition);
         if (path && this.currentPathIndex < path.length) {
             const target = path[this.currentPathIndex];
-            const dx = target.x * GameConst.SQUARE_SIZE - this.sprite.x;
-            const dy = target.y * GameConst.SQUARE_SIZE - this.sprite.y;
+            const dx = target.x * GameConst.SQUARE_SIZE - this.heroSprite.x;
+            const dy = target.y * GameConst.SQUARE_SIZE - this.heroSprite.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist > 1) {
-                this.sprite.x += (dx / dist) * this.speed * delta;
-                this.sprite.y += (dy / dist) * this.speed * delta;
+                this.heroSprite.x += (dx / dist) * this.heroSpeed * delta;
+                this.heroSprite.y += (dy / dist) * this.heroSpeed * delta;
+
+                let newTexture;
+
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 0) {
+                        newTexture = AssetLoad.getAnimation(`move_right`);
+                    } else {
+                        newTexture = AssetLoad.getAnimation(`move_left`);
+                    }
+                } else {
+                    if (dy > 0) {
+                        newTexture = AssetLoad.getAnimation(`move_down`);
+                    } else {
+                        newTexture = AssetLoad.getAnimation(`move_up`);
+                    }
+                }
+
+                // Chỉ thay đổi textures khi cần thiết
+                if (this.heroAni.textures !== newTexture) {
+                    this.heroAni.textures = newTexture;
+                    this.heroAni.play();
+                }
+
+                this.heroAni.animationSpeed = 0.1;
+
+                this.heroSprite.addChild(this.heroAni);
             } else {
                 this.currentPathIndex++;
             }
         }
-    }
 
-    // Tấn công kẻ địch trong bán kính
-    attackEnemyInRange(enemies: Enemy[]) {
-        for (const enemy of enemies) {
-            const dx = enemy.sprite.x - this.sprite.x;
-            const dy = enemy.sprite.y - this.sprite.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance <= this.attackRadius && enemy.isAlive) {
-                //  enemy.takeDamage(this.damage);
-                break; // Tấn công enemy đầu tiên trong phạm vi
-            }
+        if (path && this.currentPathIndex >= path.length) {
+            this.isMoving = false;
+            this.heroAni.gotoAndStop(0);
         }
     }
 
-    update(delta: number, enemies: Enemy[]) {
-        this.move(delta);
-        this.attackEnemyInRange(enemies);
+    public isInRange(enemyPosition: PointData): boolean {
+        const distance = Math.sqrt(
+            Math.pow(enemyPosition.x - this.heroSprite.x + GameConst.SQUARE_SIZE / 2, 2) +
+            Math.pow(enemyPosition.y - this.heroSprite.y + GameConst.SQUARE_SIZE / 2, 2)
+        );
+        return distance <= this.attackRadius;
+    }
+
+    update(deltaTime: number) {
+        this.move(deltaTime);
     }
 }
