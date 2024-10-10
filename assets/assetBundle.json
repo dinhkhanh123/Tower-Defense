@@ -73,6 +73,19 @@
             {
                 "alias":"skill_1_U",
                 "src":"./atlas/img/FireRain_U.png"
+            },
+            {
+                "alias":"btn_start_game",
+                "src":"./atlas/img/btn_start_game.png"
+            },
+            {
+                "alias":"loading_bg",
+                "src":"./atlas/img/loading_bg.png"
+            }
+            ,
+            {
+                "alias":"loading_bar",
+                "src":"./atlas/img/loading_bar.png"
             }
         ]
     }

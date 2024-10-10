@@ -46,9 +46,7 @@ export class PlayerController {
         if (this.cointPlayer >= amount) {
             this.cointPlayer -= amount;
             RightPanel.instance.updateCoinDisplay();
-        } else {
-            console.log("Not enough money.");
-        }
+        } 
     }
 
     public takeDamage(damage: number): void {
@@ -71,7 +69,6 @@ export class PlayerController {
         if (this.currentWave <= this.waveData.length) {
             const waveInfo = this.waveData[this.currentWave - 1];
 
-            // Sử dụng EnemySpawner để spawn enemy theo wave
             EnemySpawner.instance.spawnWave(
                 Array.isArray(waveInfo.spawnPoints) ? waveInfo.spawnPoints : [waveInfo.spawnPoints],
                 waveInfo.goad,
@@ -79,9 +76,7 @@ export class PlayerController {
                 waveInfo.typeEnemy
             );
 
-        } else {
-            console.log("All waves have been spawned.");
-        }
+        } 
     }
 
     startNextWave() {

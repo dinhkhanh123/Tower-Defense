@@ -7,6 +7,7 @@ import { BottomPanel } from "../GameScene/UIBottom/BottomPanel";
 import { EnemySpawner } from "./SpawnEnemy";
 import AssetLoad from "../GameBuild/Asset";
 import { PlayerController } from "./PlayerController";
+import { GameConst } from "../GameBuild/GameConst";
 
 export class TowerController {
     public static instance: TowerController;
@@ -67,8 +68,8 @@ export class TowerController {
             BottomPanel.instance.setVisibleSystem('infor');
         });
 
-        tower.spriteTower.sprite.zIndex = 1;
-        tower.spriteAniTower.zIndex = 3;
+        tower.spriteTower.sprite.zIndex = GameConst.Z_INDEX_5;
+        tower.spriteAniTower.zIndex = GameConst.Z_INDEX_4;
         this.map.addChild(tower.spriteTower.sprite);
         this.map.addChild(tower.spriteAniTower);
     }

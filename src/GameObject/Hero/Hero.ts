@@ -4,6 +4,7 @@ import Asset from "../../GameBuild/Asset";
 import { GameConst } from "../../GameBuild/GameConst";
 import AssetLoad from "../../GameBuild/Asset";
 import { Enemy } from "../Enemies/Enemy";
+import { EventHandle } from "../../GameBuild/EventHandle";
 
 export class Hero {
     private id: number;

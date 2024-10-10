@@ -25,7 +25,7 @@ export class HeroController {
     }
 
     listenEventHandle() {
-        EventHandle.on('click_position_hero', (position: { x: number, y: number }) => {
+        EventHandle.on('hero_moved', (position: { x: number, y: number }) => {
             this.moveNewPosition(position);
         });
     }
@@ -44,13 +44,10 @@ export class HeroController {
 
             this.hero.setPosition(startPosition, goalPosition, this.gridMap);
             this.hero.heroAni.play();
-            console.log(`Hero is moving from (${startPosition.x}, ${startPosition.y}) to (${goalPosition.x}, ${goalPosition.y})`);
         }
     }
 
-
     update(deltaTime: number) {
- 
         if (this.hero.isMoving) {
             this.hero.update(deltaTime);
         } else {
@@ -58,20 +55,15 @@ export class HeroController {
             const enemiesInRange = EnemySpawner.instance.getEnemies().filter(enemy =>
                 enemy.isAlive && this.hero.isInRange(enemy.getUpdatePositionEnemy())
             );
-    
+
             // Tấn công kẻ thù đầu tiên trong tầm bắn
             if (enemiesInRange.length > 0) {
                 let currentTarget = enemiesInRange[0]; // Lấy kẻ thù đầu tiên
                 if (!currentTarget.isAlive || !this.hero.isInRange(currentTarget.getUpdatePositionEnemy())) {
-                    // Nếu kẻ thù đã chết hoặc không còn trong tầm, xóa nó khỏi danh sách mục tiêu
                     this.hero.target.shift();
                 } else {
-                    // Tấn công kẻ thù
                     this.hero.attack(currentTarget);
                 }
-            }else{
-                
-                this.hero.heroAni.gotoAndStop(0);
             }
         }
     }

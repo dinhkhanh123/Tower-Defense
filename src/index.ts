@@ -48,6 +48,7 @@ import { sound } from '@pixi/sound';
     EventHandle.on('startGame', () => {
         app.stage.removeChild(gameStart);
         app.stage.addChild(gameBoard);
+        app.stage.addChild(gameResult);
     });
 
     app.ticker.add((time) => {
@@ -55,9 +56,9 @@ import { sound } from '@pixi/sound';
     });
 
 
-    app.stage.addChild(gameBoard);
+    
+    app.stage.addChild(gameStart);
 
-    app.stage.addChild(gameResult);
 
     document.body.appendChild(app.canvas);
 })();

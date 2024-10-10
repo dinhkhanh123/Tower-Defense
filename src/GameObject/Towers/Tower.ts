@@ -110,6 +110,7 @@ export class Tower {
             };
             EventHandle.emit('tower_clicked', optionTower);
             PlayerController.instance.subtractMoney(priceUpgrade);
+            SoundManager.getInstance().play('game-sound',{sprite:'upgrade'});
         }
     }
 

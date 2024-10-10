@@ -5,6 +5,17 @@ export namespace GameConst {
     export const GAME_HEIGHT = 720;
     export const SQUARE_SIZE = 40;
 
+    export const SPAWN_DELAY = 2000;
+
+    export const SPEED_ANI = 0.5;
+    export const Z_INDEX_1 = 1000;
+    export const Z_INDEX_2 = 100;
+    export const Z_INDEX_3 = 10;
+    export const Z_INDEX_4 = 5;
+    export const Z_INDEX_5 = 1;
+
+
+
     export const WAVE_1 = {
         spawnPoints: { x: 0, y: 2 },
         goad: { x: 0, y: 13 },

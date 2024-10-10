@@ -8,6 +8,7 @@ import { Projectile } from "../Projectiles/Projectile";
 import { TowerType } from "../Towers/TowerType";
 import { ObjectPool } from "../../ObjectPool/ObjectPool";
 import { HealthBar } from "./HealthBar";
+import { SoundManager } from "../../Controller/SoundController";
 
 export class Enemy {
     public id: number;
@@ -39,9 +40,6 @@ export class Enemy {
         this.position = { x: this.sprite.x, y: this.sprite.y };
         this.isAlive = true;
         this.healthBar = new HealthBar(this);
-
-        // const enemySprite = new Sprite(Asset.getTexture(type));
-        // enemySprite.anchor.set(0.5);
 
         this.anim = new AnimatedSprite(AssetLoad.getAnimation(`${this.type}_move_left`));
         this.anim.anchor.set(0.5);
@@ -78,10 +76,10 @@ export class Enemy {
     public updateTargetStatus(isInRange: boolean) {
         if (isInRange) {
             this.isTargeted = true;
-            this.anim.stop(); // Dừng hoạt ảnh
+            this.anim.stop(); 
         } else {
             this.isTargeted = false;
-            this.anim.play(); // Tiếp tục hoạt ảnh nếu không là target
+            this.anim.play(); 
         }
     }
     move(delta: number) {
@@ -131,7 +129,7 @@ export class Enemy {
     }
 
     public getUpdatePositionEnemy(): PointData {
-        this.position = { x: this.sprite.x - 20, y: this.sprite.y - 20 };
+        this.position = { x: this.sprite.x - GameConst.SQUARE_SIZE/2, y: this.sprite.y - GameConst.SQUARE_SIZE/2 };
         return this.position;
     }
 
@@ -156,6 +154,7 @@ export class Enemy {
             // Tính phần trăm máu còn lại
             const healthPercent = this._hp.hpCount / this._hp.hpConst;
             this.healthBar.updateHealthBar(healthPercent);
+            SoundManager.getInstance().play('game-sound', { sprite: 'slash', loop: false, volume: 0.8 });
         }
     }
 

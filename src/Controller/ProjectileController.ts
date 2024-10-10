@@ -4,16 +4,13 @@ import { ObjectPool } from '../ObjectPool/ObjectPool';
 import { Tower } from '../GameObject/Towers/Tower';
 import { Enemy } from '../GameObject/Enemies/Enemy';
 import { AnimatedSprite, Container, PointData } from 'pixi.js';
-import { GameConst } from '../GameBuild/GameConst';
 import { TowerType } from '../GameObject/Towers/TowerType';
 import AssetLoad from '../GameBuild/Asset';
-import { sound } from '@pixi/sound';
-import { SoundManager } from './SoundController';
+import { GameConst } from '../GameBuild/GameConst';
 
 export class ProjectileController {
     private map: Container;
     private projectiles: Projectile[] = [];
-
 
     constructor(map: Container) {
         this.map = map;
@@ -58,9 +55,6 @@ export class ProjectileController {
 
             this.map.removeChild(projectile.sprite);
          
-           SoundManager.getInstance().play('game-sound', { sprite: 'slash', loop: false, volume: 0.8 });
-          
-
             // Tạo animation khi đạn trúng mục tiêu
             const weaponAni = new AnimatedSprite(AssetLoad.getAnimation(`${towerType}_weapon_ani`));
 
@@ -70,9 +64,9 @@ export class ProjectileController {
 
 
             this.map.addChild(weaponAni);
-            weaponAni.animationSpeed = 0.5;
+            weaponAni.animationSpeed = GameConst.SPEED_ANI;
             weaponAni.loop = false;
-            weaponAni.zIndex = 1000;
+            weaponAni.zIndex = GameConst.Z_INDEX_1;
             weaponAni.play();
 
             // Kiểm tra khi animation đến frame cuối cùng

@@ -27,6 +27,7 @@ export class GameBoard extends Container {
  
         this.init();
         this.addChild(soundButton);
+        
     }
 
     init() {

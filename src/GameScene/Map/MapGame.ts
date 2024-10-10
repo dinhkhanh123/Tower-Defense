@@ -62,10 +62,9 @@ export class MapGame extends Container {
     }
 
     init() {
-        this.width = 800;
+        this.width = 800; 
         this.height = 600;
         this.LoadMap();
-
     }
 
     SpawnEnemy() {
@@ -83,6 +82,7 @@ export class MapGame extends Container {
         startSpawn.on('pointerdown', () => {
             EventHandle.emit('start_spawn');
             startSpawn.visible = false;
+            SoundManager.getInstance().play('game-sound', { sprite: 'battlemusic',loop:true,volume:.8});
         });
 
         this.addChild(startSpawn);
@@ -135,9 +135,17 @@ export class MapGame extends Container {
                     sprite.eventMode = 'static';
                     sprite.interactive = true;
                     sprite.on('pointerdown', () => {
-                        if (!this.isGameOver && SkillSystem.instance.isHeroSelected) {
-                        const position = { x: j, y: i };
-                        EventHandle.emit('click_position_hero', position);
+                        if (!this.isGameOver) {
+                            const position = { x: j, y: i };
+
+                            // Kiểm tra nếu skill được chọn
+                            if (SkillSystem.instance.isSkillSelected) {
+                                EventHandle.emit('skill_used', position);
+                            } 
+                            // Kiểm tra nếu hero được chọn
+                            else if (SkillSystem.instance.isHeroSelected) {
+                                EventHandle.emit('hero_moved', position);
+                            }
                         }
                     });
                 }

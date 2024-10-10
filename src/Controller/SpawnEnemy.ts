@@ -34,7 +34,6 @@ export class EnemySpawner {
         enemy.sprite.x = spawnPoint.x * GameConst.SQUARE_SIZE;
         enemy.sprite.y = spawnPoint.y * GameConst.SQUARE_SIZE;
 
-
         enemy.setPosition(spawnPoint, goal, this.gridMap);
 
         this.enemies.push(enemy);
@@ -58,7 +57,7 @@ export class EnemySpawner {
         this.currentEnemiesCount = 0;
         this.isSpawning = true;
 
-        const spawnDelay = 2000;
+        const spawnDelay = GameConst.SPAWN_DELAY;
 
         for (let i = 0; i < enemiesPerWave; i++) {
             spawnPoints.forEach(spawnPoint => {
@@ -115,7 +114,7 @@ export class EnemySpawner {
 
     private updateEnemyZIndex() {
         this.enemies.forEach((enemy) => {
-            enemy.sprite.zIndex = 2;
+            enemy.sprite.zIndex = GameConst.Z_INDEX_3;
         });
 
         // Cập nhật zIndex cho từng enemy dựa trên tọa độ
