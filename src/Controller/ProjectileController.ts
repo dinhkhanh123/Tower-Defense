@@ -3,7 +3,7 @@ import { EventHandle } from '../GameBuild/EventHandle';
 import { ObjectPool } from '../ObjectPool/ObjectPool';
 import { Tower } from '../GameObject/Towers/Tower';
 import { Enemy } from '../GameObject/Enemies/Enemy';
-import { AnimatedSprite, Container, PointData } from 'pixi.js';
+import { AnimatedSprite, Container } from 'pixi.js';
 import { TowerType } from '../GameObject/Towers/TowerType';
 import AssetLoad from '../GameBuild/Asset';
 import { GameConst } from '../GameBuild/GameConst';
@@ -18,8 +18,9 @@ export class ProjectileController {
         this.listenEvenHandle();
     }
 
+    //lắng nghe các sự kiện tạo và va chạm của đạn
     listenEvenHandle() {
-        EventHandle.on('create_projectile', (tower: Tower, target:Enemy) => {
+        EventHandle.on('create_projectile', (tower: Tower, target: Enemy) => {
             this.createProjectile(tower, target);
         });
         EventHandle.on('projectile_hit', (towerType: TowerType, projectile: Projectile) => {
@@ -27,7 +28,8 @@ export class ProjectileController {
         });
     }
 
-    createProjectile(tower: Tower, target:Enemy) {
+    //tạo viên đạn mới khi tháp bắn vào mục tiêu
+    createProjectile(tower: Tower, target: Enemy) {
         const projectile = ObjectPool.instance.getProjectileFromPool(tower.type);
 
         projectile.sprite.x = tower.spriteAniTower.x;
@@ -40,10 +42,11 @@ export class ProjectileController {
 
         this.projectiles.push(projectile);
 
-        projectile.sprite.zIndex = 3;
+        projectile.sprite.zIndex = GameConst.Z_INDEX_3;
         this.map.addChild(projectile.sprite);
     }
 
+    //xử lý khi viên đạn trúng mục tiêu
     removeProjectile(towerType: TowerType, projectile: Projectile) {
         const index = this.projectiles.indexOf(projectile);
 
@@ -54,7 +57,7 @@ export class ProjectileController {
             ObjectPool.instance.returnProjectileToPool(towerType, projectile);
 
             this.map.removeChild(projectile.sprite);
-         
+
             // Tạo animation khi đạn trúng mục tiêu
             const weaponAni = new AnimatedSprite(AssetLoad.getAnimation(`${towerType}_weapon_ani`));
 
@@ -76,7 +79,6 @@ export class ProjectileController {
                     weaponAni.destroy();
                 }
             };
-
         }
     }
 

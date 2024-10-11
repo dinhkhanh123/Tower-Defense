@@ -37,18 +37,21 @@ export class PlayerController {
         EventHandle.on('start_spawn', () => this.startNextWave());
     }
 
+    //  cộng tiền cho người chơi
     public addMoney(amount: number) {
         this.cointPlayer += amount;
         RightPanel.instance.updateCoinDisplay();
     }
 
+    //  trừ tiền của người chơi
     public subtractMoney(amount: number) {
         if (this.cointPlayer >= amount) {
             this.cointPlayer -= amount;
             RightPanel.instance.updateCoinDisplay();
-        } 
+        }
     }
 
+    //xử lý khi người chơi bị nhận sát thương
     public takeDamage(damage: number): void {
         this.hpPlayer -= damage;
         if (this.hpPlayer <= 0) {
@@ -59,10 +62,7 @@ export class PlayerController {
         RightPanel.instance.updateCoinDisplay();
     }
 
-    // public heal(amount: number): void {
-    //     this.hpPlayer += amount;
-    // }
-
+    //  bắt đầu đợt tấn công tiếp theo
     startSpawn() {
         this.currentWave++;
         RightPanel.instance.updateCoinDisplay();
@@ -75,8 +75,7 @@ export class PlayerController {
                 waveInfo.enemySpawnNumber,
                 waveInfo.typeEnemy
             );
-
-        } 
+        }
     }
 
     startNextWave() {

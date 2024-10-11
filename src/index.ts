@@ -7,6 +7,7 @@ import bundles from '../assets/assetBundle.json';
 import { EventHandle } from './GameBuild/EventHandle';
 import { GameResult } from './GameScene/Scenes/GameResult';
 import { sound } from '@pixi/sound';
+import { SceneManager } from './Controller/SceneManager';
 
 (async () => {
     const app = new Application();
@@ -39,25 +40,9 @@ import { sound } from '@pixi/sound';
 
     sound.add('game-sound', { url: Assets.get('game-sound').resources[0], sprites: Assets.get('game-sound').spritemap });
 
-
-    const gameStart = new GameStart();
-    const gameBoard = new GameBoard();
-    const gameResult = new GameResult();
-
-
-    EventHandle.on('startGame', () => {
-        app.stage.removeChild(gameStart);
-        app.stage.addChild(gameBoard);
-        app.stage.addChild(gameResult);
-    });
-
-    app.ticker.add((time) => {
-        gameBoard.update(time.deltaTime);
-    });
-
-
-    
-    app.stage.addChild(gameStart);
+   // Khởi tạo SceneManager và chạy màn hình khởi đầu
+   const sceneManager = SceneManager.getInstance(app);
+   sceneManager.startScene();  // Bắt đầu từ GameStart scene
 
 
     document.body.appendChild(app.canvas);

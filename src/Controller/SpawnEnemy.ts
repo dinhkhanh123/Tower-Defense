@@ -7,6 +7,7 @@ import { EventHandle } from "../GameBuild/EventHandle";
 import { MapGame } from "../GameScene/Map/MapGame";
 import { PlayerController } from "./PlayerController";
 import { GameResult } from "../GameScene/Scenes/GameResult";
+import { GameBoard } from "../GameScene/Scenes/GameBoard";
 
 export class EnemySpawner {
     public static instance: EnemySpawner;
@@ -25,6 +26,7 @@ export class EnemySpawner {
         this.waveNumber = 0;
     }
 
+    //tạo enemy mới dựa trên vị trí spawnPoint và mục tiêu 
     createEnemy(spawnPoint: { x: number, y: number }, goal: { x: number, y: number }, enemyType: EnemyType[]) {
         if (this.isGameEnded) return;
         const enemy = ObjectPool.instance.getEnemyFromPool(enemyType[Math.floor(Math.random() * enemyType.length)]);
@@ -42,6 +44,7 @@ export class EnemySpawner {
         this.map.addChild(enemy.sprite);
     }
 
+    //xóa enemy khi nó bị tiêu diệt
     removeEnemy(deadEnemy: Enemy) {
         const index = this.enemies.indexOf(deadEnemy);
         if (index !== -1) {
@@ -52,6 +55,7 @@ export class EnemySpawner {
         }
     }
 
+    //spawn một đợt quái vật mới với số lượng 
     spawnWave(spawnPoints: { x: number, y: number }[], goal: { x: number, y: number }, enemiesPerWave: number, enemyType: EnemyType[]) {
         this.waveNumber++;
         this.currentEnemiesCount = 0;
@@ -93,7 +97,7 @@ export class EnemySpawner {
                 }
 
                 if (PlayerController.instance.hpPlayer <= 0) {
-                    GameResult.instance.displayResult(false);
+                    GameBoard.instance.emit('gameEnd',(false));
                     this.endGame();
                 }
             }
@@ -106,7 +110,7 @@ export class EnemySpawner {
         }
 
         if (!this.isSpawning && this.getEnemies().length === 0 && this.waveNumber === PlayerController.instance.totalWaves) {
-            GameResult.instance.displayResult(true);
+            GameBoard.instance.emit('gameEnd',(true));
             this.endGame();
         }
 
@@ -133,16 +137,17 @@ export class EnemySpawner {
         }
     }
 
+    //trả về danh sách các quái vật hiện tại
     public getEnemies(): Enemy[] {
         return this.enemies;
     }
 
     public endGame(): void {
         this.isGameEnded = true;
-        // Dừng logic cho quái vật, nút và các thành phần khác
+
         this.enemies.forEach(enemy => {
             enemy.sprite.interactive = false;  // Vô hiệu hóa tương tác của quái
         });
-        EventHandle.emit('disable_all_interactions');  // Tắt tất cả sự kiện tương tác
+       EventHandle.emit('disable_all_interactions');  
     }
 }

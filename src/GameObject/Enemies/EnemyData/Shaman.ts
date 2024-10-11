@@ -3,7 +3,7 @@ import { EnemyType } from "../EnemyType";
 
 export class Shaman extends Enemy {
     constructor(id: number) {
-        const hp = 25;
+        const hp = 20;
         const speed = .6;
         const damage = 2;
         const money = 10;

@@ -1,7 +1,6 @@
 import { PointData, Sprite } from "pixi.js";
 import { Enemy } from "../Enemies/Enemy";
 import { EventHandle } from "../../GameBuild/EventHandle";
-import { ObjectPool } from "../../ObjectPool/ObjectPool";
 import { TowerType } from "../Towers/TowerType";
 
 export class Projectile {
@@ -11,6 +10,7 @@ export class Projectile {
     public damage: number;
     public target!: Enemy;
     private towerType: TowerType;
+    private force:number;
 
     constructor(id: number, sprite: Sprite, towerType: TowerType) {
         this.id = id;
@@ -18,11 +18,12 @@ export class Projectile {
         this.towerType = towerType;
         this.speed = 0;
         this.damage = 0;
+        this.force = 5;
     }
 
     public setTarget(enemyTarget: Enemy, speed: number, damage: number) {
         this.target = enemyTarget;
-        this.speed = speed * 5;
+        this.speed = speed * this.force;
         this.damage = damage;
     }
 

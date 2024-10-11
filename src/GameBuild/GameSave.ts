@@ -55,6 +55,6 @@ export class GameSave {
     static loadVolumeSetting(): number {
         const hashedKey = GameSave.VOLUME_KEY + GameSave.hashKey(GameSave.VOLUME_KEY);
         const savedVolumeSetting = localStorage.getItem(hashedKey);
-        return savedVolumeSetting ? JSON.parse(savedVolumeSetting) : 1.0; // Mặc định âm lượng là 1.0 nếu không có dữ liệu
+        return savedVolumeSetting ? JSON.parse(savedVolumeSetting) : 1.0;
     }
 }

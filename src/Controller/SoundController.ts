@@ -1,8 +1,7 @@
-import { sound, SoundSprite } from "@pixi/sound";
+import { sound } from "@pixi/sound";
 import { GameSave } from "../GameBuild/GameSave";
 import { Sprite, Texture } from "pixi.js";
 import AssetLoad from "../GameBuild/Asset";
-import { EventHandle } from "../GameBuild/EventHandle";
 
 export class SoundManager {
     private static instance: SoundManager;
@@ -46,7 +45,7 @@ export class SoundManager {
         GameSave.saveSoundSetting(this.isMuted);
         this.updateSoundButtonTexture(); 
         if(!this.isMuted){
-            SoundManager.getInstance().play('game-sound', { sprite: 'battlemusic',loop:true,volume:.8});
+            this.play('game-sound', { sprite: 'battlemusic',loop:true,volume:.8});
         }else{
             this.stop('game-sound');
         }

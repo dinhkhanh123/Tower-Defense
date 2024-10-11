@@ -3,10 +3,10 @@ import { EnemyType } from "../EnemyType";
 
 export class Brigand extends Enemy {
     constructor(id: number) {
-        const hp = 30;
-        const speed = .7;
-        const damage = 4;
-        const money = 8;
+        const hp = 50;
+        const speed = .6;
+        const damage = 5;
+        const money = 25;
 
         super(id, EnemyType.Brigand, hp, speed, damage, money);
     }

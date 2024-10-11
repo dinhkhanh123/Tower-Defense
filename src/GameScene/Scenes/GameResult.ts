@@ -3,6 +3,9 @@ import { GameConst } from "../../GameBuild/GameConst";
 import Asset from "../../GameBuild/Asset";
 import { sound } from "@pixi/sound";
 import { SoundManager } from "../../Controller/SoundController";
+import { EventHandle } from "../../GameBuild/EventHandle";
+import { GameBoard } from "./GameBoard";
+import { SceneManager } from "../../Controller/SceneManager";
 
 export class GameResult extends Container {
     public static instance: GameResult;
@@ -24,7 +27,7 @@ export class GameResult extends Container {
         this.addChild(background);
 
         // nút "Thoát"
-        this.exitButton = this.createButton(600, 200);
+        this.exitButton = this.createButton(600, 200,'btn_close');
         this.exitButton.interactive = true;
         this.exitButton.eventMode = 'static';
         this.exitButton.on('pointerdown', () => this.onExit());
@@ -32,10 +35,11 @@ export class GameResult extends Container {
 
         // Ẩn màn hình kết quả lúc khởi tạo
         this.visible = false;
+
     }
 
-    private createButton(x: number, y: number): Sprite {
-        const button = new Sprite(Texture.from('btn_close'));
+    private createButton(x: number, y: number, texture:string): Sprite {
+        const button = new Sprite(Texture.from(texture));
         button.anchor.set(0.5);
         button.scale.set(0.5);
         button.position.set(x, y);
@@ -50,7 +54,9 @@ export class GameResult extends Container {
         win_sprite.x = 400;
         win_sprite.y = 180;
 
+
         this.addChild(win_sprite);
+        
         this.visible = true;
 
         SoundManager.getInstance().play('game-sound', { sprite: 'win', loop: false });
@@ -63,11 +69,29 @@ export class GameResult extends Container {
         lose_sprite.x = 400;
         lose_sprite.y = 180;
 
+        const btn_restart = this.createButton(400,350,'btn_restart');
+        btn_restart.width = 150;
+        btn_restart.height = 60;
+        btn_restart.interactive = true;
+        btn_restart.eventMode = 'static';
+        btn_restart.cursor = 'pointer';
+        btn_restart.on('pointerdown',()=>{
+            this.onRestart();
+        });
+        
         this.addChild(lose_sprite);
+        this.addChild(btn_restart); 
         this.visible = true;
 
         SoundManager.getInstance().play('game-sound', { sprite: 'gamelose', loop: false });
     }
+
+    private onRestart(): void {
+        this.visible = false;
+
+        // Phát sự kiện để khởi động lại trò chơi, sử dụng EventHandle để phát sự kiện
+      //  this.emit('restartGame');
+    }   
 
 
     public displayResult(isWin: boolean): void {
@@ -79,29 +103,9 @@ export class GameResult extends Container {
         }
     }
 
-
-    // // Phương thức để thêm màn hình vào stage của game
-    // public addToStage(stage: Container): void {
-    //   //  stage.addChild(this.resultContainer);
-    // }
-
-    // // Phương thức xử lý khi nhấn nút "Chơi lại"
-    // private onReplay(): void {
-    //     console.log("Replay game");
-    //     // Thực hiện các thao tác để khởi động lại game
-    //     // Ví dụ: reset trạng thái game và ẩn màn hình kết quả
-    //    // this.resultContainer.visible = false;
-    // }
-
     // // Phương thức xử lý khi nhấn nút "Thoát"
     private onExit(): void {
         console.log("Exit game");
         this.visible = false;
     }
 }
-        // // Thêm event listener cho nút chơi lại
-        // this.replayButton.interactive = true;
-        // this.replayButton.buttonMode = true;
-        // this.replayButton.on('pointerdown', () => this.onReplay());
-
-        // // Thêm event listener cho nút thoát

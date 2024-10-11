@@ -2,18 +2,19 @@ import { Container, Sprite, Texture } from "pixi.js";
 import { GameConst } from "../../GameBuild/GameConst";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { SoundManager } from "../../Controller/SoundController";
+import { SceneManager } from "../../Controller/SceneManager";
 
 export class GameStart extends Container {
-    private progressBar!: Sprite; // Sprite thanh tiến trình
-    private startButton!: Sprite; // Nút Start Game
-    private loadingTime: number = 2000; // Thời gian tải trong milliseconds
-    private loadingAnimation: number = 0; // Biến để theo dõi hoạt ảnh thanh loading
+    private progressBar!: Sprite; 
+    private startButton!: Sprite; 
+    private loadingTime: number = 2000; 
+    private loadingAnimation: number = 0; 
 
     constructor() {
         super();
         this.init();
         this.progressBar.width = 300;
-        this.startLoadingAnimation(); // Bắt đầu hoạt ảnh thanh loading
+        this.startLoadingAnimation(); 
     }
 
     init() {
@@ -26,9 +27,9 @@ export class GameStart extends Container {
 
         // Khởi tạo thanh loader là một Sprite
         this.progressBar = new Sprite(Texture.from('loading_bar'));
-        this.progressBar.anchor.set(0, 0.5); // Đặt anchor để thanh mở rộng từ trái sang phải
-        this.progressBar.position.set(GameConst.GAME_WIDTH / 4, GameConst.GAME_HEIGHT / 2 + 105); // Vị trí của thanh loader
-        this.progressBar.width = 0; // Bắt đầu với độ dài 0 (0%)
+        this.progressBar.anchor.set(0, 0.5); 
+        this.progressBar.position.set(GameConst.GAME_WIDTH / 4, GameConst.GAME_HEIGHT / 2 + 105); 
+        this.progressBar.width = 0; 
         this.addChild(this.progressBar);
 
         // Khởi tạo nút start nhưng ẩn nó đi
@@ -39,29 +40,28 @@ export class GameStart extends Container {
         this.startButton.eventMode = 'static';
         this.startButton.cursor = 'pointer';
         this.startButton.on('pointerdown', this.onStartButtonClick.bind(this));
-        this.startButton.visible = false; // Ẩn nút cho đến khi tải xong
+        this.startButton.visible = false; 
         this.addChild(this.startButton);
 
     }
 
     // Phương thức để bắt đầu hoạt ảnh thanh loading
     startLoadingAnimation() {
-        const maxWidth = GameConst.GAME_WIDTH / 2; // Chiều rộng tối đa của thanh loader
-        const frameTime = 1000 / 60; // Thời gian giữa mỗi khung hình (60 FPS)
-        const totalFrames = this.loadingTime / frameTime; // Tổng số khung hình cho toàn bộ quá trình tải
-        const increment = maxWidth/ totalFrames; // Tăng chiều rộng mỗi khung hình
-
-        // Hàm cập nhật hoạt ảnh
+        const maxWidth = GameConst.GAME_WIDTH / 2; 
+        const frameTime = 1000 / 60; 
+        const totalFrames = this.loadingTime / frameTime; 
+        const increment = maxWidth/ totalFrames;
+     
         const update = () => {
             if (this.progressBar.width  < maxWidth) {
-                this.progressBar.width += increment; // Tăng chiều rộng của thanh
-                this.loadingAnimation = requestAnimationFrame(update); // Gọi lại hàm cập nhật
+                this.progressBar.width += increment; 
+                this.loadingAnimation = requestAnimationFrame(update); 
             } else {
-                this.onLoadComplete(); // Khi thanh đầy, gọi hàm hoàn tất
+                this.onLoadComplete(); 
             }
         };
 
-        update(); // Bắt đầu hoạt ảnh
+        update(); 
     }
 
     // Khi việc tải hoàn tất, hiển thị nút Start Game
@@ -73,6 +73,7 @@ export class GameStart extends Container {
     // Xử lý khi người dùng nhấn nút Start Game
     onStartButtonClick() {
         SoundManager.getInstance().stop('game-sound');
-        EventHandle.emit('startGame');
+        SoundManager.getInstance().play('game-sound',{sprite:'button',loop:false});
+        this.emit('startGame'); 
     }
 }

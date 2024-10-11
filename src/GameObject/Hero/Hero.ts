@@ -23,6 +23,7 @@ export class Hero {
     public isMoving: boolean = false;
     public heroAni: AnimatedSprite;
     public target: Enemy[] = [];
+
     private attackAnimationTextures: { [key: string]: string } = {
         up: 'attack_up',
         down: 'attack_down',
@@ -39,7 +40,8 @@ export class Hero {
         this.heroSpeed = speed;
         this.isAlive = true;
         this.heroSprite = new Container;
-        this.heroAni = new AnimatedSprite(AssetLoad.getAnimation(`move_right`));
+        this.heroAni = new AnimatedSprite(AssetLoad.getAnimation(`attack_right`));
+        this.heroAni.animationSpeed = 0.1;
         this.heroAni.anchor.set(0.5);
         this.heroAni.scale.set(0.6);
         this.heroSprite.zIndex = 1000;
@@ -62,10 +64,10 @@ export class Hero {
         this.pathfinding = new Pathfinding(gridMap);
         const path = this.pathfinding.bfs(this.currentPosition, this.goalPosition);
         if (path) {
-            this.isMoving = true; 
-            this.currentPathIndex = 0; 
+            this.isMoving = true;
+            this.currentPathIndex = 0;
         } else {
-            this.isMoving = false; 
+            this.isMoving = false;
         }
     }
 
@@ -77,33 +79,27 @@ export class Hero {
         } else if (this.heroAni.textures === AssetLoad.getAnimation(`move_left`)) {
             return 'left';
         } else {
-            return 'right'; 
+            return 'right';
         }
     }
 
     attack(target: Enemy) {
+    
         // Kiểm tra nếu kẻ thù đang trong tầm đánh
-        if (this.isInRange(target.getUpdatePositionEnemy())) {
-            // Kiểm tra nếu Hero không đang tấn công (animation chưa bắt đầu hoặc đã hoàn thành)
-            if (!this.heroAni.playing) {
-                // Phát animation tấn công dựa trên hướng hiện tại
-                const currentDirection = this.getCurrentDirection();
-                this.heroAni.textures = AssetLoad.getAnimation(this.attackAnimationTextures[currentDirection]);
-                this.heroAni.play();
-
-                // Kiểm tra frame hiện tại trong khi animation đang chạy
-                this.heroAni.onFrameChange = (currentFrame: number) => {
-                    // Nếu frame hiện tại là frame cuối cùng trong animation
-                    if (currentFrame === this.heroAni.totalFrames - 1) {
-                        console.log(`${this.heroName} đã gây ${this.heroDamage} damage cho `);
-                        target.takeDamage(target.id, this.heroDamage); // Gây damage cho kẻ thù
-
-                        // Sau khi gây damage, tắt sự kiện onFrameChange để tránh gây damage nhiều lần
-                        this.heroAni.onFrameChange = undefined;
-                        this.heroAni.gotoAndStop(0); // Dừng animation ở frame đầu tiên
-                    }
-                };
-            }
+        if (this.isInRange(target.getUpdatePositionEnemy()) && !this.heroAni.playing) {
+            // Phát animation tấn công dựa trên hướng hiện tại
+            const currentDirection = this.getCurrentDirection();
+            this.heroAni.textures = AssetLoad.getAnimation(this.attackAnimationTextures[currentDirection]);
+            this.heroAni.play();
+    
+            this.heroAni.onFrameChange = (currentFrame: number) => {
+                if (currentFrame === this.heroAni.totalFrames - 1) {
+                    target.takeDamage(target.id, this.heroDamage);
+    
+                    this.heroAni.onFrameChange = undefined;
+                    this.heroAni.gotoAndStop(0);
+                }
+            };
         }
     }
 
@@ -143,8 +139,6 @@ export class Hero {
                     this.heroAni.textures = newTexture;
                     this.heroAni.play();
                 }
-
-                this.heroAni.animationSpeed = 0.1;
 
                 this.heroSprite.addChild(this.heroAni);
             } else {

@@ -30,15 +30,16 @@ export class TowerController {
         });
     }
 
+    //tạo một tháp mới.
     public createTower(type: TowerType, baseSprite: Sprite) {
         const tower = this.objectPool.getTowerFromPool(type);
         tower.resetTower();
         this.map.removeChild(baseSprite);
         baseSprite.removeAllListeners();
 
-        tower.baseTower = baseSprite;    
+        tower.baseTower = baseSprite;
         tower.spriteTower.sprite.position = baseSprite.position;
-        tower.spriteAniTower.position.x = baseSprite.position.x + 20;
+        tower.spriteAniTower.position.x = baseSprite.position.x + GameConst.SQUARE_SIZE / 2;
         tower.spriteAniTower.position.y = baseSprite.position.y + 5;
 
         this.towers.push(tower);
@@ -63,7 +64,7 @@ export class TowerController {
                     y: tower.baseTower.position.y
                 }
             };
-            
+
             EventHandle.emit('tower_clicked', optionTower);
             BottomPanel.instance.setVisibleSystem('infor');
         });
@@ -74,6 +75,7 @@ export class TowerController {
         this.map.addChild(tower.spriteAniTower);
     }
 
+    //xóa tower.
     public removeTower(tower: Tower, price: number) {
         const index = this.towers.indexOf(tower);
         if (index !== -1) {
@@ -116,7 +118,7 @@ export class TowerController {
                     tower.target.shift();
                     tower.spriteAniTower.gotoAndStop(0);
                 } else {
-                    tower.Attack( currentTarget, deltaTime);
+                    tower.Attack(currentTarget, deltaTime);
                     tower.spriteAniTower.play();
                 }
             }

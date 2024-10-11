@@ -1,4 +1,3 @@
-import { sound } from '@pixi/sound';
 import { Assets, Texture } from 'pixi.js';
 
 export default class AssetLoad {
@@ -19,13 +18,13 @@ export default class AssetLoad {
     }
 
     static async loadBitmap(bitmapFiles: string[]) {
-        for(const bitmapFile of bitmapFiles){
+        for (const bitmapFile of bitmapFiles) {
             await Assets.load(bitmapFile);
-        }     
+        }
     }
-    
+
     static async loadSoundSprite(soundJsonPath: string) {
-       await Assets.load({alias:"game-sound",src:soundJsonPath});
+        await Assets.load({ alias: "game-sound", src: soundJsonPath });
     }
 
     static async loadAnimations(animationFiles: string[]) {
@@ -42,7 +41,6 @@ export default class AssetLoad {
         }
     }
 
-
     // Hàm để lấy texture theo tên
     static getTexture(name: string): Texture {
         const texture = this.texture[name];
@@ -52,6 +50,7 @@ export default class AssetLoad {
         return texture;
     }
 
+    // Hàm để lấy animation theo tên
     static getAnimation(name: string) {
         const animation = this.animations[name];
         if (!animation) {

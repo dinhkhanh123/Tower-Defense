@@ -1,6 +1,4 @@
-
 import { EventEmitter } from 'pixi.js';
-
 
 export class EventHandle {
     private static _eventEmitter: EventEmitter<string> = new EventEmitter(); 
@@ -13,6 +11,12 @@ public static emit(eventName: string, ...args: any[]): boolean {
 //Đăng ký funtion callback khi có sự kiện event được kích hoạt
 public static on(event: string, fn: EventEmitter.ListenerFn, context?: any): EventHandle {
     this._eventEmitter.on(event, fn, context);
+    return this;
+}
+
+// Xóa sự kiện đã đăng ký
+public static off(event: string, fn: EventEmitter.ListenerFn, context?: any): EventHandle {
+    this._eventEmitter.off(event, fn, context); 
     return this;
 }
 } 

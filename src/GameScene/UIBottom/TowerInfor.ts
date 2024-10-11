@@ -39,8 +39,7 @@ export class TowerInfor extends Container {
         this.init();
         this.textTower();
         this.listenToEvents();
-        
-        // Start the update loop
+
         this.update();
     }
 
@@ -106,14 +105,14 @@ export class TowerInfor extends Container {
         this.towerInforTxt = this.createText(200, 680, 'MonospacePeaberr', 12);
 
         const towerUprade = this.createButton(550, 645, 100, 30, 'ui_bar_btn');
-        this.createSprite(500,640,40,40,'ui_build');
+        this.createSprite(500, 640, 40, 40, 'ui_build');
         this.priceUpgradeTxt = this.createText(550, 630, 'ShinyPeaberry', 16);
         towerUprade.on('pointerdown', () => {
             EventHandle.emit('uprade_tower', this.towerId, this.priceUpgrade);
         });
 
         const towerSell = this.createButton(550, 685, 100, 30, 'ui_bar_btn');
-        this.createSprite(500,685,40,40,'ui_money');
+        this.createSprite(500, 685, 40, 40, 'ui_money');
         this.privateSelltxt = this.createText(550, 670, 'ShinyPeaberry', 16);
         towerSell.on('pointerdown', () => {
             EventHandle.emit('sell_tower', this.towerId, this.priceTower);
@@ -127,14 +126,14 @@ export class TowerInfor extends Container {
 
         // Check if player can afford the upgrade and sell price
         if (this.levelTower < 3 && playerCoins < this.priceUpgrade) {
-            this.priceUpgradeTxt.style.fontFamily = 'RedPeaberry'; // Change font if cannot afford upgrade
+            this.priceUpgradeTxt.style.fontFamily = 'RedPeaberry';
         } else {
-            this.priceUpgradeTxt.style.fontFamily = 'ShinyPeaberry'; // Reset font
+            this.priceUpgradeTxt.style.fontFamily = 'ShinyPeaberry';
         }
 
-  
-        // Call this function continuously (you can use a requestAnimationFrame or similar method)
-        requestAnimationFrame(this.update.bind(this)); // Keep updating
+
+
+        requestAnimationFrame(this.update.bind(this));
     }
 
     private createButton(x: number, y: number, w: number, h: number, texture: string): Sprite {

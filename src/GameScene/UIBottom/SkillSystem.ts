@@ -2,6 +2,7 @@ import { Container, Sprite, Texture, Graphics, Ticker } from 'pixi.js';
 import { EventHandle } from '../../GameBuild/EventHandle';
 import { EnemySpawner } from '../../Controller/SpawnEnemy';
 import { GameConst } from '../../GameBuild/GameConst';
+import { SoundManager } from '../../Controller/SoundController';
 export class SkillSystem extends Container {
     public static instance: SkillSystem;
     public isHeroSelected: boolean = false;
@@ -24,11 +25,11 @@ export class SkillSystem extends Container {
             if (this.isSkillSelected && !this.cooldownInProgress) {
                 this.createDamageZone(position.x, position.y);
                 this.isSkillSelected = false; // Đặt lại trạng thái sau khi chọn kỹ năng
-                this.startCooldown(); // Bắt đầu quá trình hồi chiêu
+                this.startCooldown(); 
             }
         });
         EventHandle.on('hero_moved', () => {
-            this.resetHeroAvatar(); // Reset lại avatar hero sau khi hero di chuyển
+            this.resetHeroAvatar(); 
         });
     }
 
@@ -56,17 +57,18 @@ export class SkillSystem extends Container {
         damageZone.alpha = .3;
         damageZone.position.set(x * GameConst.SQUARE_SIZE, y * GameConst.SQUARE_SIZE);
         this.addChild(damageZone);
+        SoundManager.getInstance().play('game-sound',{sprite:'firerain',loop:false});
 
         // Hàm kiểm tra kẻ địch trong vùng tròn và gây sát thương
         const damageInterval = setInterval(() => {
-            this.checkEnemiesInZone(damageZone); // Gây sát thương mỗi 1 giây
+            this.checkEnemiesInZone(damageZone); 
         }, 1000); // Cứ mỗi giây sẽ kiểm tra và gây sát thương cho kẻ địch
 
-        // Tự động xóa vùng tròn sau 5 giây và dừng việc gây sát thương
+        
         setTimeout(() => {
-            clearInterval(damageInterval); // Ngừng gây sát thương sau 5 giây
-            this.removeChild(damageZone);  // Xóa vùng tròn sau 5 giây
-        }, 5000); // Vùng tròn tồn tại trong 5 giây
+            clearInterval(damageInterval); 
+            this.removeChild(damageZone);  
+        }, 3000); 
     }
 
     checkEnemiesInZone(zone: Graphics) {
@@ -74,10 +76,10 @@ export class SkillSystem extends Container {
         enemies.forEach(enemy => {
             if (enemy.isAlive) {
                 const distance = Math.sqrt(
-                    Math.pow(enemy.sprite.x - 40 - zone.x, 2) + Math.pow(enemy.sprite.y - 40 - zone.y, 2)
+                    Math.pow(enemy.sprite.x  - zone.x, 2) + Math.pow(enemy.sprite.y - zone.y, 2)
                 );
-                if (distance <= 100) { // Nếu kẻ địch nằm trong bán kính 100 của vùng tròn
-                    enemy.takeDamage(enemy.id, 2); // Gây damage cho kẻ địch
+                if (distance <= 50) {
+                    enemy.takeDamage(enemy.id, 5); 
                 }
             }
         });
@@ -92,6 +94,7 @@ export class SkillSystem extends Container {
         this.heroAvatar.on('pointerdown', () => {
             this.isHeroSelected = true;
             this.heroAvatar.scale.set(1.2);
+            SoundManager.getInstance().play('game-sound',{sprite:'button',loop:false});
         });
 
         // Khởi tạo biểu tượng kỹ năng với texture ban đầu là 'skill_1_A'
@@ -100,6 +103,7 @@ export class SkillSystem extends Container {
             if (!this.cooldownInProgress) { // Kiểm tra nếu không có hồi chiêu
                 this.isSkillSelected = true;
                 this.skill1.scale.set(1.2);
+                SoundManager.getInstance().play('game-sound',{sprite:'button',loop:false});
             }
         });
     }
@@ -124,7 +128,7 @@ export class SkillSystem extends Container {
         // Reset kích thước avatar hero về bình thường
         if (this.heroAvatar) {
             this.heroAvatar.scale.set(1);
-            this.isHeroSelected = false;  // Đặt lại trạng thái chọn hero
+            this.isHeroSelected = false;  
         }
     }
 }

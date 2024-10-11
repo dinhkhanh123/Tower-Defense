@@ -143,7 +143,6 @@ export class Enemy {
             const randomMultiplier = 0.8 + Math.random() * 0.4;
             const finalDamage = baseDamage * randomMultiplier;
 
-            console.log(finalDamage);
             this._hp.hpCount -= finalDamage;
 
             if (this._hp.hpCount <= 0) {

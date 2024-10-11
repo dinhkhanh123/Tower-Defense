@@ -17,9 +17,8 @@ export class HeroController {
         this.gridMap = MapGame.instance.gridMap;
         this.map = map;
 
-        this.hero = new Hero(1, 'Hero', 10, 2, 5, 'hero_avatar');
-
-        this.spawnHero({ x: 1, y: 13 });
+        this.hero = new Hero(1, 'Hero', 10, 2, 5, 'hero_avatar'); // Tạo đối tượng hero 
+        this.spawnHero({ x: 1, y: 13 }); // spawn hero tại vị trí {x: 1, y: 13
 
         this.listenEventHandle();
     }
@@ -30,6 +29,7 @@ export class HeroController {
         });
     }
 
+     // Dùng để đặt hero vào một vị trí cụ thể trên bản đồ
     spawnHero(position: { x: number, y: number }) {
         this.hero.heroSprite.x = position.x * GameConst.SQUARE_SIZE;
         this.hero.heroSprite.y = position.y * GameConst.SQUARE_SIZE;
@@ -37,6 +37,7 @@ export class HeroController {
         this.map.addChild(this.hero.heroSprite);
     }
 
+    // Hàm để di chuyển hero đến một vị trí mới
     moveNewPosition(position: { x: number, y: number }) {
         if (!this.isGameOver) {
             const startPosition = { x: Math.floor(this.hero.heroSprite.x / GameConst.SQUARE_SIZE), y: Math.floor(this.hero.heroSprite.y / GameConst.SQUARE_SIZE) };
@@ -48,22 +49,19 @@ export class HeroController {
     }
 
     update(deltaTime: number) {
-        if (this.hero.isMoving) {
-            this.hero.update(deltaTime);
-        } else {
-            // Khi hero không còn di chuyển, kiểm tra kẻ thù trong tầm đánh
-            const enemiesInRange = EnemySpawner.instance.getEnemies().filter(enemy =>
-                enemy.isAlive && this.hero.isInRange(enemy.getUpdatePositionEnemy())
-            );
 
-            // Tấn công kẻ thù đầu tiên trong tầm bắn
-            if (enemiesInRange.length > 0) {
-                let currentTarget = enemiesInRange[0]; // Lấy kẻ thù đầu tiên
-                if (!currentTarget.isAlive || !this.hero.isInRange(currentTarget.getUpdatePositionEnemy())) {
-                    this.hero.target.shift();
-                } else {
-                    this.hero.attack(currentTarget);
-                }
+        this.hero.update(deltaTime);
+
+        const enemiesInRange = EnemySpawner.instance.getEnemies().filter(enemy =>
+            enemy.isAlive && this.hero.isInRange(enemy.getUpdatePositionEnemy())
+        );
+
+        if (enemiesInRange.length > 0) {
+            let currentTarget = enemiesInRange[0];
+            if (!currentTarget.isAlive || !this.hero.isInRange(currentTarget.getUpdatePositionEnemy())) {
+                this.hero.target.shift();
+            } else {
+                this.hero.attack(currentTarget);
             }
         }
     }

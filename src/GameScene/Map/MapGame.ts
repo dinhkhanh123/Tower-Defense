@@ -5,12 +5,8 @@ import AssetLoad from "../../GameBuild/Asset";
 import { EventHandle } from "../../GameBuild/EventHandle";
 import { TowerController } from "../../Controller/TowerController";
 import { ProjectileController } from "../../Controller/ProjectileController";
-import { Tower } from "../../GameObject/Towers/Tower";
-import { sound } from "@pixi/sound";
 import { SoundManager } from "../../Controller/SoundController";
-import { GameSave } from "../../GameBuild/GameSave";
 import { SkillSystem } from "../UIBottom/SkillSystem";
-import { Hero } from '../../GameObject/Hero/Hero';
 import { HeroController } from "../../Controller/HeroController";
 import { PlayerController } from "../../Controller/PlayerController";
 
@@ -20,13 +16,13 @@ export class MapGame extends Container {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Hàng 1
         [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0], // Hàng 2
         [1, 1, 1, 1, 0, 0, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1, 1, 1], // Hàng 3
-        [0, 0, 0, 1, 0, 0, 3, 3, 3, 3, 3, 0, 0, 1, 0, 2, 0, 0, 0, 0], // Hàng 4
+        [0, 0, 0, 1, 0, 0, 3, 3, 3, 3, 3, 0, 0, 1, 2, 0, 0, 0, 0, 0], // Hàng 4
         [0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 5
         [0, 2, 0, 1, 2, 0, 0, 0, 2, 0, 0, 2, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 6
-        [0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 3, 3, 0], // Hàng 7
+        [0, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 3, 3, 0], // Hàng 7
         [0, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 3, 3, 0], // Hàng 8
         [0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], // Hàng 9
-        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0], // Hàng 10
+        [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0], // Hàng 10
         [0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 11
         [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 12
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 3, 0], // Hàng 13
@@ -37,7 +33,7 @@ export class MapGame extends Container {
     private towerController: TowerController;
     private enemySpawn: EnemySpawner;
     private projectileController: ProjectileController;
-    private heroController:HeroController;
+    private heroController: HeroController;
     private isGameOver: boolean = false;
     private isSound: boolean = false;
 
@@ -47,7 +43,7 @@ export class MapGame extends Container {
         this.init();
         this.SpawnEnemy();
         this.listenEventHandle();
-        
+
         this.towerController = new TowerController(this);
         this.enemySpawn = new EnemySpawner(this);
         this.projectileController = new ProjectileController(this);
@@ -62,7 +58,7 @@ export class MapGame extends Container {
     }
 
     init() {
-        this.width = 800; 
+        this.width = 800;
         this.height = 600;
         this.LoadMap();
     }
@@ -82,7 +78,7 @@ export class MapGame extends Container {
         startSpawn.on('pointerdown', () => {
             EventHandle.emit('start_spawn');
             startSpawn.visible = false;
-            SoundManager.getInstance().play('game-sound', { sprite: 'battlemusic',loop:true,volume:.8});
+            SoundManager.getInstance().play('game-sound', { sprite: 'battlemusic', loop: true, volume: .8 });
         });
 
         this.addChild(startSpawn);
@@ -141,7 +137,7 @@ export class MapGame extends Container {
                             // Kiểm tra nếu skill được chọn
                             if (SkillSystem.instance.isSkillSelected) {
                                 EventHandle.emit('skill_used', position);
-                            } 
+                            }
                             // Kiểm tra nếu hero được chọn
                             else if (SkillSystem.instance.isHeroSelected) {
                                 EventHandle.emit('hero_moved', position);
@@ -167,7 +163,7 @@ export class MapGame extends Container {
                 defenseSprite.scale.set(0.8);
                 defenseSprite.alpha = 0.05;
 
-                defenseSprite.x = GameConst.WAVE_1.goad.x * GameConst.SQUARE_SIZE + 40;
+                defenseSprite.x = GameConst.WAVE_1.goad.x * GameConst.SQUARE_SIZE + GameConst.SQUARE_SIZE;
                 defenseSprite.y = GameConst.WAVE_1.goad.y * GameConst.SQUARE_SIZE;
 
                 this.addChild(sprite);
@@ -179,4 +175,5 @@ export class MapGame extends Container {
     endGame() {
         this.isGameOver = true;
     }
+
 }

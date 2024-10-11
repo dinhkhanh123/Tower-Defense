@@ -86,6 +86,10 @@
             {
                 "alias":"loading_bar",
                 "src":"./atlas/img/loading_bar.png"
+            },
+            {
+                "alias":"btn_restart",
+                "src":"./atlas/img/btn_restart.png"
             }
         ]
     }

@@ -9,6 +9,7 @@ import { SoundManager } from "../../Controller/SoundController";
 import { sound } from "@pixi/sound";
 
 export class GameBoard extends Container {
+    public static instance:GameBoard;
     private mapGame;
     private rightPan;
     private bottomPanel;
@@ -16,7 +17,10 @@ export class GameBoard extends Container {
 
     constructor() {
         super();
-        this.playerController = new PlayerController(1000, 10);
+        if(!GameBoard.instance){
+            GameBoard.instance = this;
+        }
+        this.playerController = new PlayerController(200, 10);
 
         this.mapGame = new MapGame();
         this.rightPan = new RightPanel();
