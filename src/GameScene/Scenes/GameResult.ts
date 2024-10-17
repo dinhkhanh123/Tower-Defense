@@ -27,7 +27,7 @@ export class GameResult extends Container {
         this.addChild(background);
 
         // nút "Thoát"
-        this.exitButton = this.createButton(600, 200,'btn_close');
+        this.exitButton = this.createButton(600, 200, 'btn_close');
         this.exitButton.interactive = true;
         this.exitButton.eventMode = 'static';
         this.exitButton.on('pointerdown', () => this.onExit());
@@ -38,7 +38,7 @@ export class GameResult extends Container {
 
     }
 
-    private createButton(x: number, y: number, texture:string): Sprite {
+    private createButton(x: number, y: number, texture: string): Sprite {
         const button = new Sprite(Texture.from(texture));
         button.anchor.set(0.5);
         button.scale.set(0.5);
@@ -56,7 +56,7 @@ export class GameResult extends Container {
 
 
         this.addChild(win_sprite);
-        
+
         this.visible = true;
 
         SoundManager.getInstance().play('game-sound', { sprite: 'win', loop: false });
@@ -69,18 +69,18 @@ export class GameResult extends Container {
         lose_sprite.x = 400;
         lose_sprite.y = 180;
 
-        const btn_restart = this.createButton(400,350,'btn_restart');
+        const btn_restart = this.createButton(400, 350, 'btn_restart');
         btn_restart.width = 150;
         btn_restart.height = 60;
         btn_restart.interactive = true;
         btn_restart.eventMode = 'static';
         btn_restart.cursor = 'pointer';
-        btn_restart.on('pointerdown',()=>{
+        btn_restart.on('pointerdown', () => {
             this.onRestart();
         });
-        
+
         this.addChild(lose_sprite);
-        this.addChild(btn_restart); 
+        this.addChild(btn_restart);
         this.visible = true;
 
         SoundManager.getInstance().play('game-sound', { sprite: 'gamelose', loop: false });
@@ -88,10 +88,7 @@ export class GameResult extends Container {
 
     private onRestart(): void {
         this.visible = false;
-
-        // Phát sự kiện để khởi động lại trò chơi, sử dụng EventHandle để phát sự kiện
-      //  this.emit('restartGame');
-    }   
+    }
 
 
     public displayResult(isWin: boolean): void {

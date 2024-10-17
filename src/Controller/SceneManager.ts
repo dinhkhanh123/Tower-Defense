@@ -4,6 +4,9 @@ import { GameBoard } from '../GameScene/Scenes/GameBoard';
 import { GameResult } from '../GameScene/Scenes/GameResult';
 import { EventHandle } from '../GameBuild/EventHandle';
 import { ObjectPool } from '../ObjectPool/ObjectPool';
+import { PlayerController } from './PlayerController';
+import { RightPanel } from '../GameScene/UIRight/RightPanel';
+import { EnemySpawner } from './SpawnEnemy';
 
 
 export class SceneManager {
@@ -36,17 +39,18 @@ export class SceneManager {
 
     // Phương thức khởi tạo cảnh ban đầu (ví dụ: GameStart)
     public startScene(): void {
-       const gameStart = new GameStart();
+        const gameStart = new GameStart();
         this.changeScene(gameStart);
 
         // Lắng nghe sự kiện bắt đầu trò chơi
-       gameStart.on('startGame', () => {
+        gameStart.on('startGame', () => {
             this.loadGameScene();
-      });
+        });
     }
 
     // Phương thức để chuyển sang cảnh trò chơi (GameBoard)
     private loadGameScene(): void {
+
         const gameBoard = new GameBoard();
         const gameResult = new GameResult();
 
@@ -66,4 +70,37 @@ export class SceneManager {
 
     }
 
+    // Phương thức khởi động lại trò chơi
+    public restartGame(): void {
+
+        // Reset lại các thành phần của game
+        const gameBoard = new GameBoard();
+        const gameResult = new GameResult();
+
+        this.changeScene(gameBoard);  // Chuyển lại cảnh game board
+
+        // Thêm màn hình kết quả vào stage
+        this.app.stage.addChild(gameResult);
+
+        // Chạy update liên tục cho GameBoard
+        this.app.ticker.add((time) => {
+
+            gameBoard.update(time.deltaTime);
+        });
+
+        // Lắng nghe sự kiện kết thúc trò chơi để hiển thị kết quả
+        gameBoard.on('gameEnd', (isWin: boolean) => {
+            gameResult.displayResult(isWin);
+        });
+
+        // Có thể reset thêm các trạng thái hoặc biến khác nếu cần
+        PlayerController.instance.reset(100, 100);
+        RightPanel.instance.updateCoinDisplay();
+        EnemySpawner.instance.reset();
+
+        EventHandle.removeAllListeners();
+
+
+
+    }
 }

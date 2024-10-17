@@ -83,4 +83,14 @@ export class PlayerController {
             this.startSpawn();
         }
     }
+
+    public reset(coint: number, hp: number): void {
+        this.cointPlayer = coint;        // Reset lại tiền người chơi
+        this.hpPlayer = hp;              // Reset lại máu người chơi
+        this.currentWave = 0;            // Reset lại đợt tấn công về 0
+        this.isGameStart = false;        // Đặt lại trạng thái game bắt đầu
+        this.isGameOver = false;         // Đặt lại trạng thái game kết thúc
+
+        RightPanel.instance.updateCoinDisplay(); // Cập nhật UI của RightPanel
+    }
 }

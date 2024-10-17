@@ -1,23 +1,21 @@
 import { Container, } from "pixi.js";
-import { GameConst } from "../../GameBuild/GameConst";
 import { MapGame } from '../Map/MapGame';
 import { BottomPanel } from '../UIBottom/BottomPanel';
-import { Enemy } from "../../GameObject/Enemies/Enemy";
 import { RightPanel } from "../UIRight/RightPanel";
 import { PlayerController } from "../../Controller/PlayerController";
 import { SoundManager } from "../../Controller/SoundController";
-import { sound } from "@pixi/sound";
 
 export class GameBoard extends Container {
-    public static instance:GameBoard;
+    public static instance: GameBoard;
     private mapGame;
     private rightPan;
     private bottomPanel;
     private playerController;
+    public isGameOver = false;
 
     constructor() {
         super();
-        if(!GameBoard.instance){
+        if (!GameBoard.instance) {
             GameBoard.instance = this;
         }
         this.playerController = new PlayerController(200, 10);
@@ -28,10 +26,9 @@ export class GameBoard extends Container {
 
         const soundManager = SoundManager.getInstance();
         const soundButton = soundManager.getSoundButton();
- 
+
         this.init();
         this.addChild(soundButton);
-        
     }
 
     init() {
@@ -41,6 +38,8 @@ export class GameBoard extends Container {
     }
 
     update(time: number) {
-        this.mapGame.update(time);
+        if (!this.isGameOver) {
+            this.mapGame.update(time);
+        }
     }
 }

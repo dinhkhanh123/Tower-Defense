@@ -97,7 +97,7 @@ export class EnemySpawner {
                 }
 
                 if (PlayerController.instance.hpPlayer <= 0) {
-                    GameBoard.instance.emit('gameEnd',(false));
+                    GameBoard.instance.emit('gameEnd', (false));
                     this.endGame();
                 }
             }
@@ -110,7 +110,7 @@ export class EnemySpawner {
         }
 
         if (!this.isSpawning && this.getEnemies().length === 0 && this.waveNumber === PlayerController.instance.totalWaves) {
-            GameBoard.instance.emit('gameEnd',(true));
+            GameBoard.instance.emit('gameEnd', (true));
             this.endGame();
         }
 
@@ -148,6 +148,22 @@ export class EnemySpawner {
         this.enemies.forEach(enemy => {
             enemy.sprite.interactive = false;  // Vô hiệu hóa tương tác của quái
         });
-       EventHandle.emit('disable_all_interactions');  
+        EventHandle.emit('disable_all_interactions');
+    }
+
+    public reset(): void {
+        this.waveNumber = 0;              // Reset lại số đợt tấn công về ban đầu
+        this.isSpawning = false;          // Đặt lại trạng thái không spawn kẻ địch
+        this.isGameEnded = false;         // Trò chơi không kết thúc
+        this.currentEnemiesCount = 0;     // Số lượng kẻ địch hiện tại bằng 0
+
+        // Xóa tất cả kẻ địch đang tồn tại trên bản đồ
+        this.enemies.forEach(enemy => {
+            this.map.removeChild(enemy.sprite);
+            ObjectPool.instance.returnEnemyToPool(enemy.type, enemy);
+        });
+
+        // Làm trống danh sách kẻ địch
+        this.enemies = [];
     }
 }

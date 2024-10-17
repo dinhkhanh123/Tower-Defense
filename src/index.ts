@@ -1,4 +1,4 @@
-import { AnimatedSprite, Application, Assets,  } from 'pixi.js';
+import { AnimatedSprite, Application, Assets, } from 'pixi.js';
 import { GameConst } from './GameBuild/GameConst';
 import { GameBoard } from './GameScene/Scenes/GameBoard';
 import { GameStart } from './GameScene/Scenes/GameStart';
@@ -25,7 +25,7 @@ import { SceneManager } from './Controller/SceneManager';
         './atlas/projectile_atlas.json',
     ]);
     //load bitmap
-    await AssetLoad.loadBitmap(['./atlas/GoldPeaberry.xml','./atlas/GoldPeaberry.fnt','./atlas/Peaberry.xml','./atlas/Peaberry.fnt','./atlas/ShinyPeaberry.fnt','./atlas/ShinyPeaberry.xml','./atlas/RedPeaberry.fnt','./atlas/RedPeaberry.xml']);
+    await AssetLoad.loadBitmap(['./atlas/GoldPeaberry.xml', './atlas/GoldPeaberry.fnt', './atlas/Peaberry.xml', './atlas/Peaberry.fnt', './atlas/ShinyPeaberry.fnt', './atlas/ShinyPeaberry.xml', './atlas/RedPeaberry.fnt', './atlas/RedPeaberry.xml']);
     //load animation
     await AssetLoad.loadAnimations([
         './atlas/orc_sprites_atlas.json',
@@ -40,11 +40,12 @@ import { SceneManager } from './Controller/SceneManager';
 
     sound.add('game-sound', { url: Assets.get('game-sound').resources[0], sprites: Assets.get('game-sound').spritemap });
 
-   // Khởi tạo SceneManager và chạy màn hình khởi đầu
-   const sceneManager = SceneManager.getInstance(app);
-   sceneManager.startScene();  // Bắt đầu từ GameStart scene
-
-
+    // Khởi tạo SceneManager và chạy màn hình khởi đầu
+    const sceneManager = SceneManager.getInstance(app);
+    sceneManager.startScene();  // Bắt đầu từ GameStart scene
+    const fps = app.ticker.FPS;  // Kiểm tra FPS hiện tại
+    console.log("FPS: ", fps);
+    console.log("deltaTime: ", app.ticker.deltaTime);
     document.body.appendChild(app.canvas);
 })();
 

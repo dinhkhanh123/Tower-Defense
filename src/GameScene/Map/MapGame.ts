@@ -40,6 +40,7 @@ export class MapGame extends Container {
     constructor() {
         super();
         MapGame.instance = this;
+
         this.init();
         this.SpawnEnemy();
         this.listenEventHandle();
@@ -49,6 +50,7 @@ export class MapGame extends Container {
         this.projectileController = new ProjectileController(this);
         this.heroController = new HeroController(this);
         this.sortableChildren = true;
+
     }
 
     listenEventHandle() {
